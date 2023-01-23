@@ -1224,3 +1224,2982 @@ Table 0 :
  Next table : NO
 
 ===========Affichage Tables===========
+[20:54:18] Loading level from file...
+[20:54:18] Tag written: GAMEOFTABLES, size_tag : 13
+[20:54:18] Cursor at : 109
+[20:54:18] File created: level.lvl, 4
+[20:54:18] load_file: file level.lvl has been create.
+[20:54:18] File loaded
+[20:54:18] Show table: 13, 0
+[20:54:18] get_table: addrTable = 13
+[20:54:18] get_table: success! firstAddress = -1
+[20:54:18] show_table: begin show table 0
+[20:54:18] Show table: 93, 0
+[20:54:18] get_table: addrTable = 93
+[20:54:18] get_data_info: type = 2, size = 80
+[20:54:18] get_table: success! firstAddress = -1
+[20:54:18] show_table: begin show table 0
+[20:54:18] 
+===========Affichage Tables===========
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+===========Affichage Tables===========
+[20:54:18] get_level: start
+[20:54:18] get_level: file opened: level.lvl
+[20:54:18] get_table: addrTable = 13
+[20:54:18] get_table: success! firstAddress = -1
+[20:54:18] get_data_info: type = 2, size = 80
+[20:54:18] get_level: table entry read: type: 0, addr: -1
+[20:54:18] Level 1 not found, empty level generated
+[20:54:20] File loaded: level.lvl, 4
+[20:54:20] get_table: addrTable = 13
+[20:54:20] get_table: success! firstAddress = -1
+[20:54:20] get_data_info: type = 2, size = 80
+[20:54:20] save_level: table entry found: type: 0, addr: -1
+[20:54:20] Convert level to bytes: 156 items.
+[20:54:20] Convert level to bytes: Success! 9984 bytes.
+[20:54:20] save_level: level converted to bytes: 961581A0
+[20:54:20] Add data: 961581A0, 9984, 3
+[20:54:20] get_table: addrTable = 13
+[20:54:20] get_table: success! firstAddress = -1
+[20:54:20] find_av_tableEntry: table[0] = -1
+[20:54:20] Table entry found: -1, 13, 0, 0
+[20:54:20] get_table: addrTable = 13
+[20:54:20] get_table: success! firstAddress = -1
+[20:54:20] get_table: addrTable = 93
+[20:54:20] get_data_info: type = 2, size = 80
+[20:54:20] get_table: success! firstAddress = -1
+[20:54:20] get_empty: checking table at addr = 93
+[20:54:20] get_empty: no empty space
+[20:54:20] Empty data not found write at the end of file
+[20:54:20] write_table: first table (addr = 13)
+[20:54:20] write_table: success!
+[20:54:20] Data added: 961581A0, 4
+[20:54:20] get_level: start
+[20:54:20] get_level: file opened: level.lvl
+[20:54:20] get_table: addrTable = 13
+[20:54:20] get_table: success! firstAddress = 189
+[20:54:20] get_data_info: type = 2, size = 80
+[20:54:20] get_level: table entry read: type: 0, addr: -1
+[20:54:20] Level 2 not found, empty level generated
+[20:54:20] Level 2 loaded (level 1 saved)
+[20:54:20] Level 2 : 156 items loaded
+[20:54:21] File loaded: level.lvl, 4
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] save_level: table entry found: type: 0, addr: -1
+[20:54:21] Convert level to bytes: 156 items.
+[20:54:21] Convert level to bytes: Success! 9984 bytes.
+[20:54:21] save_level: level converted to bytes: 961581F0
+[20:54:21] Add data: 961581F0, 9984, 3
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] find_av_tableEntry: table[0] = 189
+[20:54:21] find_av_tableEntry: table[1] = -1
+[20:54:21] Table entry found: -1, 13, 1, 0
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_table: addrTable = 93
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_table: success! firstAddress = -1
+[20:54:21] get_empty: checking table at addr = 93
+[20:54:21] get_empty: no empty space
+[20:54:21] Empty data not found write at the end of file
+[20:54:21] write_table: first table (addr = 13)
+[20:54:21] write_table: success!
+[20:54:21] Data added: 961581F0, 4
+[20:54:21] get_level: start
+[20:54:21] get_level: file opened: level.lvl
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_level: table entry read: type: 0, addr: -1
+[20:54:21] Level 3 not found, empty level generated
+[20:54:21] Level 3 loaded (level 2 saved)
+[20:54:21] Level 3 : 156 items loaded
+[20:54:21] File loaded: level.lvl, 4
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] save_level: table entry found: type: 0, addr: -1
+[20:54:21] Convert level to bytes: 156 items.
+[20:54:21] Convert level to bytes: Success! 9984 bytes.
+[20:54:21] save_level: level converted to bytes: 961581F0
+[20:54:21] Add data: 961581F0, 9984, 3
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] find_av_tableEntry: table[0] = 189
+[20:54:21] find_av_tableEntry: table[1] = 10189
+[20:54:21] find_av_tableEntry: table[2] = -1
+[20:54:21] Table entry found: -1, 13, 2, 0
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_table: addrTable = 93
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_table: success! firstAddress = -1
+[20:54:21] get_empty: checking table at addr = 93
+[20:54:21] get_empty: no empty space
+[20:54:21] Empty data not found write at the end of file
+[20:54:21] write_table: first table (addr = 13)
+[20:54:21] write_table: success!
+[20:54:21] Data added: 961581F0, 4
+[20:54:21] get_level: start
+[20:54:21] get_level: file opened: level.lvl
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_level: table entry read: type: 0, addr: -1
+[20:54:21] Level 4 not found, empty level generated
+[20:54:21] Level 4 loaded (level 3 saved)
+[20:54:21] Level 4 : 156 items loaded
+[20:54:21] File loaded: level.lvl, 4
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] save_level: table entry found: type: 0, addr: -1
+[20:54:21] Convert level to bytes: 156 items.
+[20:54:21] Convert level to bytes: Success! 9984 bytes.
+[20:54:21] save_level: level converted to bytes: 961581F0
+[20:54:21] Add data: 961581F0, 9984, 3
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] find_av_tableEntry: table[0] = 189
+[20:54:21] find_av_tableEntry: table[1] = 10189
+[20:54:21] find_av_tableEntry: table[2] = 20189
+[20:54:21] find_av_tableEntry: table[3] = -1
+[20:54:21] Table entry found: -1, 13, 3, 0
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_table: addrTable = 93
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_table: success! firstAddress = -1
+[20:54:21] get_empty: checking table at addr = 93
+[20:54:21] get_empty: no empty space
+[20:54:21] Empty data not found write at the end of file
+[20:54:21] write_table: first table (addr = 13)
+[20:54:21] write_table: success!
+[20:54:21] Data added: 961581F0, 4
+[20:54:21] get_level: start
+[20:54:21] get_level: file opened: level.lvl
+[20:54:21] get_table: addrTable = 13
+[20:54:21] get_table: success! firstAddress = 189
+[20:54:21] get_data_info: type = 2, size = 80
+[20:54:21] get_level: table entry read: type: 0, addr: -1
+[20:54:21] Level 5 not found, empty level generated
+[20:54:21] Level 5 loaded (level 4 saved)
+[20:54:21] Level 5 : 156 items loaded
+[20:54:22] File loaded: level.lvl, 4
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] save_level: table entry found: type: 0, addr: -1
+[20:54:22] Convert level to bytes: 156 items.
+[20:54:22] Convert level to bytes: Success! 9984 bytes.
+[20:54:22] save_level: level converted to bytes: 961581F0
+[20:54:22] Add data: 961581F0, 9984, 3
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] find_av_tableEntry: table[0] = 189
+[20:54:22] find_av_tableEntry: table[1] = 10189
+[20:54:22] find_av_tableEntry: table[2] = 20189
+[20:54:22] find_av_tableEntry: table[3] = 30189
+[20:54:22] find_av_tableEntry: table[4] = -1
+[20:54:22] Table entry found: -1, 13, 4, 0
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_table: addrTable = 93
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_table: success! firstAddress = -1
+[20:54:22] get_empty: checking table at addr = 93
+[20:54:22] get_empty: no empty space
+[20:54:22] Empty data not found write at the end of file
+[20:54:22] write_table: first table (addr = 13)
+[20:54:22] write_table: success!
+[20:54:22] Data added: 961581F0, 4
+[20:54:22] get_level: start
+[20:54:22] get_level: file opened: level.lvl
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_level: table entry read: type: 0, addr: -1
+[20:54:22] Level 6 not found, empty level generated
+[20:54:22] Level 6 loaded (level 5 saved)
+[20:54:22] Level 6 : 156 items loaded
+[20:54:22] File loaded: level.lvl, 4
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] save_level: table entry found: type: 0, addr: -1
+[20:54:22] Convert level to bytes: 156 items.
+[20:54:22] Convert level to bytes: Success! 9984 bytes.
+[20:54:22] save_level: level converted to bytes: 961581F0
+[20:54:22] Add data: 961581F0, 9984, 3
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] find_av_tableEntry: table[0] = 189
+[20:54:22] find_av_tableEntry: table[1] = 10189
+[20:54:22] find_av_tableEntry: table[2] = 20189
+[20:54:22] find_av_tableEntry: table[3] = 30189
+[20:54:22] find_av_tableEntry: table[4] = 40189
+[20:54:22] find_av_tableEntry: table[5] = -1
+[20:54:22] Table entry found: -1, 13, 5, 0
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_table: addrTable = 93
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_table: success! firstAddress = -1
+[20:54:22] get_empty: checking table at addr = 93
+[20:54:22] get_empty: no empty space
+[20:54:22] Empty data not found write at the end of file
+[20:54:22] write_table: first table (addr = 13)
+[20:54:22] write_table: success!
+[20:54:22] Data added: 961581F0, 4
+[20:54:22] get_level: start
+[20:54:22] get_level: file opened: level.lvl
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_level: table entry read: type: 0, addr: -1
+[20:54:22] Level 7 not found, empty level generated
+[20:54:22] Level 7 loaded (level 6 saved)
+[20:54:22] Level 7 : 156 items loaded
+[20:54:22] File loaded: level.lvl, 4
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] save_level: table entry found: type: 0, addr: -1
+[20:54:22] Convert level to bytes: 156 items.
+[20:54:22] Convert level to bytes: Success! 9984 bytes.
+[20:54:22] save_level: level converted to bytes: 961581F0
+[20:54:22] Add data: 961581F0, 9984, 3
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] find_av_tableEntry: table[0] = 189
+[20:54:22] find_av_tableEntry: table[1] = 10189
+[20:54:22] find_av_tableEntry: table[2] = 20189
+[20:54:22] find_av_tableEntry: table[3] = 30189
+[20:54:22] find_av_tableEntry: table[4] = 40189
+[20:54:22] find_av_tableEntry: table[5] = 50189
+[20:54:22] find_av_tableEntry: table[6] = -1
+[20:54:22] Table entry found: -1, 13, 6, 0
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_table: addrTable = 93
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_table: success! firstAddress = -1
+[20:54:22] get_empty: checking table at addr = 93
+[20:54:22] get_empty: no empty space
+[20:54:22] Empty data not found write at the end of file
+[20:54:22] write_table: first table (addr = 13)
+[20:54:22] write_table: success!
+[20:54:22] Data added: 961581F0, 4
+[20:54:22] get_level: start
+[20:54:22] get_level: file opened: level.lvl
+[20:54:22] get_table: addrTable = 13
+[20:54:22] get_table: success! firstAddress = 189
+[20:54:22] get_data_info: type = 2, size = 80
+[20:54:22] get_level: table entry read: type: 0, addr: -1
+[20:54:22] Level 8 not found, empty level generated
+[20:54:22] Level 8 loaded (level 7 saved)
+[20:54:22] Level 8 : 156 items loaded
+[20:54:23] File loaded: level.lvl, 4
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] save_level: table entry found: type: 0, addr: -1
+[20:54:23] Convert level to bytes: 156 items.
+[20:54:23] Convert level to bytes: Success! 9984 bytes.
+[20:54:23] save_level: level converted to bytes: 961581F0
+[20:54:23] Add data: 961581F0, 9984, 3
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] find_av_tableEntry: table[0] = 189
+[20:54:23] find_av_tableEntry: table[1] = 10189
+[20:54:23] find_av_tableEntry: table[2] = 20189
+[20:54:23] find_av_tableEntry: table[3] = 30189
+[20:54:23] find_av_tableEntry: table[4] = 40189
+[20:54:23] find_av_tableEntry: table[5] = 50189
+[20:54:23] find_av_tableEntry: table[6] = 60189
+[20:54:23] find_av_tableEntry: table[7] = -1
+[20:54:23] Table entry found: -1, 13, 7, 0
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_table: addrTable = 93
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] get_table: success! firstAddress = -1
+[20:54:23] get_empty: checking table at addr = 93
+[20:54:23] get_empty: no empty space
+[20:54:23] Empty data not found write at the end of file
+[20:54:23] write_table: first table (addr = 13)
+[20:54:23] write_table: success!
+[20:54:23] Data added: 961581F0, 4
+[20:54:23] get_level: start
+[20:54:23] get_level: file opened: level.lvl
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] get_level: table entry read: type: 0, addr: -1
+[20:54:23] Level 9 not found, empty level generated
+[20:54:23] Level 9 loaded (level 8 saved)
+[20:54:23] Level 9 : 156 items loaded
+[20:54:23] File loaded: level.lvl, 4
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] save_level: table entry found: type: 0, addr: -1
+[20:54:23] Convert level to bytes: 156 items.
+[20:54:23] Convert level to bytes: Success! 9984 bytes.
+[20:54:23] save_level: level converted to bytes: 961581F0
+[20:54:23] Add data: 961581F0, 9984, 3
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] find_av_tableEntry: table[0] = 189
+[20:54:23] find_av_tableEntry: table[1] = 10189
+[20:54:23] find_av_tableEntry: table[2] = 20189
+[20:54:23] find_av_tableEntry: table[3] = 30189
+[20:54:23] find_av_tableEntry: table[4] = 40189
+[20:54:23] find_av_tableEntry: table[5] = 50189
+[20:54:23] find_av_tableEntry: table[6] = 60189
+[20:54:23] find_av_tableEntry: table[7] = 70189
+[20:54:23] find_av_tableEntry: table[8] = -1
+[20:54:23] Table entry found: -1, 13, 8, 0
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_table: addrTable = 93
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] get_table: success! firstAddress = -1
+[20:54:23] get_empty: checking table at addr = 93
+[20:54:23] get_empty: no empty space
+[20:54:23] Empty data not found write at the end of file
+[20:54:23] write_table: first table (addr = 13)
+[20:54:23] write_table: success!
+[20:54:23] Data added: 961581F0, 4
+[20:54:23] get_level: start
+[20:54:23] get_level: file opened: level.lvl
+[20:54:23] get_table: addrTable = 13
+[20:54:23] get_table: success! firstAddress = 189
+[20:54:23] get_data_info: type = 2, size = 80
+[20:54:23] get_level: table entry read: type: 0, addr: -1
+[20:54:23] Level 10 not found, empty level generated
+[20:54:23] Level 10 loaded (level 9 saved)
+[20:54:23] Level 10 : 156 items loaded
+[20:54:24] File loaded: level.lvl, 4
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] save_level: table entry found: type: 0, addr: -1
+[20:54:24] Convert level to bytes: 156 items.
+[20:54:24] Convert level to bytes: Success! 9984 bytes.
+[20:54:24] save_level: level converted to bytes: 961581F0
+[20:54:24] Add data: 961581F0, 9984, 3
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] find_av_tableEntry: table[0] = 189
+[20:54:24] find_av_tableEntry: table[1] = 10189
+[20:54:24] find_av_tableEntry: table[2] = 20189
+[20:54:24] find_av_tableEntry: table[3] = 30189
+[20:54:24] find_av_tableEntry: table[4] = 40189
+[20:54:24] find_av_tableEntry: table[5] = 50189
+[20:54:24] find_av_tableEntry: table[6] = 60189
+[20:54:24] find_av_tableEntry: table[7] = 70189
+[20:54:24] find_av_tableEntry: table[8] = 80189
+[20:54:24] find_av_tableEntry: create new table
+[20:54:24] get_table: addrTable = 93
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] get_empty: checking table at addr = 93
+[20:54:24] get_empty: no empty space
+[20:54:24] write_table: first table (addr = 13)
+[20:54:24] write_table: success!
+[20:54:24] Table entry found: -1, 90189, 0, 0
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] get_table: addrTable = 93
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] get_empty: checking table at addr = 93
+[20:54:24] get_empty: no empty space
+[20:54:24] Empty data not found write at the end of file
+[20:54:24] write_table: not first table (addr = 90189)
+[20:54:24] write_table: success!
+[20:54:24] Data added: 961581F0, 4
+[20:54:24] get_level: start
+[20:54:24] get_level: file opened: level.lvl
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] get_data_info: type = 3, size = 9984
+[20:54:24] get_level: table entry read: type: 3, addr: -1
+[20:54:24] Get data: cursor set at 90301
+[20:54:24] get_data: data info read: type: 1, size: 94556222974896
+[20:54:24] get_data: error read data
+[20:54:24] Level 11 not found, empty level generated
+[20:54:24] Level 11 loaded (level 10 saved)
+[20:54:24] Level 11 : 156 items loaded
+[20:54:24] File loaded: level.lvl, 4
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] get_data_info: type = 3, size = 9984
+[20:54:24] save_level: table entry found: type: 3, addr: -1
+[20:54:24] Convert level to bytes: 156 items.
+[20:54:24] Convert level to bytes: Success! 9984 bytes.
+[20:54:24] save_level: level converted to bytes: 961581F0
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] get_data_info: type = 3, size = 9984
+[20:54:24] transform_to_empty: erase data at -1
+[20:54:24] get_table: addrTable = 93
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] find_av_tableEntry: table[0] = -1
+[20:54:24] transform_to_empty: find space on empty table at 93
+[20:54:24] get_table: addrTable = 93
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] transform_to_empty: get the empty table at 93
+[20:54:24] write_table: not first table (addr = 93)
+[20:54:24] write_table: success!
+[20:54:24] write_data_info: success! type = 1, size = 9984
+[20:54:24] write_table: not first table (addr = 90189)
+[20:54:24] write_table: success!
+[20:54:24] transform_to_empty: success
+[20:54:24] Add data: 961581F0, 9984, 3
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] find_av_tableEntry: table[0] = 189
+[20:54:24] find_av_tableEntry: table[1] = 10189
+[20:54:24] find_av_tableEntry: table[2] = 20189
+[20:54:24] find_av_tableEntry: table[3] = 30189
+[20:54:24] find_av_tableEntry: table[4] = 40189
+[20:54:24] find_av_tableEntry: table[5] = 50189
+[20:54:24] find_av_tableEntry: table[6] = 60189
+[20:54:24] find_av_tableEntry: table[7] = 70189
+[20:54:24] find_av_tableEntry: table[8] = 80189
+[20:54:24] find_av_tableEntry: search in next table
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] find_av_tableEntry: table[0] = 90285
+[20:54:24] find_av_tableEntry: table[1] = -1
+[20:54:24] Table entry found: -1, 90189, 1, 0
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] get_table: addrTable = 93
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = -1
+[20:54:24] get_empty: checking table at addr = 93
+[20:54:24] get_empty: no empty space
+[20:54:24] Empty data not found write at the end of file
+[20:54:24] write_table: not first table (addr = 90189)
+[20:54:24] write_table: success!
+[20:54:24] Data added: 961581F0, 4
+[20:54:24] get_level: start
+[20:54:24] get_level: file opened: level.lvl
+[20:54:24] get_table: addrTable = 13
+[20:54:24] get_table: success! firstAddress = 189
+[20:54:24] get_table: addrTable = 90189
+[20:54:24] get_data_info: type = 2, size = 80
+[20:54:24] get_table: success! firstAddress = 90285
+[20:54:24] get_data_info: type = 3, size = 9984
+[20:54:24] get_level: table entry read: type: 3, addr: -1
+[20:54:24] Get data: cursor set at 90301
+[20:54:24] get_data: data info read: type: 3, size: 9984
+[20:54:24] get_data: Success! data : 961581F0
+[20:54:24] get_level: data read: 961581F0
+[20:54:24] Convert bytes to level: 9984 bytes.
+[20:54:24] Convert bytes to level: Success! 156 items.
+[20:54:24] get_level: Level load success : 156 items loaded!
+[20:54:24] Level 12 loaded (level 11 saved)
+[20:54:24] Level 12 : 156 items loaded
+[20:54:25] File loaded: level.lvl, 4
+[20:54:25] get_table: addrTable = 13
+[20:54:25] get_table: success! firstAddress = 189
+[20:54:25] get_table: addrTable = 90189
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = 90285
+[20:54:25] get_data_info: type = 3, size = 9984
+[20:54:25] save_level: table entry found: type: 3, addr: -1
+[20:54:25] Convert level to bytes: 156 items.
+[20:54:25] Convert level to bytes: Success! 9984 bytes.
+[20:54:25] save_level: level converted to bytes: 961581F0
+[20:54:25] get_table: addrTable = 13
+[20:54:25] get_table: success! firstAddress = 189
+[20:54:25] get_table: addrTable = 90189
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = 90285
+[20:54:25] get_data_info: type = 3, size = 9984
+[20:54:25] transform_to_empty: erase data at -1
+[20:54:25] get_table: addrTable = 93
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = -1
+[20:54:25] find_av_tableEntry: table[0] = -1
+[20:54:25] transform_to_empty: find space on empty table at 93
+[20:54:25] get_table: addrTable = 93
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = -1
+[20:54:25] transform_to_empty: get the empty table at 93
+[20:54:25] write_table: not first table (addr = 93)
+[20:54:25] write_table: success!
+[20:54:25] write_data_info: success! type = 1, size = 9984
+[20:54:25] write_table: not first table (addr = 90189)
+[20:54:25] write_table: success!
+[20:54:25] transform_to_empty: success
+[20:54:25] Add data: 961581F0, 9984, 3
+[20:54:25] get_table: addrTable = 13
+[20:54:25] get_table: success! firstAddress = 189
+[20:54:25] find_av_tableEntry: table[0] = 189
+[20:54:25] find_av_tableEntry: table[1] = 10189
+[20:54:25] find_av_tableEntry: table[2] = 20189
+[20:54:25] find_av_tableEntry: table[3] = 30189
+[20:54:25] find_av_tableEntry: table[4] = 40189
+[20:54:25] find_av_tableEntry: table[5] = 50189
+[20:54:25] find_av_tableEntry: table[6] = 60189
+[20:54:25] find_av_tableEntry: table[7] = 70189
+[20:54:25] find_av_tableEntry: table[8] = 80189
+[20:54:25] find_av_tableEntry: search in next table
+[20:54:25] get_table: addrTable = 90189
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = 90285
+[20:54:25] find_av_tableEntry: table[0] = 90285
+[20:54:25] find_av_tableEntry: table[1] = 100301
+[20:54:25] find_av_tableEntry: table[2] = -1
+[20:54:25] Table entry found: -1, 90189, 2, 0
+[20:54:25] get_table: addrTable = 90189
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = 90285
+[20:54:25] get_table: addrTable = 93
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = -1
+[20:54:25] get_empty: checking table at addr = 93
+[20:54:25] get_empty: no empty space
+[20:54:25] Empty data not found write at the end of file
+[20:54:25] write_table: not first table (addr = 90189)
+[20:54:25] write_table: success!
+[20:54:25] Data added: 961581F0, 4
+[20:54:25] get_level: start
+[20:54:25] get_level: file opened: level.lvl
+[20:54:25] get_table: addrTable = 13
+[20:54:25] get_table: success! firstAddress = 189
+[20:54:25] get_table: addrTable = 90189
+[20:54:25] get_data_info: type = 2, size = 80
+[20:54:25] get_table: success! firstAddress = 90285
+[20:54:25] get_data_info: type = 3, size = 9984
+[20:54:25] get_level: table entry read: type: 3, addr: -1
+[20:54:25] Get data: cursor set at 90301
+[20:54:25] get_data: data info read: type: 3, size: 9984
+[20:54:25] get_data: Success! data : 961581F0
+[20:54:25] get_level: data read: 961581F0
+[20:54:25] Convert bytes to level: 9984 bytes.
+[20:54:25] Convert bytes to level: Success! 156 items.
+[20:54:25] get_level: Level load success : 156 items loaded!
+[20:54:25] Level 13 loaded (level 12 saved)
+[20:54:25] Level 13 : 156 items loaded
+[20:54:26] File loaded: level.lvl, 4
+[20:54:26] get_table: addrTable = 13
+[20:54:26] get_table: success! firstAddress = 189
+[20:54:26] get_table: addrTable = 90189
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = 90285
+[20:54:26] get_data_info: type = 3, size = 9984
+[20:54:26] save_level: table entry found: type: 3, addr: -1
+[20:54:26] Convert level to bytes: 156 items.
+[20:54:26] Convert level to bytes: Success! 9984 bytes.
+[20:54:26] save_level: level converted to bytes: 961581F0
+[20:54:26] get_table: addrTable = 13
+[20:54:26] get_table: success! firstAddress = 189
+[20:54:26] get_table: addrTable = 90189
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = 90285
+[20:54:26] get_data_info: type = 3, size = 9984
+[20:54:26] transform_to_empty: erase data at -1
+[20:54:26] get_table: addrTable = 93
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = -1
+[20:54:26] find_av_tableEntry: table[0] = -1
+[20:54:26] transform_to_empty: find space on empty table at 93
+[20:54:26] get_table: addrTable = 93
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = -1
+[20:54:26] transform_to_empty: get the empty table at 93
+[20:54:26] write_table: not first table (addr = 93)
+[20:54:26] write_table: success!
+[20:54:26] write_data_info: success! type = 1, size = 9984
+[20:54:26] write_table: not first table (addr = 90189)
+[20:54:26] write_table: success!
+[20:54:26] transform_to_empty: success
+[20:54:26] Add data: 961581F0, 9984, 3
+[20:54:26] get_table: addrTable = 13
+[20:54:26] get_table: success! firstAddress = 189
+[20:54:26] find_av_tableEntry: table[0] = 189
+[20:54:26] find_av_tableEntry: table[1] = 10189
+[20:54:26] find_av_tableEntry: table[2] = 20189
+[20:54:26] find_av_tableEntry: table[3] = 30189
+[20:54:26] find_av_tableEntry: table[4] = 40189
+[20:54:26] find_av_tableEntry: table[5] = 50189
+[20:54:26] find_av_tableEntry: table[6] = 60189
+[20:54:26] find_av_tableEntry: table[7] = 70189
+[20:54:26] find_av_tableEntry: table[8] = 80189
+[20:54:26] find_av_tableEntry: search in next table
+[20:54:26] get_table: addrTable = 90189
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = 90285
+[20:54:26] find_av_tableEntry: table[0] = 90285
+[20:54:26] find_av_tableEntry: table[1] = 100301
+[20:54:26] find_av_tableEntry: table[2] = 110301
+[20:54:26] find_av_tableEntry: table[3] = -1
+[20:54:26] Table entry found: -1, 90189, 3, 0
+[20:54:26] get_table: addrTable = 90189
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = 90285
+[20:54:26] get_table: addrTable = 93
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = -1
+[20:54:26] get_empty: checking table at addr = 93
+[20:54:26] get_empty: no empty space
+[20:54:26] Empty data not found write at the end of file
+[20:54:26] write_table: not first table (addr = 90189)
+[20:54:26] write_table: success!
+[20:54:26] Data added: 961581F0, 4
+[20:54:26] get_level: start
+[20:54:26] get_level: file opened: level.lvl
+[20:54:26] get_table: addrTable = 13
+[20:54:26] get_table: success! firstAddress = 189
+[20:54:26] get_table: addrTable = 90189
+[20:54:26] get_data_info: type = 2, size = 80
+[20:54:26] get_table: success! firstAddress = 90285
+[20:54:26] get_data_info: type = 3, size = 9984
+[20:54:26] get_level: table entry read: type: 3, addr: 110301
+[20:54:26] Get data: cursor set at 110301
+[20:54:26] get_data: data info read: type: 3, size: 9984
+[20:54:26] get_data: Success! data : 961581F0
+[20:54:26] get_level: data read: 961581F0
+[20:54:26] Convert bytes to level: 9984 bytes.
+[20:54:26] Convert bytes to level: Success! 156 items.
+[20:54:26] get_level: Level load success : 156 items loaded!
+[20:54:26] Level 12 loaded (level 13 saved)
+[20:54:26] Level 12 : 156 items loaded
+[20:54:27] File loaded: level.lvl, 4
+[20:54:27] get_table: addrTable = 13
+[20:54:27] get_table: success! firstAddress = 189
+[20:54:27] get_table: addrTable = 90189
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 90285
+[20:54:27] get_data_info: type = 3, size = 9984
+[20:54:27] save_level: table entry found: type: 3, addr: 110301
+[20:54:27] Convert level to bytes: 156 items.
+[20:54:27] Convert level to bytes: Success! 9984 bytes.
+[20:54:27] save_level: level converted to bytes: 961581F0
+[20:54:27] get_table: addrTable = 13
+[20:54:27] get_table: success! firstAddress = 189
+[20:54:27] get_table: addrTable = 90189
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 90285
+[20:54:27] get_data_info: type = 3, size = 9984
+[20:54:27] transform_to_empty: erase data at 110301
+[20:54:27] get_table: addrTable = 93
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = -1
+[20:54:27] find_av_tableEntry: table[0] = -1
+[20:54:27] transform_to_empty: find space on empty table at 93
+[20:54:27] get_table: addrTable = 93
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = -1
+[20:54:27] transform_to_empty: get the empty table at 93
+[20:54:27] write_table: not first table (addr = 93)
+[20:54:27] write_table: success!
+[20:54:27] write_data_info: success! type = 1, size = 9984
+[20:54:27] write_table: not first table (addr = 90189)
+[20:54:27] write_table: success!
+[20:54:27] transform_to_empty: success
+[20:54:27] Add data: 961581F0, 9984, 3
+[20:54:27] get_table: addrTable = 13
+[20:54:27] get_table: success! firstAddress = 189
+[20:54:27] find_av_tableEntry: table[0] = 189
+[20:54:27] find_av_tableEntry: table[1] = 10189
+[20:54:27] find_av_tableEntry: table[2] = 20189
+[20:54:27] find_av_tableEntry: table[3] = 30189
+[20:54:27] find_av_tableEntry: table[4] = 40189
+[20:54:27] find_av_tableEntry: table[5] = 50189
+[20:54:27] find_av_tableEntry: table[6] = 60189
+[20:54:27] find_av_tableEntry: table[7] = 70189
+[20:54:27] find_av_tableEntry: table[8] = 80189
+[20:54:27] find_av_tableEntry: search in next table
+[20:54:27] get_table: addrTable = 90189
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 90285
+[20:54:27] find_av_tableEntry: table[0] = 90285
+[20:54:27] find_av_tableEntry: table[1] = 100301
+[20:54:27] find_av_tableEntry: table[2] = -1
+[20:54:27] Table entry found: -1, 90189, 2, 0
+[20:54:27] get_table: addrTable = 90189
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 90285
+[20:54:27] get_table: addrTable = 93
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 110301
+[20:54:27] get_empty: checking table at addr = 93
+[20:54:27] get_empty: cellule 0 direct to 110301
+[20:54:27] get_data_info: type = 1, size = 9984
+[20:54:27] get_empty: empty found at 110301
+[20:54:27] get_empty: size enoughly big, size: 9984
+[20:54:27] Empty data found: addr: 110301, size : 9984
+[20:54:27] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:54:27] get_table: addrTable = 93
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 110301
+[20:54:27] write_table: not first table (addr = 93)
+[20:54:27] write_table: success!
+[20:54:27] update_empty: success!
+[20:54:27] write_table: not first table (addr = 90189)
+[20:54:27] write_table: success!
+[20:54:27] Data added: 961581F0, 4
+[20:54:27] get_level: start
+[20:54:27] get_level: file opened: level.lvl
+[20:54:27] get_table: addrTable = 13
+[20:54:27] get_table: success! firstAddress = 189
+[20:54:27] get_table: addrTable = 90189
+[20:54:27] get_data_info: type = 2, size = 80
+[20:54:27] get_table: success! firstAddress = 90285
+[20:54:27] get_data_info: type = 3, size = 9984
+[20:54:27] get_level: table entry read: type: 3, addr: 100301
+[20:54:27] Get data: cursor set at 100301
+[20:54:27] get_data: data info read: type: 3, size: 9984
+[20:54:27] get_data: Success! data : 961581F0
+[20:54:27] get_level: data read: 961581F0
+[20:54:27] Convert bytes to level: 9984 bytes.
+[20:54:27] Convert bytes to level: Success! 156 items.
+[20:54:27] get_level: Level load success : 156 items loaded!
+[20:54:27] Level 11 loaded (level 12 saved)
+[20:54:27] Level 11 : 156 items loaded
+[20:54:29] File loaded: level.lvl, 4
+[20:54:29] get_table: addrTable = 13
+[20:54:29] get_table: success! firstAddress = 189
+[20:54:29] get_table: addrTable = 90189
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 90285
+[20:54:29] get_data_info: type = 3, size = 9984
+[20:54:29] save_level: table entry found: type: 3, addr: 100301
+[20:54:29] Convert level to bytes: 156 items.
+[20:54:29] Convert level to bytes: Success! 9984 bytes.
+[20:54:29] save_level: level converted to bytes: 961581F0
+[20:54:29] get_table: addrTable = 13
+[20:54:29] get_table: success! firstAddress = 189
+[20:54:29] get_table: addrTable = 90189
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 90285
+[20:54:29] get_data_info: type = 3, size = 9984
+[20:54:29] transform_to_empty: erase data at 100301
+[20:54:29] get_table: addrTable = 93
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = -1
+[20:54:29] find_av_tableEntry: table[0] = -1
+[20:54:29] transform_to_empty: find space on empty table at 93
+[20:54:29] get_table: addrTable = 93
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = -1
+[20:54:29] transform_to_empty: get the empty table at 93
+[20:54:29] write_table: not first table (addr = 93)
+[20:54:29] write_table: success!
+[20:54:29] write_data_info: success! type = 1, size = 9984
+[20:54:29] write_table: not first table (addr = 90189)
+[20:54:29] write_table: success!
+[20:54:29] transform_to_empty: success
+[20:54:29] Add data: 961581F0, 9984, 3
+[20:54:29] get_table: addrTable = 13
+[20:54:29] get_table: success! firstAddress = 189
+[20:54:29] find_av_tableEntry: table[0] = 189
+[20:54:29] find_av_tableEntry: table[1] = 10189
+[20:54:29] find_av_tableEntry: table[2] = 20189
+[20:54:29] find_av_tableEntry: table[3] = 30189
+[20:54:29] find_av_tableEntry: table[4] = 40189
+[20:54:29] find_av_tableEntry: table[5] = 50189
+[20:54:29] find_av_tableEntry: table[6] = 60189
+[20:54:29] find_av_tableEntry: table[7] = 70189
+[20:54:29] find_av_tableEntry: table[8] = 80189
+[20:54:29] find_av_tableEntry: search in next table
+[20:54:29] get_table: addrTable = 90189
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 90285
+[20:54:29] find_av_tableEntry: table[0] = 90285
+[20:54:29] find_av_tableEntry: table[1] = -1
+[20:54:29] Table entry found: -1, 90189, 1, 0
+[20:54:29] get_table: addrTable = 90189
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 90285
+[20:54:29] get_table: addrTable = 93
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 100301
+[20:54:29] get_empty: checking table at addr = 93
+[20:54:29] get_empty: cellule 0 direct to 100301
+[20:54:29] get_data_info: type = 1, size = 9984
+[20:54:29] get_empty: empty found at 100301
+[20:54:29] get_empty: size enoughly big, size: 9984
+[20:54:29] Empty data found: addr: 100301, size : 9984
+[20:54:29] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:54:29] get_table: addrTable = 93
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 100301
+[20:54:29] write_table: not first table (addr = 93)
+[20:54:29] write_table: success!
+[20:54:29] update_empty: success!
+[20:54:29] write_table: not first table (addr = 90189)
+[20:54:29] write_table: success!
+[20:54:29] Data added: 961581F0, 4
+[20:54:29] get_level: start
+[20:54:29] get_level: file opened: level.lvl
+[20:54:29] get_table: addrTable = 13
+[20:54:29] get_table: success! firstAddress = 189
+[20:54:29] get_table: addrTable = 90189
+[20:54:29] get_data_info: type = 2, size = 80
+[20:54:29] get_table: success! firstAddress = 90285
+[20:54:29] get_data_info: type = 3, size = 9984
+[20:54:29] get_level: table entry read: type: 3, addr: 110301
+[20:54:29] Get data: cursor set at 110301
+[20:54:29] get_data: data info read: type: 3, size: 9984
+[20:54:29] get_data: Success! data : 961581F0
+[20:54:29] get_level: data read: 961581F0
+[20:54:29] Convert bytes to level: 9984 bytes.
+[20:54:29] Convert bytes to level: Success! 156 items.
+[20:54:29] get_level: Level load success : 156 items loaded!
+[20:54:29] Level 12 loaded (level 11 saved)
+[20:54:29] Level 12 : 156 items loaded
+[20:54:31] File loaded: level.lvl, 4
+[20:54:31] get_table: addrTable = 13
+[20:54:31] get_table: success! firstAddress = 189
+[20:54:31] get_table: addrTable = 90189
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 90285
+[20:54:31] get_data_info: type = 3, size = 9984
+[20:54:31] save_level: table entry found: type: 3, addr: 110301
+[20:54:31] Convert level to bytes: 156 items.
+[20:54:31] Convert level to bytes: Success! 9984 bytes.
+[20:54:31] save_level: level converted to bytes: 961581F0
+[20:54:31] get_table: addrTable = 13
+[20:54:31] get_table: success! firstAddress = 189
+[20:54:31] get_table: addrTable = 90189
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 90285
+[20:54:31] get_data_info: type = 3, size = 9984
+[20:54:31] transform_to_empty: erase data at 110301
+[20:54:31] get_table: addrTable = 93
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = -1
+[20:54:31] find_av_tableEntry: table[0] = -1
+[20:54:31] transform_to_empty: find space on empty table at 93
+[20:54:31] get_table: addrTable = 93
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = -1
+[20:54:31] transform_to_empty: get the empty table at 93
+[20:54:31] write_table: not first table (addr = 93)
+[20:54:31] write_table: success!
+[20:54:31] write_data_info: success! type = 1, size = 9984
+[20:54:31] write_table: not first table (addr = 90189)
+[20:54:31] write_table: success!
+[20:54:31] transform_to_empty: success
+[20:54:31] Add data: 961581F0, 9984, 3
+[20:54:31] get_table: addrTable = 13
+[20:54:31] get_table: success! firstAddress = 189
+[20:54:31] find_av_tableEntry: table[0] = 189
+[20:54:31] find_av_tableEntry: table[1] = 10189
+[20:54:31] find_av_tableEntry: table[2] = 20189
+[20:54:31] find_av_tableEntry: table[3] = 30189
+[20:54:31] find_av_tableEntry: table[4] = 40189
+[20:54:31] find_av_tableEntry: table[5] = 50189
+[20:54:31] find_av_tableEntry: table[6] = 60189
+[20:54:31] find_av_tableEntry: table[7] = 70189
+[20:54:31] find_av_tableEntry: table[8] = 80189
+[20:54:31] find_av_tableEntry: search in next table
+[20:54:31] get_table: addrTable = 90189
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 90285
+[20:54:31] find_av_tableEntry: table[0] = 90285
+[20:54:31] find_av_tableEntry: table[1] = 100301
+[20:54:31] find_av_tableEntry: table[2] = -1
+[20:54:31] Table entry found: -1, 90189, 2, 0
+[20:54:31] get_table: addrTable = 90189
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 90285
+[20:54:31] get_table: addrTable = 93
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 110301
+[20:54:31] get_empty: checking table at addr = 93
+[20:54:31] get_empty: cellule 0 direct to 110301
+[20:54:31] get_data_info: type = 1, size = 9984
+[20:54:31] get_empty: empty found at 110301
+[20:54:31] get_empty: size enoughly big, size: 9984
+[20:54:31] Empty data found: addr: 110301, size : 9984
+[20:54:31] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:54:31] get_table: addrTable = 93
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 110301
+[20:54:31] write_table: not first table (addr = 93)
+[20:54:31] write_table: success!
+[20:54:31] update_empty: success!
+[20:54:31] write_table: not first table (addr = 90189)
+[20:54:31] write_table: success!
+[20:54:31] Data added: 961581F0, 4
+[20:54:31] get_level: start
+[20:54:31] get_level: file opened: level.lvl
+[20:54:31] get_table: addrTable = 13
+[20:54:31] get_table: success! firstAddress = 189
+[20:54:31] get_table: addrTable = 90189
+[20:54:31] get_data_info: type = 2, size = 80
+[20:54:31] get_table: success! firstAddress = 90285
+[20:54:31] get_data_info: type = 3, size = 9984
+[20:54:31] get_level: table entry read: type: 3, addr: 100301
+[20:54:31] Get data: cursor set at 100301
+[20:54:31] get_data: data info read: type: 3, size: 9984
+[20:54:31] get_data: Success! data : 961581F0
+[20:54:31] get_level: data read: 961581F0
+[20:54:31] Convert bytes to level: 9984 bytes.
+[20:54:31] Convert bytes to level: Success! 156 items.
+[20:54:31] get_level: Level load success : 156 items loaded!
+[20:54:31] Level 11 loaded (level 12 saved)
+[20:54:31] Level 11 : 156 items loaded
+[20:54:32] File loaded: level.lvl, 4
+[20:54:32] get_table: addrTable = 13
+[20:54:32] get_table: success! firstAddress = 189
+[20:54:32] get_table: addrTable = 90189
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 90285
+[20:54:32] get_data_info: type = 3, size = 9984
+[20:54:32] save_level: table entry found: type: 3, addr: 100301
+[20:54:32] Convert level to bytes: 156 items.
+[20:54:32] Convert level to bytes: Success! 9984 bytes.
+[20:54:32] save_level: level converted to bytes: 961581F0
+[20:54:32] get_table: addrTable = 13
+[20:54:32] get_table: success! firstAddress = 189
+[20:54:32] get_table: addrTable = 90189
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 90285
+[20:54:32] get_data_info: type = 3, size = 9984
+[20:54:32] transform_to_empty: erase data at 100301
+[20:54:32] get_table: addrTable = 93
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = -1
+[20:54:32] find_av_tableEntry: table[0] = -1
+[20:54:32] transform_to_empty: find space on empty table at 93
+[20:54:32] get_table: addrTable = 93
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = -1
+[20:54:32] transform_to_empty: get the empty table at 93
+[20:54:32] write_table: not first table (addr = 93)
+[20:54:32] write_table: success!
+[20:54:32] write_data_info: success! type = 1, size = 9984
+[20:54:32] write_table: not first table (addr = 90189)
+[20:54:32] write_table: success!
+[20:54:32] transform_to_empty: success
+[20:54:32] Add data: 961581F0, 9984, 3
+[20:54:32] get_table: addrTable = 13
+[20:54:32] get_table: success! firstAddress = 189
+[20:54:32] find_av_tableEntry: table[0] = 189
+[20:54:32] find_av_tableEntry: table[1] = 10189
+[20:54:32] find_av_tableEntry: table[2] = 20189
+[20:54:32] find_av_tableEntry: table[3] = 30189
+[20:54:32] find_av_tableEntry: table[4] = 40189
+[20:54:32] find_av_tableEntry: table[5] = 50189
+[20:54:32] find_av_tableEntry: table[6] = 60189
+[20:54:32] find_av_tableEntry: table[7] = 70189
+[20:54:32] find_av_tableEntry: table[8] = 80189
+[20:54:32] find_av_tableEntry: search in next table
+[20:54:32] get_table: addrTable = 90189
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 90285
+[20:54:32] find_av_tableEntry: table[0] = 90285
+[20:54:32] find_av_tableEntry: table[1] = -1
+[20:54:32] Table entry found: -1, 90189, 1, 0
+[20:54:32] get_table: addrTable = 90189
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 90285
+[20:54:32] get_table: addrTable = 93
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 100301
+[20:54:32] get_empty: checking table at addr = 93
+[20:54:32] get_empty: cellule 0 direct to 100301
+[20:54:32] get_data_info: type = 1, size = 9984
+[20:54:32] get_empty: empty found at 100301
+[20:54:32] get_empty: size enoughly big, size: 9984
+[20:54:32] Empty data found: addr: 100301, size : 9984
+[20:54:32] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:54:32] get_table: addrTable = 93
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_table: success! firstAddress = 100301
+[20:54:32] write_table: not first table (addr = 93)
+[20:54:32] write_table: success!
+[20:54:32] update_empty: success!
+[20:54:32] write_table: not first table (addr = 90189)
+[20:54:32] write_table: success!
+[20:54:32] Data added: 961581F0, 4
+[20:54:32] get_level: start
+[20:54:32] get_level: file opened: level.lvl
+[20:54:32] get_table: addrTable = 13
+[20:54:32] get_table: success! firstAddress = 189
+[20:54:32] get_data_info: type = 2, size = 80
+[20:54:32] get_level: table entry read: type: 0, addr: -1
+[20:54:32] Level 10 not found, empty level generated
+[20:54:32] Level 10 loaded (level 11 saved)
+[20:54:32] Level 10 : 156 items loaded
+[20:54:34] File loaded: level.lvl, 4
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] save_level: table entry found: type: 0, addr: -1
+[20:54:34] Convert level to bytes: 156 items.
+[20:54:34] Convert level to bytes: Success! 9984 bytes.
+[20:54:34] save_level: level converted to bytes: 961C5F80
+[20:54:34] Add data: 961C5F80, 9984, 3
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] find_av_tableEntry: table[0] = 189
+[20:54:34] find_av_tableEntry: table[1] = 10189
+[20:54:34] find_av_tableEntry: table[2] = 20189
+[20:54:34] find_av_tableEntry: table[3] = 30189
+[20:54:34] find_av_tableEntry: table[4] = 40189
+[20:54:34] find_av_tableEntry: table[5] = 50189
+[20:54:34] find_av_tableEntry: table[6] = 60189
+[20:54:34] find_av_tableEntry: table[7] = 70189
+[20:54:34] find_av_tableEntry: table[8] = 80189
+[20:54:34] find_av_tableEntry: search in next table
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] find_av_tableEntry: table[0] = 90285
+[20:54:34] find_av_tableEntry: table[1] = 100301
+[20:54:34] find_av_tableEntry: table[2] = 110301
+[20:54:34] find_av_tableEntry: table[3] = 120301
+[20:54:34] find_av_tableEntry: table[4] = -1
+[20:54:34] Table entry found: -1, 90189, 4, 0
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_table: addrTable = 93
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = -1
+[20:54:34] get_empty: checking table at addr = 93
+[20:54:34] get_empty: no empty space
+[20:54:34] Empty data not found write at the end of file
+[20:54:34] write_table: not first table (addr = 90189)
+[20:54:34] write_table: success!
+[20:54:34] Data added: 961C5F80, 4
+[20:54:34] get_level: start
+[20:54:34] get_level: file opened: level.lvl
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_data_info: type = 3, size = 9984
+[20:54:34] get_level: table entry read: type: 3, addr: 100301
+[20:54:34] Get data: cursor set at 100301
+[20:54:34] get_data: data info read: type: 3, size: 9984
+[20:54:34] get_data: Success! data : 961C5F80
+[20:54:34] get_level: data read: 961C5F80
+[20:54:34] Convert bytes to level: 9984 bytes.
+[20:54:34] Convert bytes to level: Success! 156 items.
+[20:54:34] get_level: Level load success : 156 items loaded!
+[20:54:34] Level 11 loaded (level 10 saved)
+[20:54:34] Level 11 : 156 items loaded
+[20:54:34] File loaded: level.lvl, 4
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_data_info: type = 3, size = 9984
+[20:54:34] save_level: table entry found: type: 3, addr: 100301
+[20:54:34] Convert level to bytes: 156 items.
+[20:54:34] Convert level to bytes: Success! 9984 bytes.
+[20:54:34] save_level: level converted to bytes: 961C5F80
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_data_info: type = 3, size = 9984
+[20:54:34] transform_to_empty: erase data at 100301
+[20:54:34] get_table: addrTable = 93
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = -1
+[20:54:34] find_av_tableEntry: table[0] = -1
+[20:54:34] transform_to_empty: find space on empty table at 93
+[20:54:34] get_table: addrTable = 93
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = -1
+[20:54:34] transform_to_empty: get the empty table at 93
+[20:54:34] write_table: not first table (addr = 93)
+[20:54:34] write_table: success!
+[20:54:34] write_data_info: success! type = 1, size = 9984
+[20:54:34] write_table: not first table (addr = 90189)
+[20:54:34] write_table: success!
+[20:54:34] transform_to_empty: success
+[20:54:34] Add data: 961C5F80, 9984, 3
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] find_av_tableEntry: table[0] = 189
+[20:54:34] find_av_tableEntry: table[1] = 10189
+[20:54:34] find_av_tableEntry: table[2] = 20189
+[20:54:34] find_av_tableEntry: table[3] = 30189
+[20:54:34] find_av_tableEntry: table[4] = 40189
+[20:54:34] find_av_tableEntry: table[5] = 50189
+[20:54:34] find_av_tableEntry: table[6] = 60189
+[20:54:34] find_av_tableEntry: table[7] = 70189
+[20:54:34] find_av_tableEntry: table[8] = 80189
+[20:54:34] find_av_tableEntry: search in next table
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] find_av_tableEntry: table[0] = 90285
+[20:54:34] find_av_tableEntry: table[1] = -1
+[20:54:34] Table entry found: -1, 90189, 1, 0
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_table: addrTable = 93
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 100301
+[20:54:34] get_empty: checking table at addr = 93
+[20:54:34] get_empty: cellule 0 direct to 100301
+[20:54:34] get_data_info: type = 1, size = 9984
+[20:54:34] get_empty: empty found at 100301
+[20:54:34] get_empty: size enoughly big, size: 9984
+[20:54:34] Empty data found: addr: 100301, size : 9984
+[20:54:34] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:54:34] get_table: addrTable = 93
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 100301
+[20:54:34] write_table: not first table (addr = 93)
+[20:54:34] write_table: success!
+[20:54:34] update_empty: success!
+[20:54:34] write_table: not first table (addr = 90189)
+[20:54:34] write_table: success!
+[20:54:34] Data added: 961C5F80, 4
+[20:54:34] get_level: start
+[20:54:34] get_level: file opened: level.lvl
+[20:54:34] get_table: addrTable = 13
+[20:54:34] get_table: success! firstAddress = 189
+[20:54:34] get_table: addrTable = 90189
+[20:54:34] get_data_info: type = 2, size = 80
+[20:54:34] get_table: success! firstAddress = 90285
+[20:54:34] get_data_info: type = 3, size = 9984
+[20:54:34] get_level: table entry read: type: 3, addr: 110301
+[20:54:34] Get data: cursor set at 110301
+[20:54:34] get_data: data info read: type: 3, size: 9984
+[20:54:34] get_data: Success! data : 961C5F80
+[20:54:34] get_level: data read: 961C5F80
+[20:54:34] Convert bytes to level: 9984 bytes.
+[20:54:34] Convert bytes to level: Success! 156 items.
+[20:54:34] get_level: Level load success : 156 items loaded!
+[20:54:34] Level 12 loaded (level 11 saved)
+[20:54:34] Level 12 : 156 items loaded
+[20:54:35] File loaded: level.lvl, 4
+[20:54:35] get_table: addrTable = 13
+[20:54:35] get_table: success! firstAddress = 189
+[20:54:35] get_table: addrTable = 90189
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 90285
+[20:54:35] get_data_info: type = 3, size = 9984
+[20:54:35] save_level: table entry found: type: 3, addr: 110301
+[20:54:35] Convert level to bytes: 156 items.
+[20:54:35] Convert level to bytes: Success! 9984 bytes.
+[20:54:35] save_level: level converted to bytes: 961C5F80
+[20:54:35] get_table: addrTable = 13
+[20:54:35] get_table: success! firstAddress = 189
+[20:54:35] get_table: addrTable = 90189
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 90285
+[20:54:35] get_data_info: type = 3, size = 9984
+[20:54:35] transform_to_empty: erase data at 110301
+[20:54:35] get_table: addrTable = 93
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = -1
+[20:54:35] find_av_tableEntry: table[0] = -1
+[20:54:35] transform_to_empty: find space on empty table at 93
+[20:54:35] get_table: addrTable = 93
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = -1
+[20:54:35] transform_to_empty: get the empty table at 93
+[20:54:35] write_table: not first table (addr = 93)
+[20:54:35] write_table: success!
+[20:54:35] write_data_info: success! type = 1, size = 9984
+[20:54:35] write_table: not first table (addr = 90189)
+[20:54:35] write_table: success!
+[20:54:35] transform_to_empty: success
+[20:54:35] Add data: 961C5F80, 9984, 3
+[20:54:35] get_table: addrTable = 13
+[20:54:35] get_table: success! firstAddress = 189
+[20:54:35] find_av_tableEntry: table[0] = 189
+[20:54:35] find_av_tableEntry: table[1] = 10189
+[20:54:35] find_av_tableEntry: table[2] = 20189
+[20:54:35] find_av_tableEntry: table[3] = 30189
+[20:54:35] find_av_tableEntry: table[4] = 40189
+[20:54:35] find_av_tableEntry: table[5] = 50189
+[20:54:35] find_av_tableEntry: table[6] = 60189
+[20:54:35] find_av_tableEntry: table[7] = 70189
+[20:54:35] find_av_tableEntry: table[8] = 80189
+[20:54:35] find_av_tableEntry: search in next table
+[20:54:35] get_table: addrTable = 90189
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 90285
+[20:54:35] find_av_tableEntry: table[0] = 90285
+[20:54:35] find_av_tableEntry: table[1] = 100301
+[20:54:35] find_av_tableEntry: table[2] = -1
+[20:54:35] Table entry found: -1, 90189, 2, 0
+[20:54:35] get_table: addrTable = 90189
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 90285
+[20:54:35] get_table: addrTable = 93
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 110301
+[20:54:35] get_empty: checking table at addr = 93
+[20:54:35] get_empty: cellule 0 direct to 110301
+[20:54:35] get_data_info: type = 1, size = 9984
+[20:54:35] get_empty: empty found at 110301
+[20:54:35] get_empty: size enoughly big, size: 9984
+[20:54:35] Empty data found: addr: 110301, size : 9984
+[20:54:35] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:54:35] get_table: addrTable = 93
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 110301
+[20:54:35] write_table: not first table (addr = 93)
+[20:54:35] write_table: success!
+[20:54:35] update_empty: success!
+[20:54:35] write_table: not first table (addr = 90189)
+[20:54:35] write_table: success!
+[20:54:35] Data added: 961C5F80, 4
+[20:54:35] get_level: start
+[20:54:35] get_level: file opened: level.lvl
+[20:54:35] get_table: addrTable = 13
+[20:54:35] get_table: success! firstAddress = 189
+[20:54:35] get_table: addrTable = 90189
+[20:54:35] get_data_info: type = 2, size = 80
+[20:54:35] get_table: success! firstAddress = 90285
+[20:54:35] get_data_info: type = 3, size = 9984
+[20:54:35] get_level: table entry read: type: 3, addr: 100301
+[20:54:35] Get data: cursor set at 100301
+[20:54:35] get_data: data info read: type: 3, size: 9984
+[20:54:35] get_data: Success! data : 961C5F80
+[20:54:35] get_level: data read: 961C5F80
+[20:54:35] Convert bytes to level: 9984 bytes.
+[20:54:35] Convert bytes to level: Success! 156 items.
+[20:54:35] get_level: Level load success : 156 items loaded!
+[20:54:35] Level 11 loaded (level 12 saved)
+[20:54:35] Level 11 : 156 items loaded
+[20:54:36] File loaded: level.lvl, 4
+[20:54:36] get_table: addrTable = 13
+[20:54:36] get_table: success! firstAddress = 189
+[20:54:36] get_table: addrTable = 90189
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 90285
+[20:54:36] get_data_info: type = 3, size = 9984
+[20:54:36] save_level: table entry found: type: 3, addr: 100301
+[20:54:36] Convert level to bytes: 156 items.
+[20:54:36] Convert level to bytes: Success! 9984 bytes.
+[20:54:36] save_level: level converted to bytes: 961C5F80
+[20:54:36] get_table: addrTable = 13
+[20:54:36] get_table: success! firstAddress = 189
+[20:54:36] get_table: addrTable = 90189
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 90285
+[20:54:36] get_data_info: type = 3, size = 9984
+[20:54:36] transform_to_empty: erase data at 100301
+[20:54:36] get_table: addrTable = 93
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = -1
+[20:54:36] find_av_tableEntry: table[0] = -1
+[20:54:36] transform_to_empty: find space on empty table at 93
+[20:54:36] get_table: addrTable = 93
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = -1
+[20:54:36] transform_to_empty: get the empty table at 93
+[20:54:36] write_table: not first table (addr = 93)
+[20:54:36] write_table: success!
+[20:54:36] write_data_info: success! type = 1, size = 9984
+[20:54:36] write_table: not first table (addr = 90189)
+[20:54:36] write_table: success!
+[20:54:36] transform_to_empty: success
+[20:54:36] Add data: 961C5F80, 9984, 3
+[20:54:36] get_table: addrTable = 13
+[20:54:36] get_table: success! firstAddress = 189
+[20:54:36] find_av_tableEntry: table[0] = 189
+[20:54:36] find_av_tableEntry: table[1] = 10189
+[20:54:36] find_av_tableEntry: table[2] = 20189
+[20:54:36] find_av_tableEntry: table[3] = 30189
+[20:54:36] find_av_tableEntry: table[4] = 40189
+[20:54:36] find_av_tableEntry: table[5] = 50189
+[20:54:36] find_av_tableEntry: table[6] = 60189
+[20:54:36] find_av_tableEntry: table[7] = 70189
+[20:54:36] find_av_tableEntry: table[8] = 80189
+[20:54:36] find_av_tableEntry: search in next table
+[20:54:36] get_table: addrTable = 90189
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 90285
+[20:54:36] find_av_tableEntry: table[0] = 90285
+[20:54:36] find_av_tableEntry: table[1] = -1
+[20:54:36] Table entry found: -1, 90189, 1, 0
+[20:54:36] get_table: addrTable = 90189
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 90285
+[20:54:36] get_table: addrTable = 93
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 100301
+[20:54:36] get_empty: checking table at addr = 93
+[20:54:36] get_empty: cellule 0 direct to 100301
+[20:54:36] get_data_info: type = 1, size = 9984
+[20:54:36] get_empty: empty found at 100301
+[20:54:36] get_empty: size enoughly big, size: 9984
+[20:54:36] Empty data found: addr: 100301, size : 9984
+[20:54:36] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:54:36] get_table: addrTable = 93
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_table: success! firstAddress = 100301
+[20:54:36] write_table: not first table (addr = 93)
+[20:54:36] write_table: success!
+[20:54:36] update_empty: success!
+[20:54:36] write_table: not first table (addr = 90189)
+[20:54:36] write_table: success!
+[20:54:36] Data added: 961C5F80, 4
+[20:54:36] get_level: start
+[20:54:36] get_level: file opened: level.lvl
+[20:54:36] get_table: addrTable = 13
+[20:54:36] get_table: success! firstAddress = 189
+[20:54:36] get_data_info: type = 2, size = 80
+[20:54:36] get_level: table entry read: type: 0, addr: -1
+[20:54:36] Level 10 not found, empty level generated
+[20:54:36] Level 10 loaded (level 11 saved)
+[20:54:36] Level 10 : 156 items loaded
+[20:54:54] File loaded: level.lvl, 4
+[20:54:54] get_table: addrTable = 13
+[20:54:54] get_table: success! firstAddress = 189
+[20:54:54] get_data_info: type = 2, size = 80
+[20:54:54] save_level: table entry found: type: 0, addr: -1
+[20:54:54] Convert level to bytes: 156 items.
+[20:54:54] Convert level to bytes: Success! 9984 bytes.
+[20:54:54] save_level: level converted to bytes: 961FCFD0
+[20:54:54] Add data: 961FCFD0, 9984, 3
+[20:54:54] get_table: addrTable = 13
+[20:54:54] get_table: success! firstAddress = 189
+[20:54:54] find_av_tableEntry: table[0] = 189
+[20:54:54] find_av_tableEntry: table[1] = 10189
+[20:54:54] find_av_tableEntry: table[2] = 20189
+[20:54:54] find_av_tableEntry: table[3] = 30189
+[20:54:54] find_av_tableEntry: table[4] = 40189
+[20:54:54] find_av_tableEntry: table[5] = 50189
+[20:54:54] find_av_tableEntry: table[6] = 60189
+[20:54:54] find_av_tableEntry: table[7] = 70189
+[20:54:54] find_av_tableEntry: table[8] = 80189
+[20:54:54] find_av_tableEntry: search in next table
+[20:54:54] get_table: addrTable = 90189
+[20:54:54] get_data_info: type = 2, size = 80
+[20:54:54] get_table: success! firstAddress = 90285
+[20:54:54] find_av_tableEntry: table[0] = 90285
+[20:54:54] find_av_tableEntry: table[1] = 100301
+[20:54:54] find_av_tableEntry: table[2] = 110301
+[20:54:54] find_av_tableEntry: table[3] = 120301
+[20:54:54] find_av_tableEntry: table[4] = 130301
+[20:54:54] find_av_tableEntry: table[5] = -1
+[20:54:54] Table entry found: -1, 90189, 5, 0
+[20:54:54] get_table: addrTable = 90189
+[20:54:54] get_data_info: type = 2, size = 80
+[20:54:54] get_table: success! firstAddress = 90285
+[20:54:54] get_table: addrTable = 93
+[20:54:54] get_data_info: type = 2, size = 80
+[20:54:54] get_table: success! firstAddress = -1
+[20:54:54] get_empty: checking table at addr = 93
+[20:54:54] get_empty: no empty space
+[20:54:54] Empty data not found write at the end of file
+[20:54:54] write_table: not first table (addr = 90189)
+[20:54:54] write_table: success!
+[20:54:54] Data added: 961FCFD0, 4
+[20:54:54] get_level: start
+[20:54:54] get_level: file opened: level.lvl
+[20:54:54] get_table: addrTable = 13
+[20:54:54] get_table: success! firstAddress = 189
+[20:54:54] get_table: addrTable = 90189
+[20:54:54] get_data_info: type = 2, size = 80
+[20:54:54] get_table: success! firstAddress = 90285
+[20:54:54] get_data_info: type = 3, size = 9984
+[20:54:54] get_level: table entry read: type: 3, addr: 100301
+[20:54:54] Get data: cursor set at 100301
+[20:54:54] get_data: data info read: type: 3, size: 9984
+[20:54:54] get_data: Success! data : 961FCFD0
+[20:54:54] get_level: data read: 961FCFD0
+[20:54:54] Convert bytes to level: 9984 bytes.
+[20:54:54] Convert bytes to level: Success! 156 items.
+[20:54:54] get_level: Level load success : 156 items loaded!
+[20:54:54] Level 11 loaded (level 10 saved)
+[20:54:54] Level 11 : 156 items loaded
+[20:55:05] File loaded: level.lvl, 4
+[20:55:05] get_table: addrTable = 13
+[20:55:05] get_table: success! firstAddress = 189
+[20:55:05] get_table: addrTable = 90189
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 90285
+[20:55:05] get_data_info: type = 3, size = 9984
+[20:55:05] save_level: table entry found: type: 3, addr: 100301
+[20:55:05] Convert level to bytes: 156 items.
+[20:55:05] Convert level to bytes: Success! 9984 bytes.
+[20:55:05] save_level: level converted to bytes: 961FCFD0
+[20:55:05] get_table: addrTable = 13
+[20:55:05] get_table: success! firstAddress = 189
+[20:55:05] get_table: addrTable = 90189
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 90285
+[20:55:05] get_data_info: type = 3, size = 9984
+[20:55:05] transform_to_empty: erase data at 100301
+[20:55:05] get_table: addrTable = 93
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = -1
+[20:55:05] find_av_tableEntry: table[0] = -1
+[20:55:05] transform_to_empty: find space on empty table at 93
+[20:55:05] get_table: addrTable = 93
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = -1
+[20:55:05] transform_to_empty: get the empty table at 93
+[20:55:05] write_table: not first table (addr = 93)
+[20:55:05] write_table: success!
+[20:55:05] write_data_info: success! type = 1, size = 9984
+[20:55:05] write_table: not first table (addr = 90189)
+[20:55:05] write_table: success!
+[20:55:05] transform_to_empty: success
+[20:55:05] Add data: 961FCFD0, 9984, 3
+[20:55:05] get_table: addrTable = 13
+[20:55:05] get_table: success! firstAddress = 189
+[20:55:05] find_av_tableEntry: table[0] = 189
+[20:55:05] find_av_tableEntry: table[1] = 10189
+[20:55:05] find_av_tableEntry: table[2] = 20189
+[20:55:05] find_av_tableEntry: table[3] = 30189
+[20:55:05] find_av_tableEntry: table[4] = 40189
+[20:55:05] find_av_tableEntry: table[5] = 50189
+[20:55:05] find_av_tableEntry: table[6] = 60189
+[20:55:05] find_av_tableEntry: table[7] = 70189
+[20:55:05] find_av_tableEntry: table[8] = 80189
+[20:55:05] find_av_tableEntry: search in next table
+[20:55:05] get_table: addrTable = 90189
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 90285
+[20:55:05] find_av_tableEntry: table[0] = 90285
+[20:55:05] find_av_tableEntry: table[1] = -1
+[20:55:05] Table entry found: -1, 90189, 1, 0
+[20:55:05] get_table: addrTable = 90189
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 90285
+[20:55:05] get_table: addrTable = 93
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 100301
+[20:55:05] get_empty: checking table at addr = 93
+[20:55:05] get_empty: cellule 0 direct to 100301
+[20:55:05] get_data_info: type = 1, size = 9984
+[20:55:05] get_empty: empty found at 100301
+[20:55:05] get_empty: size enoughly big, size: 9984
+[20:55:05] Empty data found: addr: 100301, size : 9984
+[20:55:05] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:55:05] get_table: addrTable = 93
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 100301
+[20:55:05] write_table: not first table (addr = 93)
+[20:55:05] write_table: success!
+[20:55:05] update_empty: success!
+[20:55:05] write_table: not first table (addr = 90189)
+[20:55:05] write_table: success!
+[20:55:05] Data added: 961FCFD0, 4
+[20:55:05] get_level: start
+[20:55:05] get_level: file opened: level.lvl
+[20:55:05] get_table: addrTable = 13
+[20:55:05] get_table: success! firstAddress = 189
+[20:55:05] get_table: addrTable = 90189
+[20:55:05] get_data_info: type = 2, size = 80
+[20:55:05] get_table: success! firstAddress = 90285
+[20:55:05] get_data_info: type = 3, size = 9984
+[20:55:05] get_level: table entry read: type: 3, addr: 110301
+[20:55:05] Get data: cursor set at 110301
+[20:55:05] get_data: data info read: type: 3, size: 9984
+[20:55:05] get_data: Success! data : 961FCFD0
+[20:55:05] get_level: data read: 961FCFD0
+[20:55:05] Convert bytes to level: 9984 bytes.
+[20:55:05] Convert bytes to level: Success! 156 items.
+[20:55:05] get_level: Level load success : 156 items loaded!
+[20:55:05] Level 12 loaded (level 11 saved)
+[20:55:05] Level 12 : 156 items loaded
+[20:55:19] File loaded: level.lvl, 4
+[20:55:19] get_table: addrTable = 13
+[20:55:19] get_table: success! firstAddress = 189
+[20:55:19] get_table: addrTable = 90189
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 90285
+[20:55:19] get_data_info: type = 3, size = 9984
+[20:55:19] save_level: table entry found: type: 3, addr: 110301
+[20:55:19] Convert level to bytes: 156 items.
+[20:55:19] Convert level to bytes: Success! 9984 bytes.
+[20:55:19] save_level: level converted to bytes: 961FCFD0
+[20:55:19] get_table: addrTable = 13
+[20:55:19] get_table: success! firstAddress = 189
+[20:55:19] get_table: addrTable = 90189
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 90285
+[20:55:19] get_data_info: type = 3, size = 9984
+[20:55:19] transform_to_empty: erase data at 110301
+[20:55:19] get_table: addrTable = 93
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = -1
+[20:55:19] find_av_tableEntry: table[0] = -1
+[20:55:19] transform_to_empty: find space on empty table at 93
+[20:55:19] get_table: addrTable = 93
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = -1
+[20:55:19] transform_to_empty: get the empty table at 93
+[20:55:19] write_table: not first table (addr = 93)
+[20:55:19] write_table: success!
+[20:55:19] write_data_info: success! type = 1, size = 9984
+[20:55:19] write_table: not first table (addr = 90189)
+[20:55:19] write_table: success!
+[20:55:19] transform_to_empty: success
+[20:55:19] Add data: 961FCFD0, 9984, 3
+[20:55:19] get_table: addrTable = 13
+[20:55:19] get_table: success! firstAddress = 189
+[20:55:19] find_av_tableEntry: table[0] = 189
+[20:55:19] find_av_tableEntry: table[1] = 10189
+[20:55:19] find_av_tableEntry: table[2] = 20189
+[20:55:19] find_av_tableEntry: table[3] = 30189
+[20:55:19] find_av_tableEntry: table[4] = 40189
+[20:55:19] find_av_tableEntry: table[5] = 50189
+[20:55:19] find_av_tableEntry: table[6] = 60189
+[20:55:19] find_av_tableEntry: table[7] = 70189
+[20:55:19] find_av_tableEntry: table[8] = 80189
+[20:55:19] find_av_tableEntry: search in next table
+[20:55:19] get_table: addrTable = 90189
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 90285
+[20:55:19] find_av_tableEntry: table[0] = 90285
+[20:55:19] find_av_tableEntry: table[1] = 100301
+[20:55:19] find_av_tableEntry: table[2] = -1
+[20:55:19] Table entry found: -1, 90189, 2, 0
+[20:55:19] get_table: addrTable = 90189
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 90285
+[20:55:19] get_table: addrTable = 93
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 110301
+[20:55:19] get_empty: checking table at addr = 93
+[20:55:19] get_empty: cellule 0 direct to 110301
+[20:55:19] get_data_info: type = 1, size = 9984
+[20:55:19] get_empty: empty found at 110301
+[20:55:19] get_empty: size enoughly big, size: 9984
+[20:55:19] Empty data found: addr: 110301, size : 9984
+[20:55:19] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:55:19] get_table: addrTable = 93
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 110301
+[20:55:19] write_table: not first table (addr = 93)
+[20:55:19] write_table: success!
+[20:55:19] update_empty: success!
+[20:55:19] write_table: not first table (addr = 90189)
+[20:55:19] write_table: success!
+[20:55:19] Data added: 961FCFD0, 4
+[20:55:19] get_level: start
+[20:55:19] get_level: file opened: level.lvl
+[20:55:19] get_table: addrTable = 13
+[20:55:19] get_table: success! firstAddress = 189
+[20:55:19] get_table: addrTable = 90189
+[20:55:19] get_data_info: type = 2, size = 80
+[20:55:19] get_table: success! firstAddress = 90285
+[20:55:19] get_data_info: type = 3, size = 9984
+[20:55:19] get_level: table entry read: type: 3, addr: 120301
+[20:55:19] Get data: cursor set at 120301
+[20:55:19] get_data: data info read: type: 3, size: 9984
+[20:55:19] get_data: Success! data : 961FCFD0
+[20:55:19] get_level: data read: 961FCFD0
+[20:55:19] Convert bytes to level: 9984 bytes.
+[20:55:19] Convert bytes to level: Success! 156 items.
+[20:55:19] get_level: Level load success : 156 items loaded!
+[20:55:19] Level 13 loaded (level 12 saved)
+[20:55:19] Level 13 : 156 items loaded
+[20:55:20] Suppression du niveau
+[20:55:21] File loaded: level.lvl, 4
+[20:55:21] get_table: addrTable = 13
+[20:55:21] get_table: success! firstAddress = 189
+[20:55:21] get_table: addrTable = 90189
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 90285
+[20:55:21] get_data_info: type = 3, size = 9984
+[20:55:21] save_level: table entry found: type: 3, addr: 120301
+[20:55:21] Convert level to bytes: 156 items.
+[20:55:21] Convert level to bytes: Success! 9984 bytes.
+[20:55:21] save_level: level converted to bytes: 96234020
+[20:55:21] get_table: addrTable = 13
+[20:55:21] get_table: success! firstAddress = 189
+[20:55:21] get_table: addrTable = 90189
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 90285
+[20:55:21] get_data_info: type = 3, size = 9984
+[20:55:21] transform_to_empty: erase data at 120301
+[20:55:21] get_table: addrTable = 93
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = -1
+[20:55:21] find_av_tableEntry: table[0] = -1
+[20:55:21] transform_to_empty: find space on empty table at 93
+[20:55:21] get_table: addrTable = 93
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = -1
+[20:55:21] transform_to_empty: get the empty table at 93
+[20:55:21] write_table: not first table (addr = 93)
+[20:55:21] write_table: success!
+[20:55:21] write_data_info: success! type = 1, size = 9984
+[20:55:21] write_table: not first table (addr = 90189)
+[20:55:21] write_table: success!
+[20:55:21] transform_to_empty: success
+[20:55:21] Add data: 96234020, 9984, 3
+[20:55:21] get_table: addrTable = 13
+[20:55:21] get_table: success! firstAddress = 189
+[20:55:21] find_av_tableEntry: table[0] = 189
+[20:55:21] find_av_tableEntry: table[1] = 10189
+[20:55:21] find_av_tableEntry: table[2] = 20189
+[20:55:21] find_av_tableEntry: table[3] = 30189
+[20:55:21] find_av_tableEntry: table[4] = 40189
+[20:55:21] find_av_tableEntry: table[5] = 50189
+[20:55:21] find_av_tableEntry: table[6] = 60189
+[20:55:21] find_av_tableEntry: table[7] = 70189
+[20:55:21] find_av_tableEntry: table[8] = 80189
+[20:55:21] find_av_tableEntry: search in next table
+[20:55:21] get_table: addrTable = 90189
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 90285
+[20:55:21] find_av_tableEntry: table[0] = 90285
+[20:55:21] find_av_tableEntry: table[1] = 100301
+[20:55:21] find_av_tableEntry: table[2] = 110301
+[20:55:21] find_av_tableEntry: table[3] = -1
+[20:55:21] Table entry found: -1, 90189, 3, 0
+[20:55:21] get_table: addrTable = 90189
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 90285
+[20:55:21] get_table: addrTable = 93
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 120301
+[20:55:21] get_empty: checking table at addr = 93
+[20:55:21] get_empty: cellule 0 direct to 120301
+[20:55:21] get_data_info: type = 1, size = 9984
+[20:55:21] get_empty: empty found at 120301
+[20:55:21] get_empty: size enoughly big, size: 9984
+[20:55:21] Empty data found: addr: 120301, size : 9984
+[20:55:21] update_empty: addrEmpty = 120301, sizeNeeded = 9984
+[20:55:21] get_table: addrTable = 93
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 120301
+[20:55:21] write_table: not first table (addr = 93)
+[20:55:21] write_table: success!
+[20:55:21] update_empty: success!
+[20:55:21] write_table: not first table (addr = 90189)
+[20:55:21] write_table: success!
+[20:55:21] Data added: 96234020, 4
+[20:55:21] get_level: start
+[20:55:21] get_level: file opened: level.lvl
+[20:55:21] get_table: addrTable = 13
+[20:55:21] get_table: success! firstAddress = 189
+[20:55:21] get_table: addrTable = 90189
+[20:55:21] get_data_info: type = 2, size = 80
+[20:55:21] get_table: success! firstAddress = 90285
+[20:55:21] get_data_info: type = 3, size = 9984
+[20:55:21] get_level: table entry read: type: 3, addr: 110301
+[20:55:21] Get data: cursor set at 110301
+[20:55:21] get_data: data info read: type: 3, size: 9984
+[20:55:21] get_data: Success! data : 96234020
+[20:55:21] get_level: data read: 96234020
+[20:55:21] Convert bytes to level: 9984 bytes.
+[20:55:21] Convert bytes to level: Success! 156 items.
+[20:55:21] get_level: Level load success : 156 items loaded!
+[20:55:21] Level 12 loaded (level 13 saved)
+[20:55:21] Level 12 : 156 items loaded
+[20:55:22] Suppression du niveau
+[20:55:22] File loaded: level.lvl, 4
+[20:55:22] get_table: addrTable = 13
+[20:55:22] get_table: success! firstAddress = 189
+[20:55:22] get_table: addrTable = 90189
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 90285
+[20:55:22] get_data_info: type = 3, size = 9984
+[20:55:22] save_level: table entry found: type: 3, addr: 110301
+[20:55:22] Convert level to bytes: 156 items.
+[20:55:22] Convert level to bytes: Success! 9984 bytes.
+[20:55:22] save_level: level converted to bytes: 96246590
+[20:55:22] get_table: addrTable = 13
+[20:55:22] get_table: success! firstAddress = 189
+[20:55:22] get_table: addrTable = 90189
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 90285
+[20:55:22] get_data_info: type = 3, size = 9984
+[20:55:22] transform_to_empty: erase data at 110301
+[20:55:22] get_table: addrTable = 93
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = -1
+[20:55:22] find_av_tableEntry: table[0] = -1
+[20:55:22] transform_to_empty: find space on empty table at 93
+[20:55:22] get_table: addrTable = 93
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = -1
+[20:55:22] transform_to_empty: get the empty table at 93
+[20:55:22] write_table: not first table (addr = 93)
+[20:55:22] write_table: success!
+[20:55:22] write_data_info: success! type = 1, size = 9984
+[20:55:22] write_table: not first table (addr = 90189)
+[20:55:22] write_table: success!
+[20:55:22] transform_to_empty: success
+[20:55:22] Add data: 96246590, 9984, 3
+[20:55:22] get_table: addrTable = 13
+[20:55:22] get_table: success! firstAddress = 189
+[20:55:22] find_av_tableEntry: table[0] = 189
+[20:55:22] find_av_tableEntry: table[1] = 10189
+[20:55:22] find_av_tableEntry: table[2] = 20189
+[20:55:22] find_av_tableEntry: table[3] = 30189
+[20:55:22] find_av_tableEntry: table[4] = 40189
+[20:55:22] find_av_tableEntry: table[5] = 50189
+[20:55:22] find_av_tableEntry: table[6] = 60189
+[20:55:22] find_av_tableEntry: table[7] = 70189
+[20:55:22] find_av_tableEntry: table[8] = 80189
+[20:55:22] find_av_tableEntry: search in next table
+[20:55:22] get_table: addrTable = 90189
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 90285
+[20:55:22] find_av_tableEntry: table[0] = 90285
+[20:55:22] find_av_tableEntry: table[1] = 100301
+[20:55:22] find_av_tableEntry: table[2] = -1
+[20:55:22] Table entry found: -1, 90189, 2, 0
+[20:55:22] get_table: addrTable = 90189
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 90285
+[20:55:22] get_table: addrTable = 93
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 110301
+[20:55:22] get_empty: checking table at addr = 93
+[20:55:22] get_empty: cellule 0 direct to 110301
+[20:55:22] get_data_info: type = 1, size = 9984
+[20:55:22] get_empty: empty found at 110301
+[20:55:22] get_empty: size enoughly big, size: 9984
+[20:55:22] Empty data found: addr: 110301, size : 9984
+[20:55:22] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:55:22] get_table: addrTable = 93
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 110301
+[20:55:22] write_table: not first table (addr = 93)
+[20:55:22] write_table: success!
+[20:55:22] update_empty: success!
+[20:55:22] write_table: not first table (addr = 90189)
+[20:55:22] write_table: success!
+[20:55:22] Data added: 96246590, 4
+[20:55:22] get_level: start
+[20:55:22] get_level: file opened: level.lvl
+[20:55:22] get_table: addrTable = 13
+[20:55:22] get_table: success! firstAddress = 189
+[20:55:22] get_table: addrTable = 90189
+[20:55:22] get_data_info: type = 2, size = 80
+[20:55:22] get_table: success! firstAddress = 90285
+[20:55:22] get_data_info: type = 3, size = 9984
+[20:55:22] get_level: table entry read: type: 3, addr: 100301
+[20:55:22] Get data: cursor set at 100301
+[20:55:22] get_data: data info read: type: 3, size: 9984
+[20:55:22] get_data: Success! data : 96246590
+[20:55:22] get_level: data read: 96246590
+[20:55:22] Convert bytes to level: 9984 bytes.
+[20:55:22] Convert bytes to level: Success! 156 items.
+[20:55:22] get_level: Level load success : 156 items loaded!
+[20:55:22] Level 11 loaded (level 12 saved)
+[20:55:22] Level 11 : 156 items loaded
+[20:55:24] File loaded: level.lvl, 4
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] save_level: table entry found: type: 3, addr: 100301
+[20:55:24] Convert level to bytes: 156 items.
+[20:55:24] Convert level to bytes: Success! 9984 bytes.
+[20:55:24] save_level: level converted to bytes: 96246590
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] transform_to_empty: erase data at 100301
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = -1
+[20:55:24] find_av_tableEntry: table[0] = -1
+[20:55:24] transform_to_empty: find space on empty table at 93
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = -1
+[20:55:24] transform_to_empty: get the empty table at 93
+[20:55:24] write_table: not first table (addr = 93)
+[20:55:24] write_table: success!
+[20:55:24] write_data_info: success! type = 1, size = 9984
+[20:55:24] write_table: not first table (addr = 90189)
+[20:55:24] write_table: success!
+[20:55:24] transform_to_empty: success
+[20:55:24] Add data: 96246590, 9984, 3
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] find_av_tableEntry: table[0] = 189
+[20:55:24] find_av_tableEntry: table[1] = 10189
+[20:55:24] find_av_tableEntry: table[2] = 20189
+[20:55:24] find_av_tableEntry: table[3] = 30189
+[20:55:24] find_av_tableEntry: table[4] = 40189
+[20:55:24] find_av_tableEntry: table[5] = 50189
+[20:55:24] find_av_tableEntry: table[6] = 60189
+[20:55:24] find_av_tableEntry: table[7] = 70189
+[20:55:24] find_av_tableEntry: table[8] = 80189
+[20:55:24] find_av_tableEntry: search in next table
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] find_av_tableEntry: table[0] = 90285
+[20:55:24] find_av_tableEntry: table[1] = -1
+[20:55:24] Table entry found: -1, 90189, 1, 0
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 100301
+[20:55:24] get_empty: checking table at addr = 93
+[20:55:24] get_empty: cellule 0 direct to 100301
+[20:55:24] get_data_info: type = 1, size = 9984
+[20:55:24] get_empty: empty found at 100301
+[20:55:24] get_empty: size enoughly big, size: 9984
+[20:55:24] Empty data found: addr: 100301, size : 9984
+[20:55:24] update_empty: addrEmpty = 100301, sizeNeeded = 9984
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 100301
+[20:55:24] write_table: not first table (addr = 93)
+[20:55:24] write_table: success!
+[20:55:24] update_empty: success!
+[20:55:24] write_table: not first table (addr = 90189)
+[20:55:24] write_table: success!
+[20:55:24] Data added: 96246590, 4
+[20:55:24] get_level: start
+[20:55:24] get_level: file opened: level.lvl
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] get_level: table entry read: type: 3, addr: 110301
+[20:55:24] Get data: cursor set at 110301
+[20:55:24] get_data: data info read: type: 3, size: 9984
+[20:55:24] get_data: Success! data : 96246590
+[20:55:24] get_level: data read: 96246590
+[20:55:24] Convert bytes to level: 9984 bytes.
+[20:55:24] Convert bytes to level: Success! 156 items.
+[20:55:24] get_level: Level load success : 156 items loaded!
+[20:55:24] Level 12 loaded (level 11 saved)
+[20:55:24] Level 12 : 156 items loaded
+[20:55:24] File loaded: level.lvl, 4
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] save_level: table entry found: type: 3, addr: 110301
+[20:55:24] Convert level to bytes: 156 items.
+[20:55:24] Convert level to bytes: Success! 9984 bytes.
+[20:55:24] save_level: level converted to bytes: 96246590
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] transform_to_empty: erase data at 110301
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = -1
+[20:55:24] find_av_tableEntry: table[0] = -1
+[20:55:24] transform_to_empty: find space on empty table at 93
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = -1
+[20:55:24] transform_to_empty: get the empty table at 93
+[20:55:24] write_table: not first table (addr = 93)
+[20:55:24] write_table: success!
+[20:55:24] write_data_info: success! type = 1, size = 9984
+[20:55:24] write_table: not first table (addr = 90189)
+[20:55:24] write_table: success!
+[20:55:24] transform_to_empty: success
+[20:55:24] Add data: 96246590, 9984, 3
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] find_av_tableEntry: table[0] = 189
+[20:55:24] find_av_tableEntry: table[1] = 10189
+[20:55:24] find_av_tableEntry: table[2] = 20189
+[20:55:24] find_av_tableEntry: table[3] = 30189
+[20:55:24] find_av_tableEntry: table[4] = 40189
+[20:55:24] find_av_tableEntry: table[5] = 50189
+[20:55:24] find_av_tableEntry: table[6] = 60189
+[20:55:24] find_av_tableEntry: table[7] = 70189
+[20:55:24] find_av_tableEntry: table[8] = 80189
+[20:55:24] find_av_tableEntry: search in next table
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] find_av_tableEntry: table[0] = 90285
+[20:55:24] find_av_tableEntry: table[1] = 100301
+[20:55:24] find_av_tableEntry: table[2] = -1
+[20:55:24] Table entry found: -1, 90189, 2, 0
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 110301
+[20:55:24] get_empty: checking table at addr = 93
+[20:55:24] get_empty: cellule 0 direct to 110301
+[20:55:24] get_data_info: type = 1, size = 9984
+[20:55:24] get_empty: empty found at 110301
+[20:55:24] get_empty: size enoughly big, size: 9984
+[20:55:24] Empty data found: addr: 110301, size : 9984
+[20:55:24] update_empty: addrEmpty = 110301, sizeNeeded = 9984
+[20:55:24] get_table: addrTable = 93
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 110301
+[20:55:24] write_table: not first table (addr = 93)
+[20:55:24] write_table: success!
+[20:55:24] update_empty: success!
+[20:55:24] write_table: not first table (addr = 90189)
+[20:55:24] write_table: success!
+[20:55:24] Data added: 96246590, 4
+[20:55:24] get_level: start
+[20:55:24] get_level: file opened: level.lvl
+[20:55:24] get_table: addrTable = 13
+[20:55:24] get_table: success! firstAddress = 189
+[20:55:24] get_table: addrTable = 90189
+[20:55:24] get_data_info: type = 2, size = 80
+[20:55:24] get_table: success! firstAddress = 90285
+[20:55:24] get_data_info: type = 3, size = 9984
+[20:55:24] get_level: table entry read: type: 3, addr: 120301
+[20:55:24] Get data: cursor set at 120301
+[20:55:24] get_data: data info read: type: 3, size: 9984
+[20:55:24] get_data: Success! data : 96246590
+[20:55:24] get_level: data read: 96246590
+[20:55:24] Convert bytes to level: 9984 bytes.
+[20:55:24] Convert bytes to level: Success! 156 items.
+[20:55:24] get_level: Level load success : 156 items loaded!
+[20:55:24] Level 13 loaded (level 12 saved)
+[20:55:24] Level 13 : 156 items loaded
+[20:55:25] File loaded: level.lvl, 4
+[20:55:25] get_table: addrTable = 13
+[20:55:25] get_table: success! firstAddress = 189
+[20:55:25] get_table: addrTable = 90189
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 90285
+[20:55:25] get_data_info: type = 3, size = 9984
+[20:55:25] save_level: table entry found: type: 3, addr: 120301
+[20:55:25] Convert level to bytes: 156 items.
+[20:55:25] Convert level to bytes: Success! 9984 bytes.
+[20:55:25] save_level: level converted to bytes: 96246590
+[20:55:25] get_table: addrTable = 13
+[20:55:25] get_table: success! firstAddress = 189
+[20:55:25] get_table: addrTable = 90189
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 90285
+[20:55:25] get_data_info: type = 3, size = 9984
+[20:55:25] transform_to_empty: erase data at 120301
+[20:55:25] get_table: addrTable = 93
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = -1
+[20:55:25] find_av_tableEntry: table[0] = -1
+[20:55:25] transform_to_empty: find space on empty table at 93
+[20:55:25] get_table: addrTable = 93
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = -1
+[20:55:25] transform_to_empty: get the empty table at 93
+[20:55:25] write_table: not first table (addr = 93)
+[20:55:25] write_table: success!
+[20:55:25] write_data_info: success! type = 1, size = 9984
+[20:55:25] write_table: not first table (addr = 90189)
+[20:55:25] write_table: success!
+[20:55:25] transform_to_empty: success
+[20:55:25] Add data: 96246590, 9984, 3
+[20:55:25] get_table: addrTable = 13
+[20:55:25] get_table: success! firstAddress = 189
+[20:55:25] find_av_tableEntry: table[0] = 189
+[20:55:25] find_av_tableEntry: table[1] = 10189
+[20:55:25] find_av_tableEntry: table[2] = 20189
+[20:55:25] find_av_tableEntry: table[3] = 30189
+[20:55:25] find_av_tableEntry: table[4] = 40189
+[20:55:25] find_av_tableEntry: table[5] = 50189
+[20:55:25] find_av_tableEntry: table[6] = 60189
+[20:55:25] find_av_tableEntry: table[7] = 70189
+[20:55:25] find_av_tableEntry: table[8] = 80189
+[20:55:25] find_av_tableEntry: search in next table
+[20:55:25] get_table: addrTable = 90189
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 90285
+[20:55:25] find_av_tableEntry: table[0] = 90285
+[20:55:25] find_av_tableEntry: table[1] = 100301
+[20:55:25] find_av_tableEntry: table[2] = 110301
+[20:55:25] find_av_tableEntry: table[3] = -1
+[20:55:25] Table entry found: -1, 90189, 3, 0
+[20:55:25] get_table: addrTable = 90189
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 90285
+[20:55:25] get_table: addrTable = 93
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 120301
+[20:55:25] get_empty: checking table at addr = 93
+[20:55:25] get_empty: cellule 0 direct to 120301
+[20:55:25] get_data_info: type = 1, size = 9984
+[20:55:25] get_empty: empty found at 120301
+[20:55:25] get_empty: size enoughly big, size: 9984
+[20:55:25] Empty data found: addr: 120301, size : 9984
+[20:55:25] update_empty: addrEmpty = 120301, sizeNeeded = 9984
+[20:55:25] get_table: addrTable = 93
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 120301
+[20:55:25] write_table: not first table (addr = 93)
+[20:55:25] write_table: success!
+[20:55:25] update_empty: success!
+[20:55:25] write_table: not first table (addr = 90189)
+[20:55:25] write_table: success!
+[20:55:25] Data added: 96246590, 4
+[20:55:25] get_level: start
+[20:55:25] get_level: file opened: level.lvl
+[20:55:25] get_table: addrTable = 13
+[20:55:25] get_table: success! firstAddress = 189
+[20:55:25] get_table: addrTable = 90189
+[20:55:25] get_data_info: type = 2, size = 80
+[20:55:25] get_table: success! firstAddress = 90285
+[20:55:25] get_data_info: type = 3, size = 9984
+[20:55:25] get_level: table entry read: type: 3, addr: 130301
+[20:55:25] Get data: cursor set at 130301
+[20:55:25] get_data: data info read: type: 3, size: 9984
+[20:55:25] get_data: Success! data : 96246590
+[20:55:25] get_level: data read: 96246590
+[20:55:25] Convert bytes to level: 9984 bytes.
+[20:55:25] Convert bytes to level: Success! 156 items.
+[20:55:25] get_level: Level load success : 156 items loaded!
+[20:55:25] Level 14 loaded (level 13 saved)
+[20:55:25] Level 14 : 156 items loaded
+[20:55:26] File loaded: level.lvl, 4
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] save_level: table entry found: type: 3, addr: 130301
+[20:55:26] Convert level to bytes: 156 items.
+[20:55:26] Convert level to bytes: Success! 9984 bytes.
+[20:55:26] save_level: level converted to bytes: 96246590
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] transform_to_empty: erase data at 130301
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = -1
+[20:55:26] find_av_tableEntry: table[0] = -1
+[20:55:26] transform_to_empty: find space on empty table at 93
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = -1
+[20:55:26] transform_to_empty: get the empty table at 93
+[20:55:26] write_table: not first table (addr = 93)
+[20:55:26] write_table: success!
+[20:55:26] write_data_info: success! type = 1, size = 9984
+[20:55:26] write_table: not first table (addr = 90189)
+[20:55:26] write_table: success!
+[20:55:26] transform_to_empty: success
+[20:55:26] Add data: 96246590, 9984, 3
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] find_av_tableEntry: table[0] = 189
+[20:55:26] find_av_tableEntry: table[1] = 10189
+[20:55:26] find_av_tableEntry: table[2] = 20189
+[20:55:26] find_av_tableEntry: table[3] = 30189
+[20:55:26] find_av_tableEntry: table[4] = 40189
+[20:55:26] find_av_tableEntry: table[5] = 50189
+[20:55:26] find_av_tableEntry: table[6] = 60189
+[20:55:26] find_av_tableEntry: table[7] = 70189
+[20:55:26] find_av_tableEntry: table[8] = 80189
+[20:55:26] find_av_tableEntry: search in next table
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] find_av_tableEntry: table[0] = 90285
+[20:55:26] find_av_tableEntry: table[1] = 100301
+[20:55:26] find_av_tableEntry: table[2] = 110301
+[20:55:26] find_av_tableEntry: table[3] = 120301
+[20:55:26] find_av_tableEntry: table[4] = -1
+[20:55:26] Table entry found: -1, 90189, 4, 0
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 130301
+[20:55:26] get_empty: checking table at addr = 93
+[20:55:26] get_empty: cellule 0 direct to 130301
+[20:55:26] get_data_info: type = 1, size = 9984
+[20:55:26] get_empty: empty found at 130301
+[20:55:26] get_empty: size enoughly big, size: 9984
+[20:55:26] Empty data found: addr: 130301, size : 9984
+[20:55:26] update_empty: addrEmpty = 130301, sizeNeeded = 9984
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 130301
+[20:55:26] write_table: not first table (addr = 93)
+[20:55:26] write_table: success!
+[20:55:26] update_empty: success!
+[20:55:26] write_table: not first table (addr = 90189)
+[20:55:26] write_table: success!
+[20:55:26] Data added: 96246590, 4
+[20:55:26] get_level: start
+[20:55:26] get_level: file opened: level.lvl
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] get_level: table entry read: type: 3, addr: 140301
+[20:55:26] Get data: cursor set at 140301
+[20:55:26] get_data: data info read: type: 3, size: 9984
+[20:55:26] get_data: Success! data : 96246590
+[20:55:26] get_level: data read: 96246590
+[20:55:26] Convert bytes to level: 9984 bytes.
+[20:55:26] Convert bytes to level: Success! 156 items.
+[20:55:26] get_level: Level load success : 156 items loaded!
+[20:55:26] Level 15 loaded (level 14 saved)
+[20:55:26] Level 15 : 156 items loaded
+[20:55:26] File loaded: level.lvl, 4
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] save_level: table entry found: type: 3, addr: 140301
+[20:55:26] Convert level to bytes: 156 items.
+[20:55:26] Convert level to bytes: Success! 9984 bytes.
+[20:55:26] save_level: level converted to bytes: 96246590
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] transform_to_empty: erase data at 140301
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = -1
+[20:55:26] find_av_tableEntry: table[0] = -1
+[20:55:26] transform_to_empty: find space on empty table at 93
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = -1
+[20:55:26] transform_to_empty: get the empty table at 93
+[20:55:26] write_table: not first table (addr = 93)
+[20:55:26] write_table: success!
+[20:55:26] write_data_info: success! type = 1, size = 9984
+[20:55:26] write_table: not first table (addr = 90189)
+[20:55:26] write_table: success!
+[20:55:26] transform_to_empty: success
+[20:55:26] Add data: 96246590, 9984, 3
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] find_av_tableEntry: table[0] = 189
+[20:55:26] find_av_tableEntry: table[1] = 10189
+[20:55:26] find_av_tableEntry: table[2] = 20189
+[20:55:26] find_av_tableEntry: table[3] = 30189
+[20:55:26] find_av_tableEntry: table[4] = 40189
+[20:55:26] find_av_tableEntry: table[5] = 50189
+[20:55:26] find_av_tableEntry: table[6] = 60189
+[20:55:26] find_av_tableEntry: table[7] = 70189
+[20:55:26] find_av_tableEntry: table[8] = 80189
+[20:55:26] find_av_tableEntry: search in next table
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] find_av_tableEntry: table[0] = 90285
+[20:55:26] find_av_tableEntry: table[1] = 100301
+[20:55:26] find_av_tableEntry: table[2] = 110301
+[20:55:26] find_av_tableEntry: table[3] = 120301
+[20:55:26] find_av_tableEntry: table[4] = 130301
+[20:55:26] find_av_tableEntry: table[5] = -1
+[20:55:26] Table entry found: -1, 90189, 5, 0
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 140301
+[20:55:26] get_empty: checking table at addr = 93
+[20:55:26] get_empty: cellule 0 direct to 140301
+[20:55:26] get_data_info: type = 1, size = 9984
+[20:55:26] get_empty: empty found at 140301
+[20:55:26] get_empty: size enoughly big, size: 9984
+[20:55:26] Empty data found: addr: 140301, size : 9984
+[20:55:26] update_empty: addrEmpty = 140301, sizeNeeded = 9984
+[20:55:26] get_table: addrTable = 93
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 140301
+[20:55:26] write_table: not first table (addr = 93)
+[20:55:26] write_table: success!
+[20:55:26] update_empty: success!
+[20:55:26] write_table: not first table (addr = 90189)
+[20:55:26] write_table: success!
+[20:55:26] Data added: 96246590, 4
+[20:55:26] get_level: start
+[20:55:26] get_level: file opened: level.lvl
+[20:55:26] get_table: addrTable = 13
+[20:55:26] get_table: success! firstAddress = 189
+[20:55:26] get_table: addrTable = 90189
+[20:55:26] get_data_info: type = 2, size = 80
+[20:55:26] get_table: success! firstAddress = 90285
+[20:55:26] get_data_info: type = 3, size = 9984
+[20:55:26] get_level: table entry read: type: 3, addr: -1
+[20:55:26] Get data: cursor set at 90301
+[20:55:26] get_data: data info read: type: 3, size: 9984
+[20:55:26] get_data: Success! data : 96246590
+[20:55:26] get_level: data read: 96246590
+[20:55:26] Convert bytes to level: 9984 bytes.
+[20:55:26] Convert bytes to level: Success! 156 items.
+[20:55:26] get_level: Level load success : 156 items loaded!
+[20:55:26] Level 16 loaded (level 15 saved)
+[20:55:26] Level 16 : 156 items loaded
+[20:55:28] Suppression du niveau
+[20:55:29] Game stopped
+[20:55:29] File loaded: level.lvl, 4
+[20:55:29] Saving level 16...
+[20:55:29] get_table: addrTable = 13
+[20:55:29] get_table: success! firstAddress = 189
+[20:55:29] get_table: addrTable = 90189
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = 90285
+[20:55:29] get_data_info: type = 3, size = 9984
+[20:55:29] save_level: table entry found: type: 3, addr: -1
+[20:55:29] Convert level to bytes: 156 items.
+[20:55:29] Convert level to bytes: Success! 9984 bytes.
+[20:55:29] save_level: level converted to bytes: 962B4630
+[20:55:29] get_table: addrTable = 13
+[20:55:29] get_table: success! firstAddress = 189
+[20:55:29] get_table: addrTable = 90189
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = 90285
+[20:55:29] get_data_info: type = 3, size = 9984
+[20:55:29] transform_to_empty: erase data at -1
+[20:55:29] get_table: addrTable = 93
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = -1
+[20:55:29] find_av_tableEntry: table[0] = -1
+[20:55:29] transform_to_empty: find space on empty table at 93
+[20:55:29] get_table: addrTable = 93
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = -1
+[20:55:29] transform_to_empty: get the empty table at 93
+[20:55:29] write_table: not first table (addr = 93)
+[20:55:29] write_table: success!
+[20:55:29] write_data_info: success! type = 1, size = 9984
+[20:55:29] write_table: not first table (addr = 90189)
+[20:55:29] write_table: success!
+[20:55:29] transform_to_empty: success
+[20:55:29] Add data: 962B4630, 9984, 3
+[20:55:29] get_table: addrTable = 13
+[20:55:29] get_table: success! firstAddress = 189
+[20:55:29] find_av_tableEntry: table[0] = 189
+[20:55:29] find_av_tableEntry: table[1] = 10189
+[20:55:29] find_av_tableEntry: table[2] = 20189
+[20:55:29] find_av_tableEntry: table[3] = 30189
+[20:55:29] find_av_tableEntry: table[4] = 40189
+[20:55:29] find_av_tableEntry: table[5] = 50189
+[20:55:29] find_av_tableEntry: table[6] = 60189
+[20:55:29] find_av_tableEntry: table[7] = 70189
+[20:55:29] find_av_tableEntry: table[8] = 80189
+[20:55:29] find_av_tableEntry: search in next table
+[20:55:29] get_table: addrTable = 90189
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = 90285
+[20:55:29] find_av_tableEntry: table[0] = 90285
+[20:55:29] find_av_tableEntry: table[1] = 100301
+[20:55:29] find_av_tableEntry: table[2] = 110301
+[20:55:29] find_av_tableEntry: table[3] = 120301
+[20:55:29] find_av_tableEntry: table[4] = 130301
+[20:55:29] find_av_tableEntry: table[5] = 140301
+[20:55:29] find_av_tableEntry: table[6] = -1
+[20:55:29] Table entry found: -1, 90189, 6, 0
+[20:55:29] get_table: addrTable = 90189
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = 90285
+[20:55:29] get_table: addrTable = 93
+[20:55:29] get_data_info: type = 2, size = 80
+[20:55:29] get_table: success! firstAddress = -1
+[20:55:29] get_empty: checking table at addr = 93
+[20:55:29] get_empty: no empty space
+[20:55:29] Empty data not found write at the end of file
+[20:55:29] write_table: not first table (addr = 90189)
+[20:55:29] write_table: success!
+[20:55:29] Data added: 962B4630, 4
+[20:55:29] Level 16 saved
+[20:55:29] End of the session of the game.
+[20:55:31] Loading level from file...
+[20:55:31] File loaded: level.lvl, 4
+[20:55:31] File loaded
+[20:55:31] Show table: 13, 0
+[20:55:31] get_table: addrTable = 13
+[20:55:31] get_table: success! firstAddress = 189
+[20:55:31] show_table: begin show table 0
+[20:55:31] show_table: cell 0 is not empty
+[20:55:31] Get data: cursor set at 189
+[20:55:31] get_data: data info read: type: 1, size: 9984
+[20:55:31] get_data: Success! data : 38C1CAA0
+[20:55:31] show_table: data info read: type: 1, size: 9984
+[20:55:31] show_table: cell 1 is not empty
+[20:55:31] Get data: cursor set at 10189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C1F1B0
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 2 is not empty
+[20:55:31] Get data: cursor set at 20189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C218C0
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 3 is not empty
+[20:55:31] Get data: cursor set at 30189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C23FD0
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 4 is not empty
+[20:55:31] Get data: cursor set at 40189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C266E0
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 5 is not empty
+[20:55:31] Get data: cursor set at 50189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C28DF0
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 6 is not empty
+[20:55:31] Get data: cursor set at 60189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C2B500
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 7 is not empty
+[20:55:31] Get data: cursor set at 70189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C2DC10
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 8 is not empty
+[20:55:31] Get data: cursor set at 80189
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C30320
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] Show table: 90189, 1
+[20:55:31] get_table: addrTable = 90189
+[20:55:31] get_data_info: type = 2, size = 80
+[20:55:31] get_table: success! firstAddress = 90285
+[20:55:31] show_table: begin show table 1
+[20:55:31] show_table: cell 0 is not empty
+[20:55:31] Get data: cursor set at 90285
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C32A30
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 1 is not empty
+[20:55:31] Get data: cursor set at 100301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C35140
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 2 is not empty
+[20:55:31] Get data: cursor set at 110301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C37850
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 3 is not empty
+[20:55:31] Get data: cursor set at 120301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C39F60
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 4 is not empty
+[20:55:31] Get data: cursor set at 130301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C3C670
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 5 is not empty
+[20:55:31] Get data: cursor set at 140301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C3ED80
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] show_table: cell 6 is not empty
+[20:55:31] Get data: cursor set at 150301
+[20:55:31] get_data: data info read: type: 3, size: 9984
+[20:55:31] get_data: Success! data : 38C41490
+[20:55:31] show_table: data info read: type: 3, size: 9984
+[20:55:31] Show table: 93, 0
+[20:55:31] get_table: addrTable = 93
+[20:55:31] get_data_info: type = 2, size = 80
+[20:55:31] get_table: success! firstAddress = -1
+[20:55:31] show_table: begin show table 0
+[20:55:31] 
+===========Affichage Tables===========
+Tables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 10189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[2] : 20189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[3] : 30189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[4] : 40189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[5] : 50189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[6] : 60189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[7] : 70189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[8] : 80189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ Next table : YES
+
+Table 1 :
+ CELL[0] : 90285
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : 100301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[2] : 110301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[3] : 120301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[4] : 130301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[5] : 140301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[6] : 150301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+===========Affichage Tables===========
+[20:56:24] Loading level from file...
+[20:56:24] File loaded: level.lvl, 4
+[20:56:24] File loaded
+[20:56:24] Show table: 13, 0
+[20:56:24] get_table: addrTable = 13
+[20:56:24] get_table: success! firstAddress = 189
+[20:56:24] show_table: begin show table 0
+[20:56:24] show_table: cell 0 is not empty
+[20:56:24] Get data: cursor set at 189
+[20:56:24] get_data: data info read: type: 1, size: 9984
+[20:56:24] get_data: Success! data : 52E00AA0
+[20:56:24] show_table: data info read: type: 1, size: 9984
+[20:56:24] show_table: cell 1 is not empty
+[20:56:24] Get data: cursor set at 10189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E031B0
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 2 is not empty
+[20:56:24] Get data: cursor set at 20189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E058C0
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 3 is not empty
+[20:56:24] Get data: cursor set at 30189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E07FD0
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 4 is not empty
+[20:56:24] Get data: cursor set at 40189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E0A6E0
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 5 is not empty
+[20:56:24] Get data: cursor set at 50189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E0CDF0
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 6 is not empty
+[20:56:24] Get data: cursor set at 60189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E0F500
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 7 is not empty
+[20:56:24] Get data: cursor set at 70189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E11C10
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 8 is not empty
+[20:56:24] Get data: cursor set at 80189
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E14320
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] Show table: 90189, 1
+[20:56:24] get_table: addrTable = 90189
+[20:56:24] get_data_info: type = 2, size = 80
+[20:56:24] get_table: success! firstAddress = 90285
+[20:56:24] show_table: begin show table 1
+[20:56:24] show_table: cell 0 is not empty
+[20:56:24] Get data: cursor set at 90285
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E16A30
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 1 is not empty
+[20:56:24] Get data: cursor set at 100301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E19140
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 2 is not empty
+[20:56:24] Get data: cursor set at 110301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E1B850
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 3 is not empty
+[20:56:24] Get data: cursor set at 120301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E1DF60
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 4 is not empty
+[20:56:24] Get data: cursor set at 130301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E20670
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 5 is not empty
+[20:56:24] Get data: cursor set at 140301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E22D80
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] show_table: cell 6 is not empty
+[20:56:24] Get data: cursor set at 150301
+[20:56:24] get_data: data info read: type: 3, size: 9984
+[20:56:24] get_data: Success! data : 52E25490
+[20:56:24] show_table: data info read: type: 3, size: 9984
+[20:56:24] Show table: 93, 0
+[20:56:24] get_table: addrTable = 93
+[20:56:24] get_data_info: type = 2, size = 80
+[20:56:24] get_table: success! firstAddress = -1
+[20:56:24] show_table: begin show table 0
+[20:56:24] 
+===========Affichage Tables===========
+Tables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 10189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[2] : 20189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[3] : 30189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[4] : 40189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[5] : 50189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[6] : 60189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[7] : 70189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[8] : 80189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ Next table : YES
+
+Table 1 :
+ CELL[0] : 90285
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : 100301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[2] : 110301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[3] : 120301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[4] : 130301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[5] : 140301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[6] : 150301
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+===========Affichage Tables===========
+[20:57:02] Loading level from file...
+[20:57:02] Tag written: GAMEOFTABLES, size_tag : 13
+[20:57:02] Cursor at : 109
+[20:57:02] File created: level.lvl, 4
+[20:57:02] load_file: file level.lvl has been create.
+[20:57:02] File loaded
+[20:57:02] Show table: 13, 0
+[20:57:02] get_table: addrTable = 13
+[20:57:02] get_table: success! firstAddress = -1
+[20:57:02] show_table: begin show table 0
+[20:57:02] Show table: 93, 0
+[20:57:02] get_table: addrTable = 93
+[20:57:02] get_data_info: type = 2, size = 80
+[20:57:02] get_table: success! firstAddress = -1
+[20:57:02] show_table: begin show table 0
+[20:57:02] 
+===========Affichage Tables===========
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+===========Affichage Tables===========
+[20:57:02] get_level: start
+[20:57:02] get_level: file opened: level.lvl
+[20:57:02] get_table: addrTable = 13
+[20:57:02] get_table: success! firstAddress = -1
+[20:57:02] get_data_info: type = 2, size = 80
+[20:57:02] get_level: table entry read: type: 0, addr: -1
+[20:57:02] Level 1 not found, empty level generated
+[20:57:06] nbPos: 12
+[20:57:06] [11] add => x: 37, y: 11
+[20:57:06] [10] add => x: 38, y: 11
+[20:57:06] [9] add => x: 39, y: 11
+[20:57:06] [8] add => x: 37, y: 10
+[20:57:06] [7] add => x: 38, y: 10
+[20:57:06] [6] add => x: 39, y: 10
+[20:57:06] [5] add => x: 37, y: 9
+[20:57:06] [4] add => x: 38, y: 9
+[20:57:06] [3] add => x: 39, y: 9
+[20:57:06] [2] add => x: 37, y: 8
+[20:57:06] [1] add => x: 38, y: 8
+[20:57:06] [0] add => x: 39, y: 8
+[20:57:06] read => x: 39, y: 8 (pas de colision)
+[20:57:06] read => x: 38, y: 8 (pas de colision)
+[20:57:06] read => x: 37, y: 8 (pas de colision)
+[20:57:06] read => x: 39, y: 9 (pas de colision)
+[20:57:06] read => x: 38, y: 9 (pas de colision)
+[20:57:06] read => x: 37, y: 9 (pas de colision)
+[20:57:06] read => x: 39, y: 10 (pas de colision)
+[20:57:06] read => x: 38, y: 10 (pas de colision)
+[20:57:06] read => x: 37, y: 10 (pas de colision)
+[20:57:06] read => x: 39, y: 11 (pas de colision)
+[20:57:06] read => x: 38, y: 11 (pas de colision)
+[20:57:06] read => x: 37, y: 11 (pas de colision)
+[20:57:07] nbPos: 12
+[20:57:07] [11] add => x: 21, y: 11
+[20:57:07] [10] add => x: 22, y: 11
+[20:57:07] [9] add => x: 23, y: 11
+[20:57:07] [8] add => x: 21, y: 10
+[20:57:07] [7] add => x: 22, y: 10
+[20:57:07] [6] add => x: 23, y: 10
+[20:57:07] [5] add => x: 21, y: 9
+[20:57:07] [4] add => x: 22, y: 9
+[20:57:07] [3] add => x: 23, y: 9
+[20:57:07] [2] add => x: 21, y: 8
+[20:57:07] [1] add => x: 22, y: 8
+[20:57:07] [0] add => x: 23, y: 8
+[20:57:07] read => x: 23, y: 8 (pas de colision)
+[20:57:07] read => x: 22, y: 8 (pas de colision)
+[20:57:07] read => x: 21, y: 8 (pas de colision)
+[20:57:07] read => x: 23, y: 9 (pas de colision)
+[20:57:07] read => x: 22, y: 9 (pas de colision)
+[20:57:07] read => x: 21, y: 9 (pas de colision)
+[20:57:07] read => x: 23, y: 10 (pas de colision)
+[20:57:07] read => x: 22, y: 10 (pas de colision)
+[20:57:07] read => x: 21, y: 10 (pas de colision)
+[20:57:07] read => x: 23, y: 11 (pas de colision)
+[20:57:07] read => x: 22, y: 11 (pas de colision)
+[20:57:07] read => x: 21, y: 11 (pas de colision)
+[20:57:10] Game stopped
+[20:57:10] File loaded: level.lvl, 4
+[20:57:10] Saving level 1...
+[20:57:10] get_table: addrTable = 13
+[20:57:10] get_table: success! firstAddress = -1
+[20:57:10] get_data_info: type = 2, size = 80
+[20:57:10] save_level: table entry found: type: 0, addr: -1
+[20:57:10] Convert level to bytes: 158 items.
+[20:57:10] Convert level to bytes: Success! 10112 bytes.
+[20:57:10] save_level: level converted to bytes: F1318530
+[20:57:10] Add data: F1318530, 10112, 3
+[20:57:10] get_table: addrTable = 13
+[20:57:10] get_table: success! firstAddress = -1
+[20:57:10] find_av_tableEntry: table[0] = -1
+[20:57:10] Table entry found: -1, 13, 0, 0
+[20:57:10] get_table: addrTable = 13
+[20:57:10] get_table: success! firstAddress = -1
+[20:57:10] get_table: addrTable = 93
+[20:57:10] get_data_info: type = 2, size = 80
+[20:57:10] get_table: success! firstAddress = -1
+[20:57:10] get_empty: checking table at addr = 93
+[20:57:10] get_empty: no empty space
+[20:57:10] Empty data not found write at the end of file
+[20:57:10] write_table: first table (addr = 13)
+[20:57:10] write_table: success!
+[20:57:10] Data added: F1318530, 4
+[20:57:10] Level 1 saved
+[20:57:10] End of the session of the game.
+[20:57:11] Loading level from file...
+[20:57:11] File loaded: level.lvl, 4
+[20:57:11] File loaded
+[20:57:11] Show table: 13, 0
+[20:57:11] get_table: addrTable = 13
+[20:57:11] get_table: success! firstAddress = 189
+[20:57:11] show_table: begin show table 0
+[20:57:11] show_table: cell 0 is not empty
+[20:57:11] Get data: cursor set at 189
+[20:57:11] get_data: data info read: type: 3, size: 10112
+[20:57:11] get_data: Success! data : 7A137AA0
+[20:57:11] show_table: data info read: type: 3, size: 10112
+[20:57:11] Show table: 93, 0
+[20:57:11] get_table: addrTable = 93
+[20:57:11] get_data_info: type = 2, size = 80
+[20:57:11] get_table: success! firstAddress = -1
+[20:57:11] show_table: begin show table 0
+[20:57:11] 
+===========Affichage Tables===========
+Tables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+===========Affichage Tables===========
+[20:57:11] get_level: start
+[20:57:11] get_level: file opened: level.lvl
+[20:57:11] get_table: addrTable = 13
+[20:57:11] get_table: success! firstAddress = 189
+[20:57:11] get_data_info: type = 3, size = 10112
+[20:57:11] get_level: table entry read: type: 3, addr: 189
+[20:57:11] Get data: cursor set at 189
+[20:57:11] get_data: data info read: type: 3, size: 10112
+[20:57:11] get_data: Success! data : 7A13A230
+[20:57:11] get_level: data read: 7A13A230
+[20:57:11] Convert bytes to level: 10112 bytes.
+[20:57:11] Convert bytes to level: Success! 158 items.
+[20:57:11] get_level: Level load success : 158 items loaded!
+[20:57:11] Level 1 loaded
+[20:57:11] Level 1 : 158 items loaded
+[20:57:13] Game stopped
+[20:57:13] File loaded: level.lvl, 4
+[20:57:13] Saving level 1...
+[20:57:13] get_table: addrTable = 13
+[20:57:13] get_table: success! firstAddress = 189
+[20:57:13] get_data_info: type = 3, size = 10112
+[20:57:13] save_level: table entry found: type: 3, addr: 189
+[20:57:13] Convert level to bytes: 158 items.
+[20:57:13] Convert level to bytes: Success! 10112 bytes.
+[20:57:13] save_level: level converted to bytes: 7A13A230
+[20:57:13] get_table: addrTable = 13
+[20:57:13] get_table: success! firstAddress = 189
+[20:57:13] get_data_info: type = 3, size = 10112
+[20:57:13] transform_to_empty: erase data at 189
+[20:57:13] get_table: addrTable = 93
+[20:57:13] get_data_info: type = 2, size = 80
+[20:57:13] get_table: success! firstAddress = -1
+[20:57:13] find_av_tableEntry: table[0] = -1
+[20:57:13] transform_to_empty: find space on empty table at 93
+[20:57:13] get_table: addrTable = 93
+[20:57:13] get_data_info: type = 2, size = 80
+[20:57:13] get_table: success! firstAddress = -1
+[20:57:13] transform_to_empty: get the empty table at 93
+[20:57:13] write_table: not first table (addr = 93)
+[20:57:13] write_table: success!
+[20:57:13] write_data_info: success! type = 1, size = 10112
+[20:57:13] write_table: first table (addr = 13)
+[20:57:13] write_table: success!
+[20:57:13] transform_to_empty: success
+[20:57:13] Add data: 7A13A230, 10112, 3
+[20:57:13] get_table: addrTable = 13
+[20:57:13] get_table: success! firstAddress = -1
+[20:57:13] find_av_tableEntry: table[0] = -1
+[20:57:13] Table entry found: -1, 13, 0, 0
+[20:57:13] get_table: addrTable = 13
+[20:57:13] get_table: success! firstAddress = -1
+[20:57:13] get_table: addrTable = 93
+[20:57:13] get_data_info: type = 2, size = 80
+[20:57:13] get_table: success! firstAddress = 189
+[20:57:13] get_empty: checking table at addr = 93
+[20:57:13] get_empty: cellule 0 direct to 189
+[20:57:13] get_data_info: type = 1, size = 10112
+[20:57:13] get_empty: empty found at 189
+[20:57:13] get_empty: size enoughly big, size: 10112
+[20:57:13] Empty data found: addr: 189, size : 10112
+[20:57:13] update_empty: addrEmpty = 189, sizeNeeded = 10112
+[20:57:13] get_table: addrTable = 93
+[20:57:13] get_data_info: type = 2, size = 80
+[20:57:13] get_table: success! firstAddress = 189
+[20:57:13] write_table: not first table (addr = 93)
+[20:57:13] write_table: success!
+[20:57:13] update_empty: success!
+[20:57:13] write_table: first table (addr = 13)
+[20:57:13] write_table: success!
+[20:57:13] Data added: 7A13A230, 4
+[20:57:13] Level 1 saved
+[20:57:13] End of the session of the game.
