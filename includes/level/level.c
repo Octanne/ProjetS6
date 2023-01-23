@@ -4,30 +4,19 @@
 
 #include "../constants.h"
 
-Objet** levelCreateSaveArray(Level* level) {
-    Objet** saveMatrice = malloc(sizeof(Objet*) * level->listeObjet->taille);
+Level* levelEmpty() {
+    Level* level = malloc(sizeof(Level));
+    level->listeObjet = creerListeObjet();
 
-    // Parcourir la liste des objets
-    EltListe_o* obj = level->listeObjet->tete;
-    int i = 0;
-    while (obj != NULL) {
-        // Ajouter l'objet à la matrice
-        saveMatrice[i] = obj->objet;
-        i++;
+    // Set default sprite
+    int y, x;
+    for (y = 0; y < 20; y++) {
+        for (x = 0; x < 60; x++) {
+            level->matriceSprite[y+x*20] = NULL;
+        }
     }
 
-    return saveMatrice;
-}
-
-Level* levelLoadFromSaveArray(Objet** saveMatrice) {
-    Level* level = levelCreer();
-    int numObjet = sizeof(saveMatrice) / sizeof(Objet);
-    // Parcourir la matrice
-    int i = 0;
-    for (i = 0; i < numObjet; i++) {
-        // Ajouter l'objet à la liste
-        listeAjouterObjet(level->listeObjet, saveMatrice[i]);
-    }
+    levelUpdateMatriceSprite(level);
 
     return level;
 }

@@ -48,7 +48,7 @@ typedef struct table_entry {
 
 #define SIZE_TABLE sizeof(off_t)*TAILLE_TABLE
 #define SIZE_DATA_INFO sizeof(data_info_t)
-#define SIZE_TAG strlen(TAG_FILE)
+#define SIZE_TAG (strlen(TAG_FILE)+1)
 
 #define ADDR_EMTPY_TABLE SIZE_TAG + SIZE_TABLE
 #define ADDR_FIRST_TABLE SIZE_TAG
@@ -63,7 +63,7 @@ int remove_entry(file_t* file, int index); // Retourne -1 si l'index n'est pas s
 
 int save_level(file_t* file, int numLevel, Level* level); // Retourne -1 en cas d'erreur. 0 sinon.
 int remove_level(file_t* file, int numLevel); // Retourne -1 si level n'est pas dans les tables. 0 sinon.
-int get_level(file_t* file, int numLevel, Level* level); // Retourne -1 si le level n'est pas dans les tables. 0 sinon.
+int get_level(file_t* file, int numLevel, Level** level); // Retourne -1 si le level n'est pas dans les tables. 0 sinon.
 
 char* show_table(file_t* file);
 
