@@ -26,12 +26,6 @@ typedef struct data_info {
     size_t size;
 } data_info_t;
 
-typedef struct data_read {
-    data_info_t info;
-    int valid;
-    char * buffer;
-} data_read_t;
-
 typedef struct empty_data {
     off_t addr_table;
     off_t addr_empty;
@@ -57,7 +51,6 @@ typedef struct table_entry {
 file_t* load_file(char* filename);
 void free_file(file_t* file);
 
-data_read_t read_data(file_t* file, int index);
 int add_data(file_t* file, char* data, size_t size, char data_type);
 int remove_entry(file_t* file, int index); // Retourne -1 si l'index n'est pas set dans les tables.
 

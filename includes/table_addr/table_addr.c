@@ -497,7 +497,7 @@ file_t* load_file(char* filename) {
 int add_data(file_t* file, char* data, size_t size, char data_type) {
     logs("Add data: %X, %ld, %d", data, size, data_type);
 
-    int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
+    int fd = open(file->filename, O_RDWR);
     if (fd == -1) {
         logs("Error open file: %s", file->filename);
         return -1;
@@ -572,34 +572,12 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
     return 1;
 }
 
-int overwrite_data(file_t* file, off_t addr, char* data, size_t size, char data_type) {
-    logs("Overwrite data: at %d on %d bytes with data_type : %d", addr, size, data_type);
-
+int remove_entry(file_t* file, int index) {
     int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
     if (fd == -1) {
         logs("Error open file: %s", file->filename);
         return -1;
     }
-
-    // pos cursor at the addr
-    lseek(fd, addr+SIZE_DATA_INFO, SEEK_SET);
-
-    // write data
-    if (write(fd, data, size) == -1) {
-        close(fd);
-        return -1;
-    }
-
-    // close file
-    close(fd);
-
-    logs("Data overwritten: %X, %d", data, fd);
-
-    return 1;
-}
-
-int remove_entry(file_t* file, int index) {
-    int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
 
     int res = transform_to_empty(fd, index, ADDR_FIRST_TABLE, 0);
 
@@ -607,40 +585,6 @@ int remove_entry(file_t* file, int index) {
     close(fd);
 
     return res;
-}
-
-data_read_t read_data(file_t* file, int index) {
-    int fd = open(file->filename, O_RDONLY, S_IRUSR | S_IWUSR);
-
-    // get table entry
-    table_entry_t entry = find_tableEntryOfIdx(fd,index,ADDR_FIRST_TABLE,0);
-
-    if (entry.type_data == TABLE_TYPE_NONE) {
-        data_read_t awr;
-        awr.valid = 0;
-        close(fd);
-        return awr;
-    }
-
-    data_read_t data;
-
-    lseek(fd,entry.addr_cell, SEEK_SET);
-    if (read(fd, &data.info, SIZE_DATA_INFO)) {
-        data.valid = 0;
-        close(fd);
-        return data;
-    }
-    if (read(fd, &data.buffer, data.info.size)) {
-        data.valid = 0;
-        close(fd);
-        return data;
-    }
-    data.valid = 1;
-
-    // close file
-    close(fd);
-
-    return data;
 }
 
 int get_data(int fd, off_t addr_data, data_info_t* dataInfo, char** data) {
@@ -684,7 +628,7 @@ char* convert_level_to_bytes(Level* level, int* size) {
     // Parcourir la liste des objets
     EltListe_o* obj = level->listeObjet->tete;
     while(obj != NULL) {
-        logs("Convert level to bytes: x: %d, y: %d, type: %d", obj->objet->x, obj->objet->y, obj->objet->type);
+        //logs("Convert level to bytes: x: %d, y: %d, type: %d", obj->objet->x, obj->objet->y, obj->objet->type);
         memcpy(buffer + (i * sizeof(Objet)), obj->objet, sizeof(Objet));
         obj = obj->suivant;
         i++;
@@ -696,15 +640,19 @@ char* convert_level_to_bytes(Level* level, int* size) {
 }
 
 Level* convert_bytes_to_level(char* bytes, int size) {
+    logs("Convert bytes to level: %d bytes.", size);
+
     Level* level = levelEmpty();
     int i;
     int num_obj = size / sizeof(Objet);
     for (i = 0; i < num_obj; i++) {
         Objet* obj = malloc(sizeof(Objet));
         memcpy(obj, bytes + (i * sizeof(Objet)), sizeof(Objet));
-        logs("Convert bytes to obj: x: %d, y: %d, type: %d", obj->x, obj->y, obj->type);
+        //logs("Convert bytes to obj: x: %d, y: %d, type: %d", obj->x, obj->y, obj->type);
         levelAjouterObjet(level, obj);
     }
+
+    logs("Convert bytes to level: Success! %d items.", level->listeObjet->taille);
 
     return level;
 }
@@ -712,6 +660,10 @@ Level* convert_bytes_to_level(char* bytes, int size) {
 int get_level(file_t* file, int numLevel, Level** level) {
     logs("get_level: start");
     int fd = open(file->filename, O_RDONLY);
+    if (fd == -1) {
+        logs("Error open file: %s", file->filename);
+        return -1;
+    }
 
     logs("get_level: file opened: %s", file->filename);
 
@@ -763,6 +715,10 @@ int get_level(file_t* file, int numLevel, Level** level) {
 int save_level(file_t* file, int numLevel, Level* level) {
     // open 
     int fd = open(file->filename, O_RDWR);
+    if (fd == -1) {
+        logs("Error open file: %s", file->filename);
+        return -1;
+    }
     table_entry_t result = find_tableEntryOfIdx(fd, numLevel-1, ADDR_FIRST_TABLE, 0);
     
     logs("save_level: table entry found: type: %d, addr: %ld", result.type_data, result.addr_cell);
@@ -830,7 +786,7 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
                 if (dataInfo.type == TABLE_TYPE_EMPTY) {
                     strcat(output, "EMPTY\n");
                 } else if (dataInfo.type == TABLE_TYPE_LEVEL) {
-                    int num_obj = strlen(dataBuffer) / sizeof(Objet);
+                    int num_obj = dataInfo.size / sizeof(Objet);
                     sprintf(text, "%d map's items\n", num_obj);
                     strcat(output, text);
                 } else {
@@ -861,7 +817,11 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
 
 char* show_table(file_t* file){
     char * result = malloc(8192);
-    int fd = open(file->filename, O_RDONLY, S_IRUSR | S_IWUSR);
+    int fd = open(file->filename, O_RDONLY);
+    if (fd == -1) {
+        logs("Error open file: %s", file->filename);
+        return "ERROR\n";
+    }
 
     strcat(result, "Tables :\n");
     if (show_table_c(fd, ADDR_FIRST_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
@@ -869,6 +829,5 @@ char* show_table(file_t* file){
     if (show_table_c(fd, ADDR_EMTPY_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
 
     close(fd);
-
     return result;
 }

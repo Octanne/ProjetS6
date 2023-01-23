@@ -145,6 +145,9 @@ void load_level_file() {
     file_t* file = load_file(FILENAME);
     logs("File loaded");
 
+    // show table
+    logs("\n===========Affichage Tables===========\n%s===========Affichage Tables===========",show_table(file));
+
     if (get_level(file, 1, &level) == -1) {
         // Pas de niveau dans le fichier
         gen_level_empty();
