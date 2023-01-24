@@ -136,7 +136,7 @@ void get_log_tag(int log_level, char ** log_tag) {
 */
 void logs(int log_level, char *text_to_log, ...) {
     // check log level
-    if (log_level >= LOGS_ACTIVE) return;
+    if (log_level > LOGS_ACTIVE) return;
 
     char * lvl_log = malloc(10);
     get_log_tag(log_level, &lvl_log);
