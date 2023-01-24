@@ -30,26 +30,6 @@ WINDOW* cwinINFOS;
 ToolsMenu* toolsMenu;
 Level* level = NULL;
 
-void palette() {
-    init_pair(WHITE_COLOR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(RED_COLOR, COLOR_RED, COLOR_BLACK);
-    init_pair(GREEN_COLOR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(LBLUE_COLOR, COLOR_BLUE, COLOR_BLACK);
-    init_pair(DBLUE_COLOR, COLOR_CYAN, COLOR_BLACK);
-    init_pair(YELLOW_COLOR, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(PURPLE_COLOR, COLOR_MAGENTA, COLOR_BLACK);
-
-    init_pair(LBLUE_BLOCK, COLOR_BLACK, COLOR_CYAN);
-    init_pair(DBLUE_BLOCK, COLOR_BLACK, COLOR_BLUE);
-    init_pair(PURPLE_BLOCK, COLOR_BLACK, COLOR_MAGENTA);
-    init_pair(GREEN_BLOCK, COLOR_BLACK, COLOR_GREEN);
-    init_pair(YELLOW_BLOCK, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(RED_BLOCK, COLOR_BLACK, COLOR_RED);
-
-    init_pair(RED_BUTTON, COLOR_WHITE, COLOR_RED);
-    init_pair(ARROW_BUTTON, COLOR_BLACK, COLOR_WHITE);
-}
-
 void set_text_info(const char *text, int line, int color) {
     mvwprintw(winINFOS, line, 0, 
     "                                                                           ");
@@ -165,6 +145,7 @@ void stop_game() {
     delwin(cwinLEVEL);
     delwin(cwinTOOLS);
     delwin(cwinINFOS);
+    ncurses_stop();
 
     logs("Game stopped");
     file_t* file = load_file(FILENAME);
@@ -175,7 +156,6 @@ void stop_game() {
 
     free(toolsMenu);
     level_free(level);
-    ncurses_stop();
     closeLogs();
 }
 
@@ -438,8 +418,15 @@ void control_handler() {
     }
 }
 
+void main_exit() {
+    stop_game();
+}
+
 int main(void)
 {
+    // Register exit function
+    atexit(main_exit);
+
     // Init ncurses
     setlocale(LC_ALL, "");
     ncurses_init();

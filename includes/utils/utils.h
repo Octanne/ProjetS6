@@ -43,4 +43,9 @@ void logs(char *text_to_log, ...);
 */
 void closeLogs();
 
+/**
+ * palette() : initialize the colors palette
+ */
+void palette();
+
 #endif

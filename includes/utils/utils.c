@@ -69,6 +69,29 @@ int mouse_getpos(int *x, int *y) {
   return result;
 }
 
+/**
+ * palette() : initialize the colors palette
+ */
+void palette() {
+    init_pair(WHITE_COLOR, COLOR_WHITE, COLOR_BLACK);
+    init_pair(RED_COLOR, COLOR_RED, COLOR_BLACK);
+    init_pair(GREEN_COLOR, COLOR_GREEN, COLOR_BLACK);
+    init_pair(LBLUE_COLOR, COLOR_BLUE, COLOR_BLACK);
+    init_pair(DBLUE_COLOR, COLOR_CYAN, COLOR_BLACK);
+    init_pair(YELLOW_COLOR, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(PURPLE_COLOR, COLOR_MAGENTA, COLOR_BLACK);
+
+    init_pair(LBLUE_BLOCK, COLOR_BLACK, COLOR_CYAN);
+    init_pair(DBLUE_BLOCK, COLOR_BLACK, COLOR_BLUE);
+    init_pair(PURPLE_BLOCK, COLOR_BLACK, COLOR_MAGENTA);
+    init_pair(GREEN_BLOCK, COLOR_BLACK, COLOR_GREEN);
+    init_pair(YELLOW_BLOCK, COLOR_BLACK, COLOR_YELLOW);
+    init_pair(RED_BLOCK, COLOR_BLACK, COLOR_RED);
+
+    init_pair(RED_BUTTON, COLOR_WHITE, COLOR_RED);
+    init_pair(ARROW_BUTTON, COLOR_BLACK, COLOR_WHITE);
+}
+
 // Global variables
 int file_logs_desc = -1;
 
