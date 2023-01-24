@@ -1,6 +1,8 @@
 #ifndef _FUNCTIONS_
 #define _FUNCTIONS_
 
+#include "constants.h"
+
 /**
  * ncurses initialisation.
  */
@@ -26,6 +28,19 @@ void ncurses_init_mouse();
  */
 int mouse_getpos(int *x, int *y);
 
+/**
+ * initLogs() : initialize the logs file
+*/
+void initLogs();
 
+/**
+ * logs() : write a log in the logs file
+*/
+void logs(char *text_to_log, ...);
+
+/**
+ * closeLogs() : close the logs file
+*/
+void closeLogs();
 
 #endif

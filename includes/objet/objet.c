@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "../constants.h"
+#include "../utils/utils.h"
 
 Objet* initObjet(int x, int y, int xSize, int ySize, int type) {
     Objet* objet = malloc(sizeof(Objet));

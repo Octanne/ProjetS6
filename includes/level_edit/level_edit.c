@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../constants.h"
+#include "../utils/utils.h"
 
 // TODO revoir hitbox semble pas fonctionner correctement
 int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {

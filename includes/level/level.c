@@ -1,8 +1,6 @@
 #include "level.h"
 
-#include <stdlib.h>
-
-#include "../constants.h"
+#include "../utils/utils.h"
 
 Level* levelEmpty() {
     Level* level = malloc(sizeof(Level));

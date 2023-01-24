@@ -7,7 +7,7 @@
 #include <error.h>
 #include <errno.h>
 
-#include "../constants.h"
+#include "../utils/utils.h"
 
 void optimize() {
     // Faire la contatenation des empties adjacents
@@ -335,7 +335,7 @@ table_entry_t find_tableEntryOfIdx(int fd, int globalIndexEntry, off_t addrTable
     get_table(fd, addrTable, table);
 
     // check index presence
-    if (globalIndexEntry > (TAILLE_TABLE-1) * (numTable+1)) {
+    if (globalIndexEntry >= (TAILLE_TABLE-1) * (numTable+1)) {
         if (table[TAILLE_TABLE - 1] == ADDR_UNUSED) {
             // the table is empty
             table_entry_t entry;
@@ -674,6 +674,7 @@ int get_level(file_t* file, int numLevel, Level** level) {
 
     if (entry.type_data == TABLE_TYPE_NONE) {
         // Level not found
+        logs("get_level: Level not found");
         close(fd);
         return -1;
     } else if (entry.type_data == TABLE_TYPE_LEVEL) {
@@ -746,6 +747,8 @@ int save_level(file_t* file, int numLevel, Level* level) {
     free(bytes);
 
     close(fd);
+
+    logs("save_level: Error, unexpected type: %d", result.type_data);
 
     return -1;
 }

@@ -1,8 +1,10 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "../liste/liste.h"
+#include <stdlib.h>
 #include <ncurses.h>
+
+#include "../liste/liste.h"
 
 typedef struct {
     char sprite;

@@ -1,6 +1,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define LOGS_FILE "logs/latest.log"
+#define LOGS_FOLDER "logs/"
+#define LOGS_ACTIVE 1 // 1 = active, 0 = inactive
+#define LOGS_MAX_LENGTH 3500
+
+#define FILENAME "level.lvl"
+
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10
 
@@ -38,9 +45,5 @@
 
 #define RIGHT_ORIENTATION 1
 #define LEFT_ORIENTATION 0
-
-void initLogs();
-void logs(char *text_to_log, ...);
-void closeLogs();
 
 #endif

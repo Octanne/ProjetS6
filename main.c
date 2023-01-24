@@ -3,10 +3,9 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
-#include "includes/constants.h"
 #include "includes/level/level.h"
+#include "includes/utils/utils.h"
 #include "includes/level_edit/level_edit.h"
-#include "includes/functions/functions.h"
 #include "includes/table_addr/table_addr.h"
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
@@ -30,8 +29,6 @@ WINDOW* cwinINFOS;
 
 ToolsMenu* toolsMenu;
 Level* level = NULL;
-
-#define FILENAME "level.lvl"
 
 void palette() {
     init_pair(WHITE_COLOR, COLOR_WHITE, COLOR_BLACK);
