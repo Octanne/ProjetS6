@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define L_INFO 1
+#define L_DEBUG 2
 #define LOGS_FILE "logs/latest.log"
 #define LOGS_FOLDER "logs/"
 #define LOGS_ACTIVE 2 // 2 = debug, 1 = info, 0 = inactive

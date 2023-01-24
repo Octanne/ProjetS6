@@ -161,7 +161,7 @@ void logs(int log_level, char *text_to_log, ...) {
     // Open the file in append mode check the success
     char final_text[LOGS_MAX_LENGTH+26];
     sprintf(final_text, "[%s][%s] %s\n", time, lvl_log, text_form);
-    if (write(file_logs_desc, final_text, strlen(final_text)+1) == -1) {
+    if (write(file_logs_desc, final_text, strlen(final_text)) == -1) {
         fprintf(stderr, "Error while writing in the logs file.\n");
     }
 }
@@ -173,10 +173,10 @@ void closeLogs() {
     // Write the end of the log file
     if(file_logs_desc == -1) {
         initLogs();
-        logs(1, "No logs has been written during this session.");
+        logs(L_INFO, "No logs has been written during this session.");
     }
     
-    logs(1, "End of the session of the game.");
+    logs(L_INFO, "End of the session of the game.");
     if(close(file_logs_desc) == -1) {
         fprintf(stderr, "Error while closing the logs file.\n");
     }
