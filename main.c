@@ -145,7 +145,6 @@ void stop_game() {
     delwin(cwinLEVEL);
     delwin(cwinTOOLS);
     delwin(cwinINFOS);
-    ncurses_stop();
 
     logs(1, "Game stopped");
     file_t* file = load_file(FILENAME);
@@ -157,6 +156,8 @@ void stop_game() {
     free(toolsMenu);
     level_free(level);
     closeLogs();
+
+    ncurses_stop();
 }
 
 void refresh_tools_menu() {
@@ -442,6 +443,5 @@ int main(void)
 
     control_handler();
 
-    stop_game();
     return 0;
 }

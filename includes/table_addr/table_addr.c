@@ -94,7 +94,7 @@ int update_empty(int fd, empty_data_t emptyData, size_t sizeNeeded) {
     if (get_table(fd, emptyData.addr_table, table) == -1) return -1;
 
     // if size not fully used
-    if (emptyData.size != sizeNeeded) {
+    if (emptyData.size != sizeNeeded && (emptyData.size - sizeNeeded - SIZE_DATA_INFO) > 0) {
         // update data_info
         data_info_t dataInfo;
         dataInfo.type = TABLE_TYPE_EMPTY;

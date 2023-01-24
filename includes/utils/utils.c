@@ -109,12 +109,26 @@ void initLogs() {
         }
     }
     // Open the file with open
-    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY | O_APPEND, S_IRUSR | S_IWUSR);
+    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
     // check if the file is open
     if (file_logs_desc == -1) {
         fprintf(stderr, "Error: can't open the logs file.\n");
         exit(EXIT_FAILURE);
     }
+}
+
+void get_log_tag(int log_level, char ** log_tag) {
+  switch(log_level) {
+    case 2: 
+      *log_tag = "DEBUG";
+      break;
+    case 1:
+      *log_tag = "INFO";
+      break;
+    default:
+      *log_tag = "UNKNOWN";
+      break;
+  }
 }
 
 /**
@@ -125,17 +139,7 @@ void logs(int log_level, char *text_to_log, ...) {
     if (log_level >= LOGS_ACTIVE) return;
 
     char * lvl_log = malloc(10);
-    switch (log_level) {
-        case 2:
-            lvl_log = "DEBUG";
-            break;
-        case 1:
-            lvl_log = "INFO";
-            break;
-        default:
-            lvl_log = "UNKNOWN";
-            break;
-    }
+    get_log_tag(log_level, &lvl_log);
 
     if (file_logs_desc == -1) initLogs();
 
@@ -155,13 +159,11 @@ void logs(int log_level, char *text_to_log, ...) {
     va_end(args);
 
     // Open the file in append mode check the success
-    char final_text[LOGS_MAX_LENGTH+17];
+    char final_text[LOGS_MAX_LENGTH+26];
     sprintf(final_text, "[%s][%s] %s\n", time, lvl_log, text_form);
     if (write(file_logs_desc, final_text, strlen(final_text)+1) == -1) {
         fprintf(stderr, "Error while writing in the logs file.\n");
     }
-
-    free(lvl_log);
 }
 
 /**
@@ -185,7 +187,7 @@ void closeLogs() {
     struct tm *t = localtime(&now);
     char time[30];
     strftime(time, sizeof(time), "%d-%m-%Y_%H-%M-%S", t);
-    
+
     char file_name[30] = LOGS_FOLDER;
     strcat(file_name, time);
     strcat(file_name, ".log");
