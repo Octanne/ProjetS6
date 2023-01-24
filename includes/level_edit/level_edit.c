@@ -8,7 +8,7 @@
 // TODO revoir hitbox semble pas fonctionner correctement
 int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
     if (x+xSize > 60 || y-ySize > 20) {
-        logs("checkHitBox => x: %d, y: %d (colision avec le bord)", x, y);
+        logs(1, "checkHitBox => x: %d, y: %d (colision avec le bord)", x, y);
         return 0;
     }
     // calculate number of positions
@@ -17,7 +17,7 @@ int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
 
     Position posL[nbPos];
     int i, j;
-    logs("nbPos: %d", nbPos);
+    logs(1, "nbPos: %d", nbPos);
     // calculate all positions on the hitbox
     for (j = y; j > y-ySize; j--) {
         for (i = x; i < x+xSize; i++) {
@@ -26,7 +26,7 @@ int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
             pos.y = j;
             nbIter--;
             posL[nbIter] = pos;
-            logs("[%d] add => x: %d, y: %d", nbIter, pos.x, pos.y);
+            logs(1, "[%d] add => x: %d, y: %d", nbIter, pos.x, pos.y);
         }
     }
 
@@ -35,18 +35,18 @@ int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
         Position pos = posL[i];
         // check if in level
         if (pos.x < 0 || pos.x > 60 || pos.y < 0 || pos.y > 20) {
-            logs("read => x: %d, y: %d (colision avec le bord)", pos.x, pos.y);
+            logs(1, "read => x: %d, y: %d (colision avec le bord)", pos.x, pos.y);
             return 0;
         }
 
         ListeObjet* objs = rechercherObjet(level, pos.x, pos.y);
         if (objs->tete != NULL) {
-            logs("read => x: %d, y: %d (colision avec %d)", pos.x, pos.y, objs->tete->objet->type);
+            logs(1, "read => x: %d, y: %d (colision avec %d)", pos.x, pos.y, objs->tete->objet->type);
             listeObjet_free(objs, 0);
             return 0;
         }
         listeObjet_free(objs, 0);
-        logs("read => x: %d, y: %d (pas de colision)", pos.x, pos.y);
+        logs(1, "read => x: %d, y: %d (pas de colision)", pos.x, pos.y);
     }
 
     return 1;

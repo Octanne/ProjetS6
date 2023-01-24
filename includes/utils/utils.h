@@ -36,7 +36,7 @@ void initLogs();
 /**
  * logs() : write a log in the logs file
 */
-void logs(char *text_to_log, ...);
+void logs(int log_level, char *text_to_log, ...);
 
 /**
  * closeLogs() : close the logs file

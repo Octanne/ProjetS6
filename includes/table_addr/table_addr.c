@@ -26,14 +26,14 @@ void init_table(off_t* table) {
 int get_data_info(int fd, off_t addr, data_info_t* dataInfo) {
     lseek(fd, addr, SEEK_SET);
     if (read(fd, dataInfo, SIZE_DATA_INFO) == -1) {
-        logs("get_data_info: read error: %s", strerror(errno));
+        logs(1, "get_data_info: read error: %s", strerror(errno));
         return -1;
     }
-    logs("get_data_info: type = %d, size = %d", dataInfo->type, dataInfo->size);
+    logs(1, "get_data_info: type = %d, size = %d", dataInfo->type, dataInfo->size);
     return 1;
 }
 int get_table(int fd, off_t addrTable, off_t* tableToFill) {
-    logs("get_table: addrTable = %ld", addrTable);
+    logs(1, "get_table: addrTable = %ld", addrTable);
     lseek(fd, addrTable, SEEK_SET);
     
     if (addrTable != ADDR_FIRST_TABLE) {
@@ -47,48 +47,48 @@ int get_table(int fd, off_t addrTable, off_t* tableToFill) {
 
     // get table
     if (read(fd, tableToFill, SIZE_TABLE) == -1) {
-        logs("get_table: read error: %s", strerror(errno));
+        logs(1, "get_table: read error: %s", strerror(errno));
         return -1;
     }
 
-    logs("get_table: success! firstAddress = %ld", (off_t)tableToFill[0]);
+    logs(1, "get_table: success! firstAddress = %ld", (off_t)tableToFill[0]);
     return 1;
 }
 
 int write_data_info(int fd, off_t addr, data_info_t *dataInfo) {
     lseek(fd, addr, SEEK_SET);
     if (write(fd, dataInfo, SIZE_DATA_INFO) == -1) {
-        logs("write_data_info: write error: %s", strerror(errno));
+        logs(1, "write_data_info: write error: %s", strerror(errno));
         return -1;
     }
 
-    logs("write_data_info: success! type = %d, size = %d", dataInfo->type, dataInfo->size);
+    logs(1, "write_data_info: success! type = %d, size = %d", dataInfo->type, dataInfo->size);
     return 1;
 }
 int write_table(int fd, off_t addrTable, off_t* table) {
     if (addrTable == ADDR_FIRST_TABLE) {
-        logs("write_table: first table (addr = %ld)", addrTable);
+        logs(1, "write_table: first table (addr = %ld)", addrTable);
         lseek(fd, addrTable, SEEK_SET);
         if (write(fd, table, SIZE_TABLE) == -1) {
-            logs("write_table: write error: %s", strerror(errno));
+            logs(1, "write_table: write error: %s", strerror(errno));
             return -1;
         }
-        logs("write_table: success!");
+        logs(1, "write_table: success!");
         return 1;
     } else {
-        logs("write_table: not first table (addr = %ld)", addrTable);
+        logs(1, "write_table: not first table (addr = %ld)", addrTable);
         lseek(fd, addrTable + SIZE_DATA_INFO, SEEK_SET);
         if (write(fd, table, SIZE_TABLE) == -1) {
-            logs("write_table: write error: %s", strerror(errno));
+            logs(1, "write_table: write error: %s", strerror(errno));
             return -1;
         }
-        logs("write_table: success!");
+        logs(1, "write_table: success!");
         return 1;
     }
 }
 
 int update_empty(int fd, empty_data_t emptyData, size_t sizeNeeded) {
-    logs("update_empty: addrEmpty = %ld, sizeNeeded = %d", emptyData.addr_empty, sizeNeeded);
+    logs(1, "update_empty: addrEmpty = %ld, sizeNeeded = %d", emptyData.addr_empty, sizeNeeded);
     // get table
     off_t table[TAILLE_TABLE];
     if (get_table(fd, emptyData.addr_table, table) == -1) return -1;
@@ -111,7 +111,7 @@ int update_empty(int fd, empty_data_t emptyData, size_t sizeNeeded) {
     // update table
     if(write_table(fd, emptyData.addr_table, table) == -1) return -1;
 
-    logs("update_empty: success!");
+    logs(1, "update_empty: success!");
     return 1;
 }
 
@@ -125,21 +125,21 @@ empty_data_t get_empty(int fd, size_t sizeNeeded, off_t addrTable) {
     off_t table[TAILLE_TABLE];
     if (get_table(fd, addrTable, table) == -1) return errReturn;
 
-    logs("get_empty: checking table at addr = %ld", addrTable);
+    logs(1, "get_empty: checking table at addr = %ld", addrTable);
 
     // check table if there is an empty space
     int i;
     for (i = 0; i < TAILLE_TABLE - 1; i++) {
         // cellule is used
         if (table[i] != ADDR_UNUSED) {
-            logs("get_empty: cellule %d direct to %ld", i, table[i]);
+            logs(1, "get_empty: cellule %d direct to %ld", i, table[i]);
             // get data_info
             data_info_t dataInfo;
             if(get_data_info(fd, table[i], &dataInfo) == -1) return errReturn;
 
             // check if it's an empty
             if (dataInfo.type == TABLE_TYPE_EMPTY) {
-                logs("get_empty: empty found at %ld", table[i]);
+                logs(1, "get_empty: empty found at %ld", table[i]);
                 // check if it's big enough
                 if (dataInfo.size >= sizeNeeded) {
                     // return addr
@@ -148,7 +148,7 @@ empty_data_t get_empty(int fd, size_t sizeNeeded, off_t addrTable) {
                     emptyData.addr_table = addrTable;
                     emptyData.size = dataInfo.size;
                     emptyData.found = i;
-                    logs("get_empty: size enoughly big, size: %ld", emptyData.size);
+                    logs(1, "get_empty: size enoughly big, size: %ld", emptyData.size);
                     return emptyData;
                 }
             }
@@ -157,13 +157,13 @@ empty_data_t get_empty(int fd, size_t sizeNeeded, off_t addrTable) {
 
     // check if there is an other empty table
     if (table[TAILLE_TABLE - 1] != ADDR_UNUSED) {
-        logs("get_empty: next table at %ld", table[TAILLE_TABLE - 1]);
+        logs(1, "get_empty: next table at %ld", table[TAILLE_TABLE - 1]);
         // get table
         off_t next_table_addr = table[TAILLE_TABLE - 1];
         return get_empty(fd, sizeNeeded, next_table_addr);
     } else {
         // no empty space
-        logs("get_empty: no empty space");
+        logs(1, "get_empty: no empty space");
         errReturn.found = -1; // set to -1 to know it's have not found
         return errReturn;
     }
@@ -178,7 +178,7 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
     // check table if there is an empty space
     int i;
     for (i = 0; i < TAILLE_TABLE - 1; i++) {
-        logs("find_av_tableEntry: table[%d] = %ld", i, table[i]);
+        logs(1, "find_av_tableEntry: table[%d] = %ld", i, table[i]);
         if (table[i] == ADDR_UNUSED) {
             result->addr_table = addrTable;
             result->idx_table = i;
@@ -190,12 +190,12 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
 
     // check if there is an other empty table
     if (table[TAILLE_TABLE - 1] != ADDR_UNUSED) {
-        logs("find_av_tableEntry: search in next table");
+        logs(1, "find_av_tableEntry: search in next table");
         // get table
         off_t next_table_addr = table[TAILLE_TABLE - 1];
         return find_av_tableEntry(fd, next_table_addr, result);
     } else {
-        logs("find_av_tableEntry: create new table");
+        logs(1, "find_av_tableEntry: create new table");
         // create a new table
         // if empty on file
         empty_data_t emptyData = get_empty(fd, SIZE_TABLE, ADDR_EMTPY_TABLE);
@@ -289,7 +289,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 
     // write the buffer
     if (write(fd, buffer, dataInfo.size + SIZE_DATA_INFO) == -1) return -1;
-    logs("transform_to_empty: erase data at %d", table[localIndex]);
+    logs(1, "transform_to_empty: erase data at %d", table[localIndex]);
 
     // 
     // Register the empty space to the empty table
@@ -297,13 +297,13 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     table_entry_t tableEntry;
     if (find_av_tableEntry(fd, ADDR_EMTPY_TABLE, &tableEntry) == -1) return -1;
 
-    logs("transform_to_empty: find space on empty table at %d", tableEntry.addr_table);
+    logs(1, "transform_to_empty: find space on empty table at %d", tableEntry.addr_table);
 
     // get the table
     off_t tableEmpty[TAILLE_TABLE];
     if (get_table(fd, tableEntry.addr_table, tableEmpty) == -1) return -1;
 
-    logs("transform_to_empty: get the empty table at %d", tableEntry.addr_table);
+    logs(1, "transform_to_empty: get the empty table at %d", tableEntry.addr_table);
 
     // set the table entry
     tableEmpty[tableEntry.idx_table] = table[localIndex];
@@ -324,7 +324,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     // update the table
     if (write_table(fd, addrTable, table) == -1) return -1;
 
-    logs("transform_to_empty: success");
+    logs(1, "transform_to_empty: success");
     return 1;
 }
 
@@ -405,7 +405,7 @@ file_t* create_file(char* filename) {
         return (file_t*)NULL;
     }
 
-    logs("Tag written: %s, size_tag : %ld", TAG_FILE, SIZE_TAG);
+    logs(1, "Tag written: %s, size_tag : %ld", TAG_FILE, SIZE_TAG);
 
     // write table
     if (write(fd, file->table, SIZE_TABLE) == -1) {
@@ -421,7 +421,7 @@ file_t* create_file(char* filename) {
         close(fd);
         return (file_t*)NULL;
     }
-    logs("Cursor at : %ld", lseek(fd, 0, SEEK_CUR));
+    logs(1, "Cursor at : %ld", lseek(fd, 0, SEEK_CUR));
     // write tableOfEmpty
     if (write(fd, file->tableOfEmpty, SIZE_TABLE) == -1) {
         close(fd);
@@ -431,7 +431,7 @@ file_t* create_file(char* filename) {
     // close file
     close(fd);
 
-    logs("File created: %s, %d", filename, fd);
+    logs(1, "File created: %s, %d", filename, fd);
 
     return file;
 }
@@ -442,11 +442,11 @@ file_t* load_file(char* filename) {
         if (errno == ENOENT) {
             // file doesn't exist so create it
             file_t* file = create_file(filename);
-            logs("load_file: file %s has been create.", filename);
+            logs(1, "load_file: file %s has been create.", filename);
             return file;
         } else {
             // other error
-            logs("load_file: error opening file %s, %s", filename, strerror(errno));
+            logs(1, "load_file: error opening file %s, %s", filename, strerror(errno));
             return (file_t*)NULL;
         }
     }
@@ -461,7 +461,7 @@ file_t* load_file(char* filename) {
     char tag[SIZE_TAG];
     readRes = read(fd, tag, SIZE_TAG);
     if (readRes == -1 || strcmp(tag, TAG_FILE) != 0) {
-        logs("Tag unreconized! Tag: %s", tag);
+        logs(1, "Tag unreconized! Tag: %s", tag);
         free(file);
         close(fd);
         return (file_t*)NULL;
@@ -470,7 +470,7 @@ file_t* load_file(char* filename) {
     // load table
     readRes = read(fd, file->table, SIZE_TABLE);
     if (readRes == -1) {
-        logs("Error read table");
+        logs(1, "Error read table");
         close(fd);
         free(file);
         return (file_t*)NULL;
@@ -480,13 +480,13 @@ file_t* load_file(char* filename) {
     // load tableOfEmpty
     readRes = read(fd, file->tableOfEmpty, SIZE_TABLE);
     if (readRes == -1) {
-        logs("Error read tableOfEmpty");
+        logs(1, "Error read tableOfEmpty");
         close(fd);
         free(file);
         return (file_t*)NULL;
     }
 
-    logs("File loaded: %s, %d", filename, fd);
+    logs(1, "File loaded: %s, %d", filename, fd);
 
     // close file
     close(fd);
@@ -495,11 +495,11 @@ file_t* load_file(char* filename) {
 }
 
 int add_data(file_t* file, char* data, size_t size, char data_type) {
-    logs("Add data: %X, %ld, %d", data, size, data_type);
+    logs(1, "Add data: %X, %ld, %d", data, size, data_type);
 
     int fd = open(file->filename, O_RDWR);
     if (fd == -1) {
-        logs("Error open file: %s", file->filename);
+        logs(1, "Error open file: %s", file->filename);
         return -1;
     }
 
@@ -507,11 +507,11 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
     table_entry_t tableEntry;
     if (find_av_tableEntry(fd, ADDR_FIRST_TABLE, &tableEntry) == -1) {
         close(fd);
-        logs("Error find_av_tableEntry");
+        logs(1, "Error find_av_tableEntry");
         return -1;
     }
     
-    logs("Table entry found: %ld, %ld, %d, %d", 
+    logs(1, "Table entry found: %ld, %ld, %d, %d", 
     tableEntry.addr_cell, tableEntry.addr_table, tableEntry.idx_table, tableEntry.type_data);
 
     // get the table
@@ -523,7 +523,7 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
     
     empty_data_t emptyData = get_empty(fd, size, ADDR_EMTPY_TABLE);
     if (emptyData.found > -1) {
-        logs("Empty data found: addr: %ld, size : %ld", emptyData.addr_empty, emptyData.size);
+        logs(1, "Empty data found: addr: %ld, size : %ld", emptyData.addr_empty, emptyData.size);
         // set cursor in the empty space found
         lseek(fd, emptyData.addr_empty, SEEK_SET);
         update_empty(fd, emptyData, size);
@@ -533,12 +533,12 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
         lseek(fd, emptyData.addr_empty, SEEK_SET);
     } else if (emptyData.found == -1){
         // set cursor at the end of file
-        logs("Empty data not found write at the end of file");
+        logs(1, "Empty data not found write at the end of file");
         // update table
         table[tableEntry.idx_table] = lseek(fd, 0, SEEK_END);
     } else {
         // error
-        logs("Error get_empty");
+        logs(1, "Error get_empty");
         close(fd);
         return -1;
     }
@@ -567,7 +567,7 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
     // close file
     close(fd);
 
-    logs("Data added: %X, %d", data, fd);
+    logs(1, "Data added: %X, %d", data, fd);
 
     return 1;
 }
@@ -575,7 +575,7 @@ int add_data(file_t* file, char* data, size_t size, char data_type) {
 int remove_entry(file_t* file, int index) {
     int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
     if (fd == -1) {
-        logs("Error open file: %s", file->filename);
+        logs(1, "Error open file: %s", file->filename);
         return -1;
     }
 
@@ -590,26 +590,26 @@ int remove_entry(file_t* file, int index) {
 int get_data(int fd, off_t addr_data, data_info_t* dataInfo, char** data) {
     // set cursor
     lseek(fd, addr_data, SEEK_SET);
-    logs("Get data: cursor set at %ld", lseek(fd, 0, SEEK_CUR));
+    logs(1, "Get data: cursor set at %ld", lseek(fd, 0, SEEK_CUR));
 
     // read data info
     if (read(fd, dataInfo, SIZE_DATA_INFO) == -1) {
-        logs("get_data: error read data info");
+        logs(1, "get_data: error read data info");
         return -1;
     }
 
-    logs("get_data: data info read: type: %d, size: %ld", dataInfo->type, dataInfo->size);
+    logs(1, "get_data: data info read: type: %d, size: %ld", dataInfo->type, dataInfo->size);
 
     // allocate data
     char *dataS = malloc(dataInfo->size);
     // read data
     if (read(fd, dataS, dataInfo->size) == -1) {
-        logs("get_data: error read data");
+        logs(1, "get_data: error read data");
         return -1;
     }
     *data = dataS;
 
-    logs("get_data: Success! data : %X", *data);
+    logs(1, "get_data: Success! data : %X", *data);
     return 1;
 }
 
@@ -618,7 +618,7 @@ int remove_level(file_t* file, int numLevel) {
 }
 
 char* convert_level_to_bytes(Level* level, int* size) {
-    logs("Convert level to bytes: %d items.", level->listeObjet->taille);
+    logs(1, "Convert level to bytes: %d items.", level->listeObjet->taille);
 
     int num_obj = level->listeObjet->taille;
     *size = num_obj * sizeof(Objet);
@@ -628,19 +628,19 @@ char* convert_level_to_bytes(Level* level, int* size) {
     // Parcourir la liste des objets
     EltListe_o* obj = level->listeObjet->tete;
     while(obj != NULL) {
-        //logs("Convert level to bytes: x: %d, y: %d, type: %d", obj->objet->x, obj->objet->y, obj->objet->type);
+        //logs(1, "Convert level to bytes: x: %d, y: %d, type: %d", obj->objet->x, obj->objet->y, obj->objet->type);
         memcpy(buffer + (i * sizeof(Objet)), obj->objet, sizeof(Objet));
         obj = obj->suivant;
         i++;
     }
 
-    logs("Convert level to bytes: Success! %d bytes.", *size);
+    logs(1, "Convert level to bytes: Success! %d bytes.", *size);
     
     return buffer;
 }
 
 Level* convert_bytes_to_level(char* bytes, int size) {
-    logs("Convert bytes to level: %d bytes.", size);
+    logs(1, "Convert bytes to level: %d bytes.", size);
 
     Level* level = levelEmpty();
     int i;
@@ -648,33 +648,33 @@ Level* convert_bytes_to_level(char* bytes, int size) {
     for (i = 0; i < num_obj; i++) {
         Objet* obj = malloc(sizeof(Objet));
         memcpy(obj, bytes + (i * sizeof(Objet)), sizeof(Objet));
-        //logs("Convert bytes to obj: x: %d, y: %d, type: %d", obj->x, obj->y, obj->type);
+        //logs(1, "Convert bytes to obj: x: %d, y: %d, type: %d", obj->x, obj->y, obj->type);
         levelAjouterObjet(level, obj);
     }
 
-    logs("Convert bytes to level: Success! %d items.", level->listeObjet->taille);
+    logs(1, "Convert bytes to level: Success! %d items.", level->listeObjet->taille);
 
     return level;
 }
 
 int get_level(file_t* file, int numLevel, Level** level) {
-    logs("get_level: start");
+    logs(1, "get_level: start");
     int fd = open(file->filename, O_RDONLY);
     if (fd == -1) {
-        logs("Error open file: %s", file->filename);
+        logs(1, "Error open file: %s", file->filename);
         return -1;
     }
 
-    logs("get_level: file opened: %s", file->filename);
+    logs(1, "get_level: file opened: %s", file->filename);
 
     // get table entry
     table_entry_t entry = find_tableEntryOfIdx(fd,numLevel-1,ADDR_FIRST_TABLE,0);
 
-    logs("get_level: table entry read: type: %d, addr: %ld", entry.type_data, entry.addr_cell);
+    logs(1, "get_level: table entry read: type: %d, addr: %ld", entry.type_data, entry.addr_cell);
 
     if (entry.type_data == TABLE_TYPE_NONE) {
         // Level not found
-        logs("get_level: Level not found");
+        logs(1, "get_level: Level not found");
         close(fd);
         return -1;
     } else if (entry.type_data == TABLE_TYPE_LEVEL) {
@@ -686,7 +686,7 @@ int get_level(file_t* file, int numLevel, Level** level) {
             return -1;
         }
 
-        logs("get_level: data read: %X", data);
+        logs(1, "get_level: data read: %X", data);
 
         // convert bytes to level
         *level = convert_bytes_to_level(data, dataInfo.size);
@@ -700,7 +700,7 @@ int get_level(file_t* file, int numLevel, Level** level) {
         // close file
         close(fd);
 
-        logs("get_level: Level load success : %d items loaded!", (*level)->listeObjet->taille);
+        logs(1, "get_level: Level load success : %d items loaded!", (*level)->listeObjet->taille);
 
         return 1;
     }
@@ -708,7 +708,7 @@ int get_level(file_t* file, int numLevel, Level** level) {
     // close file
     close(fd);
 
-    logs("get_level: Level not found");
+    logs(1, "get_level: Level not found");
 
     return -1;
 }
@@ -717,17 +717,17 @@ int save_level(file_t* file, int numLevel, Level* level) {
     // open 
     int fd = open(file->filename, O_RDWR);
     if (fd == -1) {
-        logs("Error open file: %s", file->filename);
+        logs(1, "Error open file: %s", file->filename);
         return -1;
     }
     table_entry_t result = find_tableEntryOfIdx(fd, numLevel-1, ADDR_FIRST_TABLE, 0);
     
-    logs("save_level: table entry found: type: %d, addr: %ld", result.type_data, result.addr_cell);
+    logs(1, "save_level: table entry found: type: %d, addr: %ld", result.type_data, result.addr_cell);
 
     int size;
     char* bytes = convert_level_to_bytes(level, &size);
 
-    logs("save_level: level converted to bytes: %X", bytes);
+    logs(1, "save_level: level converted to bytes: %X", bytes);
     if (result.type_data == TABLE_TYPE_NONE) {
         close(fd);
         // create new level
@@ -748,20 +748,20 @@ int save_level(file_t* file, int numLevel, Level* level) {
 
     close(fd);
 
-    logs("save_level: Error, unexpected type: %d", result.type_data);
+    logs(1, "save_level: Error, unexpected type: %d", result.type_data);
 
     return -1;
 }
 
 int show_table_c(int fd, off_t addr_table, int level, char* output) {
-    logs("Show table: %ld, %d", addr_table, level);
+    logs(1, "Show table: %ld, %d", addr_table, level);
     char text[300];
 
     // get table
     off_t table[TAILLE_TABLE];
     if (get_table(fd, addr_table, table) == -1) return -1;
 
-    logs("show_table: begin show table %d", level);
+    logs(1, "show_table: begin show table %d", level);
     sprintf(text, "Table %d :\n", level);
     strcat(output, text);
 
@@ -769,7 +769,7 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
     int i;
     for (i = 0; i < TAILLE_TABLE-1; i++) {
         if (table[i] != ADDR_UNUSED) {
-            logs("show_table: cell %d is not empty", i);
+            logs(1, "show_table: cell %d is not empty", i);
             sprintf(text, " CELL[%d] : %ld\n", i, table[i]);
             strcat(output, text);
             // get data info
@@ -778,7 +778,7 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
             if (get_data(fd, table[i], &dataInfo, &dataBuffer) == -1) {
                 strcat(output, "   Data : ERROR\n");
             } else {
-                logs("show_table: data info read: type: %d, size: %ld", dataInfo.type, dataInfo.size);
+                logs(1, "show_table: data info read: type: %d, size: %ld", dataInfo.type, dataInfo.size);
                 // show data size
                 sprintf(text, "   Data size : %ld\n", dataInfo.size);
                 strcat(output, text);
@@ -822,7 +822,7 @@ char* show_table(file_t* file){
     char * result = malloc(8192);
     int fd = open(file->filename, O_RDONLY);
     if (fd == -1) {
-        logs("Error open file: %s", file->filename);
+        logs(1, "Error open file: %s", file->filename);
         return "ERROR\n";
     }
 

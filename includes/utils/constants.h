@@ -3,7 +3,7 @@
 
 #define LOGS_FILE "logs/latest.log"
 #define LOGS_FOLDER "logs/"
-#define LOGS_ACTIVE 1 // 1 = active, 0 = inactive
+#define LOGS_ACTIVE 2 // 2 = debug, 1 = info, 0 = inactive
 #define LOGS_MAX_LENGTH 3500
 
 #define FILENAME "level.lvl"

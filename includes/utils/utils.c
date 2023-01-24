@@ -108,7 +108,7 @@ void initLogs() {
         }
     }
     // Open the file with open
-    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY | O_APPEND, S_IRUSR | S_IWUSR);
     // check if the file is open
     if (file_logs_desc == -1) {
         fprintf(stderr, "Error: can't open the logs file.\n");
@@ -119,7 +119,23 @@ void initLogs() {
 /**
  * logs() : write a log in the logs file
 */
-void logs(char *text_to_log, ...) {
+void logs(int log_level, char *text_to_log, ...) {
+    // check log level
+    if (log_level >= LOGS_ACTIVE) return;
+
+    char * lvl_log = malloc(10);
+    switch (log_level) {
+        case 2:
+            lvl_log = "DEBUG";
+            break;
+        case 1:
+            lvl_log = "INFO";
+            break;
+        default:
+            lvl_log = "UNKNOWN";
+            break;
+    }
+
     if (file_logs_desc == -1) initLogs();
 
     // Format time in char * with the format: [HH:MM:SS]
@@ -138,11 +154,13 @@ void logs(char *text_to_log, ...) {
     va_end(args);
 
     // Open the file in append mode check the success
-    char final_text[LOGS_MAX_LENGTH+15];
-    sprintf(final_text, "[%s] %s\n", time, text_form);
+    char final_text[LOGS_MAX_LENGTH+17];
+    sprintf(final_text, "[%s][%s] %s\n", time, lvl_log, text_form);
     if (write(file_logs_desc, final_text, strlen(final_text)+1) == -1) {
         fprintf(stderr, "Error while writing in the logs file.\n");
     }
+
+    free(lvl_log);
 }
 
 /**
@@ -152,10 +170,10 @@ void closeLogs() {
     // Write the end of the log file
     if(file_logs_desc == -1) {
         initLogs();
-        logs("No logs has been written during this session.");
+        logs(1, "No logs has been written during this session.");
     }
     
-    logs("End of the session of the game.");
+    logs(1, "End of the session of the game.");
     if(close(file_logs_desc) == -1) {
         fprintf(stderr, "Error while closing the logs file.\n");
     }

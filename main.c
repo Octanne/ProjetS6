@@ -101,37 +101,37 @@ void load_level(int newLevel, int oldLevel) {
     // TODO: Load level from file or empty level if not found
     file_t* file = load_file(FILENAME);
 
-    if (save_level(file, oldLevel, level) == -1) logs("Error while saving level %d", oldLevel);
+    if (save_level(file, oldLevel, level) == -1) logs(1, "Error while saving level %d", oldLevel);
     if (get_level(file, newLevel, &level) == -1) {
         // Pas de niveau dans le fichier
         gen_level_empty();
-        logs("Level %d not found, empty level generated", newLevel);
+        logs(1, "Level %d not found, empty level generated", newLevel);
     }
 
     free_file(file);
 
-    logs("Level %d loaded (level %d saved)", newLevel, oldLevel);
-    logs("Level %d : %d items loaded", newLevel, level->listeObjet->taille);
+    logs(1, "Level %d loaded (level %d saved)", newLevel, oldLevel);
+    logs(1, "Level %d : %d items loaded", newLevel, level->listeObjet->taille);
     refresh_level();
 
     set_text_info("Level loaded", 1, GREEN_COLOR);
 }
 
 void load_level_file() {
-    logs("Loading level from file...");
+    logs(1, "Loading level from file...");
     file_t* file = load_file(FILENAME);
-    logs("File loaded");
+    logs(1, "File loaded");
 
     // show table
-    logs("\n===========Affichage Tables===========\n%s===========Affichage Tables===========",show_table(file));
+    logs(1, "\n===========Affichage Tables===========\n%s===========Affichage Tables===========",show_table(file));
 
     if (get_level(file, 1, &level) == -1) {
         // Pas de niveau dans le fichier
         gen_level_empty();
-        logs("Level 1 not found, empty level generated");
+        logs(1, "Level 1 not found, empty level generated");
     } else {
-        logs("Level 1 loaded");
-        logs("Level 1 : %d items loaded", level->listeObjet->taille);
+        logs(1, "Level 1 loaded");
+        logs(1, "Level 1 : %d items loaded", level->listeObjet->taille);
         refresh_level();
     }
 
@@ -147,11 +147,11 @@ void stop_game() {
     delwin(cwinINFOS);
     ncurses_stop();
 
-    logs("Game stopped");
+    logs(1, "Game stopped");
     file_t* file = load_file(FILENAME);
-    logs("Saving level %d...", toolsMenu->levelNumberSelected);
+    logs(1, "Saving level %d...", toolsMenu->levelNumberSelected);
     save_level(file, toolsMenu->levelNumberSelected, level);
-    logs("Level %d saved", toolsMenu->levelNumberSelected);
+    logs(1, "Level %d saved", toolsMenu->levelNumberSelected);
     free_file(file);
 
     free(toolsMenu);
@@ -264,7 +264,7 @@ void mouse_toolsWindow(int posX, int posY) {
         }
         // delete level
         else if (posY == 18 && posX >= 65 && posX <= 70) {
-            logs("Suppression du niveau");
+            logs(1, "Suppression du niveau");
             gen_level_empty();
             set_text_info("Le niveau est remis a zero.", 1, WHITE_COLOR);
         }
