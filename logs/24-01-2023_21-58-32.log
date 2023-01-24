@@ -1,0 +1,1446 @@
+[20:38:49][INFO] Main | Loading first level from file...
+[20:38:49][DEBUG] init_table | Initialisation Ã  ADDR_UNUSED des entrÃ©es de la table.
+[20:38:49][DEBUG] Tag written: GAMEOFTABLES, size_tag : 13
+[20:38:49][DEBUG] Cursor at : 109
+[20:38:49][DEBUG] File created: level.lvl, 4
+[20:38:49][DEBUG] load_file: file level.lvl has been create.
+[20:38:49][INFO] Main | File loaded
+[20:38:49][DEBUG] get_table | addrTable = 13
+[20:38:49][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:38:49][DEBUG] get_table | addrTable = 93
+[20:38:49][DEBUG] get_data_info | addr = 93
+[20:38:49][INFO] get_data_info | retour : type = 2, size = 80
+[20:38:49][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:38:49][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:38:49][DEBUG] Get_level | level : 0
+[20:38:49][DEBUG] Get_level | File opened: level.lvl
+[20:38:49][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:38:49][DEBUG] get_table | addrTable = 13
+[20:38:49][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:38:49][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:38:49][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:38:49][DEBUG] Get_level | table entry read: type = 0, addr = -1
+[20:38:49][DEBUG] Get_level | Level not found
+[20:38:49][INFO] Main | First level not found, empty level generated.
+[20:38:49][DEBUG] free_file | file = level.lvl
+[20:39:05][DEBUG] File loaded: level.lvl, 4
+[20:39:05][DEBUG] Save_level | level : 0
+[20:39:05][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:39:05][DEBUG] get_table | addrTable = 13
+[20:39:05][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:05][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:39:05][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:39:05][DEBUG] Save_level | table entry found: type: 0, addr: -1
+[20:39:05][INFO] Level Converter | Convert level to bytes: 156 items.
+[20:39:05][INFO] Level Converter | Convert level to bytes: Success! 9984 bytes.
+[20:39:05][DEBUG] Save_level | Success level converted to bytes: D0BD6EC0
+[20:39:05][DEBUG] add_data | data: , size: 9984, data_type: 3
+[20:39:05][DEBUG] find_av_tableEntry | addrTable = 13
+[20:39:05][DEBUG] get_table | addrTable = 13
+[20:39:05][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:05][DEBUG] find_av_tableEntry | entry not used found at index = 0 of table = 13
+[20:39:05][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 0, tableEntry.type_data: 0
+[20:39:05][DEBUG] get_table | addrTable = 13
+[20:39:05][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:05][DEBUG] get_empty | sizeNeeded = 9984, addrTable = 93
+[20:39:05][DEBUG] get_table | addrTable = 93
+[20:39:05][DEBUG] get_data_info | addr = 93
+[20:39:05][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:05][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:05][DEBUG] get_empty | Check table for an empty space...
+[20:39:05][DEBUG] get_empty | no more table to check, no empty space found
+[20:39:05][DEBUG] add_data | No empty space found, set cursor at the end of file
+[20:39:05][DEBUG] write_table | addrTable = 13
+[20:39:05][DEBUG] write_table | first table
+[20:39:05][DEBUG] write_table | retour : success!
+[20:39:05][DEBUG] add_data | Data added at addr = 189, idx = 0, tableAddr = 13
+[20:39:05][DEBUG] Save_level | Success level created: res = 1
+[20:39:05][DEBUG] Get_level | level : 1
+[20:39:05][DEBUG] Get_level | File opened: level.lvl
+[20:39:05][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:39:05][DEBUG] get_table | addrTable = 13
+[20:39:05][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:05][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:39:05][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:39:05][DEBUG] Get_level | table entry read: type = 0, addr = -1
+[20:39:05][DEBUG] Get_level | Level not found
+[20:39:05][INFO] Main | Level 2 not found, empty level generated
+[20:39:05][DEBUG] get_table | addrTable = 13
+[20:39:05][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:05][DEBUG] Get_data | Set cursor at addr = 189
+[20:39:05][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 9984
+[20:39:05][DEBUG] Get_data | Success! data : D0BD98B0
+[20:39:05][DEBUG] get_table | addrTable = 93
+[20:39:05][DEBUG] get_data_info | addr = 93
+[20:39:05][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:05][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:05][INFO] 
+======================Affichage Tables======================
+
+ ³üÖžTables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:39:05][DEBUG] free_file | file = level.lvl
+[20:39:05][INFO] Main | New level load : 2, Old level save : 1
+[20:39:05][INFO] Main | Level 2 : 156 items loaded
+[20:39:21][DEBUG] nbPos: 3
+[20:39:21][DEBUG] [2] add => x: 30, y: 9
+[20:39:21][DEBUG] [1] add => x: 31, y: 9
+[20:39:21][DEBUG] [0] add => x: 32, y: 9
+[20:39:21][DEBUG] read => x: 32, y: 9 (pas de colision)
+[20:39:21][DEBUG] read => x: 31, y: 9 (pas de colision)
+[20:39:21][DEBUG] read => x: 30, y: 9 (pas de colision)
+[20:39:22][DEBUG] nbPos: 3
+[20:39:22][DEBUG] [2] add => x: 16, y: 10
+[20:39:22][DEBUG] [1] add => x: 17, y: 10
+[20:39:22][DEBUG] [0] add => x: 18, y: 10
+[20:39:22][DEBUG] read => x: 18, y: 10 (pas de colision)
+[20:39:22][DEBUG] read => x: 17, y: 10 (pas de colision)
+[20:39:22][DEBUG] read => x: 16, y: 10 (pas de colision)
+[20:39:22][DEBUG] nbPos: 3
+[20:39:22][DEBUG] [2] add => x: 48, y: 9
+[20:39:22][DEBUG] [1] add => x: 49, y: 9
+[20:39:22][DEBUG] [0] add => x: 50, y: 9
+[20:39:22][DEBUG] read => x: 50, y: 9 (pas de colision)
+[20:39:22][DEBUG] read => x: 49, y: 9 (pas de colision)
+[20:39:22][DEBUG] read => x: 48, y: 9 (pas de colision)
+[20:39:26][DEBUG] File loaded: level.lvl, 4
+[20:39:26][DEBUG] Save_level | level : 1
+[20:39:26][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:39:26][DEBUG] get_table | addrTable = 13
+[20:39:26][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:26][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:39:26][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:39:26][DEBUG] Save_level | table entry found: type: 0, addr: -1
+[20:39:26][INFO] Level Converter | Convert level to bytes: 159 items.
+[20:39:26][INFO] Level Converter | Convert level to bytes: Success! 10176 bytes.
+[20:39:26][DEBUG] Save_level | Success level converted to bytes: D0BDC100
+[20:39:26][DEBUG] add_data | data: 
+, size: 10176, data_type: 3
+[20:39:26][DEBUG] find_av_tableEntry | addrTable = 13
+[20:39:26][DEBUG] get_table | addrTable = 13
+[20:39:26][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:26][DEBUG] find_av_tableEntry | entry not used found at index = 1 of table = 13
+[20:39:26][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 1, tableEntry.type_data: 0
+[20:39:26][DEBUG] get_table | addrTable = 13
+[20:39:26][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:26][DEBUG] get_empty | sizeNeeded = 10176, addrTable = 93
+[20:39:26][DEBUG] get_table | addrTable = 93
+[20:39:26][DEBUG] get_data_info | addr = 93
+[20:39:26][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:26][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:26][DEBUG] get_empty | Check table for an empty space...
+[20:39:26][DEBUG] get_empty | no more table to check, no empty space found
+[20:39:26][DEBUG] add_data | No empty space found, set cursor at the end of file
+[20:39:26][DEBUG] write_table | addrTable = 13
+[20:39:26][DEBUG] write_table | first table
+[20:39:26][DEBUG] write_table | retour : success!
+[20:39:26][DEBUG] add_data | Data added at addr = 10189, idx = 1, tableAddr = 13
+[20:39:26][DEBUG] Save_level | Success level created: res = 1
+[20:39:26][DEBUG] Get_level | level : 0
+[20:39:26][DEBUG] Get_level | File opened: level.lvl
+[20:39:26][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:39:26][DEBUG] get_table | addrTable = 13
+[20:39:26][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:26][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:39:26][DEBUG] get_data_info | addr = 189
+[20:39:26][INFO] get_data_info | retour : type = 3, size = 9984
+[20:39:26][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 189, addr_table = 13, idx_table = 0, type_data = 3
+[20:39:26][DEBUG] Get_level | table entry read: type = 3, addr = 189
+[20:39:26][DEBUG] Get_data | Set cursor at addr = 189
+[20:39:26][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 9984
+[20:39:26][DEBUG] Get_data | Success! data : D0BDEBB0
+[20:39:26][DEBUG] Get_level | dataInfo.type = 3, dataInfo.size = 9984
+[20:39:26][DEBUG] Get_level | data = D0BDEBB0
+[20:39:26][INFO] Level Converter | Convert bytes to level: 9984 bytes.
+[20:39:26][INFO] Level Converter | Convert bytes to level: Success! 156 items.
+[20:39:26][DEBUG] Get_level | level : 0, success! 156 items loaded!
+[20:39:26][DEBUG] get_table | addrTable = 13
+[20:39:26][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:26][DEBUG] Get_data | Set cursor at addr = 189
+[20:39:26][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 9984
+[20:39:26][DEBUG] Get_data | Success! data : D0BF12B0
+[20:39:26][DEBUG] Get_data | Set cursor at addr = 10189
+[20:39:26][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:39:26][DEBUG] Get_data | Success! data : D0BF39C0
+[20:39:26][DEBUG] get_table | addrTable = 93
+[20:39:26][DEBUG] get_data_info | addr = 93
+[20:39:26][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:26][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:26][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : 10189
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:39:26][DEBUG] free_file | file = level.lvl
+[20:39:26][INFO] Main | New level load : 1, Old level save : 2
+[20:39:26][INFO] Main | Level 1 : 156 items loaded
+[20:39:47][DEBUG] nbPos: 12
+[20:39:47][DEBUG] [11] add => x: 15, y: 12
+[20:39:47][DEBUG] [10] add => x: 16, y: 12
+[20:39:47][DEBUG] [9] add => x: 17, y: 12
+[20:39:47][DEBUG] [8] add => x: 15, y: 11
+[20:39:47][DEBUG] [7] add => x: 16, y: 11
+[20:39:47][DEBUG] [6] add => x: 17, y: 11
+[20:39:47][DEBUG] [5] add => x: 15, y: 10
+[20:39:47][DEBUG] [4] add => x: 16, y: 10
+[20:39:47][DEBUG] [3] add => x: 17, y: 10
+[20:39:47][DEBUG] [2] add => x: 15, y: 9
+[20:39:47][DEBUG] [1] add => x: 16, y: 9
+[20:39:47][DEBUG] [0] add => x: 17, y: 9
+[20:39:47][DEBUG] read => x: 17, y: 9 (pas de colision)
+[20:39:47][DEBUG] read => x: 16, y: 9 (pas de colision)
+[20:39:47][DEBUG] read => x: 15, y: 9 (pas de colision)
+[20:39:47][DEBUG] read => x: 17, y: 10 (pas de colision)
+[20:39:47][DEBUG] read => x: 16, y: 10 (pas de colision)
+[20:39:47][DEBUG] read => x: 15, y: 10 (pas de colision)
+[20:39:47][DEBUG] read => x: 17, y: 11 (pas de colision)
+[20:39:47][DEBUG] read => x: 16, y: 11 (pas de colision)
+[20:39:47][DEBUG] read => x: 15, y: 11 (pas de colision)
+[20:39:47][DEBUG] read => x: 17, y: 12 (pas de colision)
+[20:39:47][DEBUG] read => x: 16, y: 12 (pas de colision)
+[20:39:47][DEBUG] read => x: 15, y: 12 (pas de colision)
+[20:39:48][DEBUG] nbPos: 12
+[20:39:48][DEBUG] [11] add => x: 36, y: 10
+[20:39:48][DEBUG] [10] add => x: 37, y: 10
+[20:39:48][DEBUG] [9] add => x: 38, y: 10
+[20:39:48][DEBUG] [8] add => x: 36, y: 9
+[20:39:48][DEBUG] [7] add => x: 37, y: 9
+[20:39:48][DEBUG] [6] add => x: 38, y: 9
+[20:39:48][DEBUG] [5] add => x: 36, y: 8
+[20:39:48][DEBUG] [4] add => x: 37, y: 8
+[20:39:48][DEBUG] [3] add => x: 38, y: 8
+[20:39:48][DEBUG] [2] add => x: 36, y: 7
+[20:39:48][DEBUG] [1] add => x: 37, y: 7
+[20:39:48][DEBUG] [0] add => x: 38, y: 7
+[20:39:48][DEBUG] read => x: 38, y: 7 (pas de colision)
+[20:39:48][DEBUG] read => x: 37, y: 7 (pas de colision)
+[20:39:48][DEBUG] read => x: 36, y: 7 (pas de colision)
+[20:39:48][DEBUG] read => x: 38, y: 8 (pas de colision)
+[20:39:48][DEBUG] read => x: 37, y: 8 (pas de colision)
+[20:39:48][DEBUG] read => x: 36, y: 8 (pas de colision)
+[20:39:48][DEBUG] read => x: 38, y: 9 (pas de colision)
+[20:39:48][DEBUG] read => x: 37, y: 9 (pas de colision)
+[20:39:48][DEBUG] read => x: 36, y: 9 (pas de colision)
+[20:39:48][DEBUG] read => x: 38, y: 10 (pas de colision)
+[20:39:48][DEBUG] read => x: 37, y: 10 (pas de colision)
+[20:39:48][DEBUG] read => x: 36, y: 10 (pas de colision)
+[20:39:50][DEBUG] File loaded: level.lvl, 4
+[20:39:50][DEBUG] Save_level | level : 0
+[20:39:50][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:50][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:39:50][DEBUG] get_data_info | addr = 189
+[20:39:50][INFO] get_data_info | retour : type = 3, size = 9984
+[20:39:50][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 189, addr_table = 13, idx_table = 0, type_data = 3
+[20:39:50][DEBUG] Save_level | table entry found: type: 3, addr: 189
+[20:39:50][INFO] Level Converter | Convert level to bytes: 158 items.
+[20:39:50][INFO] Level Converter | Convert level to bytes: Success! 10112 bytes.
+[20:39:50][DEBUG] Save_level | Success level converted to bytes: D0BF6540
+[20:39:50][DEBUG] remove_entry | index: 0
+[20:39:50][DEBUG] transform_to_empty | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:50][DEBUG] transform_to_empty | entry find ! localIndex = 0
+[20:39:50][DEBUG] get_data_info | addr = 189
+[20:39:50][INFO] get_data_info | retour : type = 3, size = 9984
+[20:39:50][DEBUG] transform_to_empty | Erase data at 189
+[20:39:50][DEBUG] find_av_tableEntry | addrTable = 93
+[20:39:50][DEBUG] get_table | addrTable = 93
+[20:39:50][DEBUG] get_data_info | addr = 93
+[20:39:50][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:50][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:50][DEBUG] find_av_tableEntry | entry not used found at index = 0 of table = 93
+[20:39:50][DEBUG] transform_to_empty: Find space on empty table at 93 on index 0
+[20:39:50][DEBUG] get_table | addrTable = 93
+[20:39:50][DEBUG] get_data_info | addr = 93
+[20:39:50][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:50][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:50][DEBUG] write_table | addrTable = 93
+[20:39:50][DEBUG] write_table | not first table
+[20:39:50][DEBUG] write_table | retour : success!
+[20:39:50][DEBUG] transform_to_empty: Register the empty space successfully
+[20:39:50][DEBUG] write_data_info | addr = 189
+[20:39:50][INFO] write_data_info | retour : type = 1, size = 9984
+[20:39:50][DEBUG] transform_to_empty | Update the data_info
+[20:39:50][DEBUG] transform_to_empty | Unregister the old data address
+[20:39:50][DEBUG] write_table | addrTable = 13
+[20:39:50][DEBUG] write_table | first table
+[20:39:50][DEBUG] write_table | retour : success!
+[20:39:50][DEBUG] transform_to_empty | End of transformation
+[20:39:50][DEBUG] remove_entry | Entry removed, result = 1
+[20:39:50][DEBUG] add_data | data: , size: 10112, data_type: 3
+[20:39:50][DEBUG] find_av_tableEntry | addrTable = 13
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:50][DEBUG] find_av_tableEntry | entry not used found at index = 0 of table = 13
+[20:39:50][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 0, tableEntry.type_data: 0
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:39:50][DEBUG] get_empty | sizeNeeded = 10112, addrTable = 93
+[20:39:50][DEBUG] get_table | addrTable = 93
+[20:39:50][DEBUG] get_data_info | addr = 93
+[20:39:50][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:50][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:50][DEBUG] get_empty | Check table for an empty space...
+[20:39:50][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:39:50][DEBUG] get_data_info | addr = 189
+[20:39:50][INFO] get_data_info | retour : type = 1, size = 9984
+[20:39:50][DEBUG] get_empty | This empty had a size of 9984
+[20:39:50][DEBUG] get_empty | no more table to check, no empty space found
+[20:39:50][DEBUG] add_data | No empty space found, set cursor at the end of file
+[20:39:50][DEBUG] write_table | addrTable = 13
+[20:39:50][DEBUG] write_table | first table
+[20:39:50][DEBUG] write_table | retour : success!
+[20:39:50][DEBUG] add_data | Data added at addr = 20381, idx = 0, tableAddr = 13
+[20:39:50][DEBUG] Save_level | Success level updated: res = 1
+[20:39:50][DEBUG] Get_level | level : 1
+[20:39:50][DEBUG] Get_level | File opened: level.lvl
+[20:39:50][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:39:50][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:39:50][DEBUG] get_data_info | addr = 10189
+[20:39:50][INFO] get_data_info | retour : type = 3, size = 10176
+[20:39:50][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 10189, addr_table = 13, idx_table = 1, type_data = 3
+[20:39:50][DEBUG] Get_level | table entry read: type = 3, addr = 10189
+[20:39:50][DEBUG] Get_data | Set cursor at addr = 10189
+[20:39:50][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:39:50][DEBUG] Get_data | Success! data : D0BF9430
+[20:39:50][DEBUG] Get_level | dataInfo.type = 3, dataInfo.size = 10176
+[20:39:50][DEBUG] Get_level | data = D0BF9430
+[20:39:50][INFO] Level Converter | Convert bytes to level: 10176 bytes.
+[20:39:50][INFO] Level Converter | Convert bytes to level: Success! 159 items.
+[20:39:50][DEBUG] Get_level | level : 1, success! 159 items loaded!
+[20:39:50][DEBUG] get_table | addrTable = 13
+[20:39:50][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:39:50][DEBUG] Get_data | Set cursor at addr = 20381
+[20:39:50][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:39:50][DEBUG] Get_data | Success! data : D0C0BD80
+[20:39:50][DEBUG] Get_data | Set cursor at addr = 10189
+[20:39:50][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:39:50][DEBUG] Get_data | Success! data : D0C0E510
+[20:39:50][DEBUG] get_table | addrTable = 93
+[20:39:50][DEBUG] get_data_info | addr = 93
+[20:39:50][INFO] get_data_info | retour : type = 2, size = 80
+[20:39:50][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:39:50][DEBUG] Get_data | Set cursor at addr = 189
+[20:39:50][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:39:50][DEBUG] Get_data | Success! data : D0C10CE0
+[20:39:50][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 20381
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 10189
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:39:50][DEBUG] free_file | file = level.lvl
+[20:39:50][INFO] Main | New level load : 2, Old level save : 1
+[20:39:50][INFO] Main | Level 2 : 159 items loaded
+[20:40:08][DEBUG] File loaded: level.lvl, 4
+[20:40:08][DEBUG] Save_level | level : 1
+[20:40:08][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:40:08][DEBUG] get_data_info | addr = 10189
+[20:40:08][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:08][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 10189, addr_table = 13, idx_table = 1, type_data = 3
+[20:40:08][DEBUG] Save_level | table entry found: type: 3, addr: 10189
+[20:40:08][INFO] Level Converter | Convert level to bytes: 159 items.
+[20:40:08][INFO] Level Converter | Convert level to bytes: Success! 10176 bytes.
+[20:40:08][DEBUG] Save_level | Success level converted to bytes: D0C133F0
+[20:40:08][DEBUG] remove_entry | index: 1
+[20:40:08][DEBUG] transform_to_empty | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] transform_to_empty | entry find ! localIndex = 1
+[20:40:08][DEBUG] get_data_info | addr = 10189
+[20:40:08][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:08][DEBUG] transform_to_empty | Erase data at 10189
+[20:40:08][DEBUG] find_av_tableEntry | addrTable = 93
+[20:40:08][DEBUG] get_table | addrTable = 93
+[20:40:08][DEBUG] get_data_info | addr = 93
+[20:40:08][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:08][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:08][DEBUG] find_av_tableEntry | entry not used found at index = 1 of table = 93
+[20:40:08][DEBUG] transform_to_empty: Find space on empty table at 93 on index 1
+[20:40:08][DEBUG] get_table | addrTable = 93
+[20:40:08][DEBUG] get_data_info | addr = 93
+[20:40:08][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:08][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:08][DEBUG] write_table | addrTable = 93
+[20:40:08][DEBUG] write_table | not first table
+[20:40:08][DEBUG] write_table | retour : success!
+[20:40:08][DEBUG] transform_to_empty: Register the empty space successfully
+[20:40:08][DEBUG] write_data_info | addr = 10189
+[20:40:08][INFO] write_data_info | retour : type = 1, size = 10176
+[20:40:08][DEBUG] transform_to_empty | Update the data_info
+[20:40:08][DEBUG] transform_to_empty | Unregister the old data address
+[20:40:08][DEBUG] write_table | addrTable = 13
+[20:40:08][DEBUG] write_table | first table
+[20:40:08][DEBUG] write_table | retour : success!
+[20:40:08][DEBUG] transform_to_empty | End of transformation
+[20:40:08][DEBUG] remove_entry | Entry removed, result = 1
+[20:40:08][DEBUG] add_data | data: , size: 10176, data_type: 3
+[20:40:08][DEBUG] find_av_tableEntry | addrTable = 13
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] find_av_tableEntry | entry not used found at index = 1 of table = 13
+[20:40:08][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 1, tableEntry.type_data: 0
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] get_empty | sizeNeeded = 10176, addrTable = 93
+[20:40:08][DEBUG] get_table | addrTable = 93
+[20:40:08][DEBUG] get_data_info | addr = 93
+[20:40:08][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:08][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:08][DEBUG] get_empty | Check table for an empty space...
+[20:40:08][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:40:08][DEBUG] get_data_info | addr = 189
+[20:40:08][INFO] get_data_info | retour : type = 1, size = 9984
+[20:40:08][DEBUG] get_empty | This empty had a size of 9984
+[20:40:08][DEBUG] get_empty | Empty found at index = 1 pointing to addr = 10189
+[20:40:08][DEBUG] get_data_info | addr = 10189
+[20:40:08][INFO] get_data_info | retour : type = 1, size = 10176
+[20:40:08][DEBUG] get_empty | This empty had a size of 10176
+[20:40:08][DEBUG] get_empty | The size is big enough compare to sizeNeeded
+[20:40:08][DEBUG] add_data | Empty space found, addr: 10189, size : 10176
+[20:40:08][DEBUG] update_empty | addrEmpty = 10189, sizeNeeded = 10176
+[20:40:08][DEBUG] get_table | addrTable = 93
+[20:40:08][DEBUG] get_data_info | addr = 93
+[20:40:08][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:08][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:08][DEBUG] write_data_info | addr = 20381
+[20:40:08][INFO] write_data_info | retour : type = 1, size = -16
+[20:40:08][DEBUG] update_empty | addrEmpty updated in table
+[20:40:08][DEBUG] write_table | addrTable = 93
+[20:40:08][DEBUG] write_table | not first table
+[20:40:08][DEBUG] write_table | retour : success!
+[20:40:08][DEBUG] update_empty | retour : success!
+[20:40:08][DEBUG] write_table | addrTable = 13
+[20:40:08][DEBUG] write_table | first table
+[20:40:08][DEBUG] write_table | retour : success!
+[20:40:08][DEBUG] add_data | Data added at addr = 10189, idx = 1, tableAddr = 13
+[20:40:08][DEBUG] Save_level | Success level updated: res = 1
+[20:40:08][DEBUG] Get_level | level : 2
+[20:40:08][DEBUG] Get_level | File opened: level.lvl
+[20:40:08][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 2, addrTable = 13, numTable = 0
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 2
+[20:40:08][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:40:08][DEBUG] Get_level | table entry read: type = 0, addr = -1
+[20:40:08][DEBUG] Get_level | Level not found
+[20:40:08][INFO] Main | Level 3 not found, empty level generated
+[20:40:08][DEBUG] get_table | addrTable = 13
+[20:40:08][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:08][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:08][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -16
+[20:40:08][DEBUG] Get_data | error read data
+[20:40:08][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:08][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:08][DEBUG] Get_data | Success! data : D0C16140
+[20:40:08][DEBUG] get_table | addrTable = 93
+[20:40:08][DEBUG] get_data_info | addr = 93
+[20:40:08][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:08][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:08][DEBUG] Get_data | Set cursor at addr = 189
+[20:40:08][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:40:08][DEBUG] Get_data | Success! data : D0C18910
+[20:40:08][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:08][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -16
+[20:40:08][DEBUG] Get_data | error read data
+[20:40:08][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 20381
+   Data : ERROR
+ CELL[1] : 10189
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 20381
+   Data : ERROR
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:40:08][DEBUG] free_file | file = level.lvl
+[20:40:08][INFO] Main | New level load : 3, Old level save : 2
+[20:40:08][INFO] Main | Level 3 : 156 items loaded
+[20:40:09][DEBUG] nbPos: 12
+[20:40:09][DEBUG] [11] add => x: 34, y: 12
+[20:40:09][DEBUG] [10] add => x: 35, y: 12
+[20:40:09][DEBUG] [9] add => x: 36, y: 12
+[20:40:09][DEBUG] [8] add => x: 34, y: 11
+[20:40:09][DEBUG] [7] add => x: 35, y: 11
+[20:40:09][DEBUG] [6] add => x: 36, y: 11
+[20:40:09][DEBUG] [5] add => x: 34, y: 10
+[20:40:09][DEBUG] [4] add => x: 35, y: 10
+[20:40:09][DEBUG] [3] add => x: 36, y: 10
+[20:40:09][DEBUG] [2] add => x: 34, y: 9
+[20:40:09][DEBUG] [1] add => x: 35, y: 9
+[20:40:09][DEBUG] [0] add => x: 36, y: 9
+[20:40:09][DEBUG] read => x: 36, y: 9 (pas de colision)
+[20:40:09][DEBUG] read => x: 35, y: 9 (pas de colision)
+[20:40:09][DEBUG] read => x: 34, y: 9 (pas de colision)
+[20:40:09][DEBUG] read => x: 36, y: 10 (pas de colision)
+[20:40:09][DEBUG] read => x: 35, y: 10 (pas de colision)
+[20:40:09][DEBUG] read => x: 34, y: 10 (pas de colision)
+[20:40:09][DEBUG] read => x: 36, y: 11 (pas de colision)
+[20:40:09][DEBUG] read => x: 35, y: 11 (pas de colision)
+[20:40:09][DEBUG] read => x: 34, y: 11 (pas de colision)
+[20:40:09][DEBUG] read => x: 36, y: 12 (pas de colision)
+[20:40:09][DEBUG] read => x: 35, y: 12 (pas de colision)
+[20:40:09][DEBUG] read => x: 34, y: 12 (pas de colision)
+[20:40:11][DEBUG] nbPos: 12
+[20:40:11][DEBUG] [11] add => x: 14, y: 12
+[20:40:11][DEBUG] [10] add => x: 15, y: 12
+[20:40:11][DEBUG] [9] add => x: 16, y: 12
+[20:40:11][DEBUG] [8] add => x: 14, y: 11
+[20:40:11][DEBUG] [7] add => x: 15, y: 11
+[20:40:11][DEBUG] [6] add => x: 16, y: 11
+[20:40:11][DEBUG] [5] add => x: 14, y: 10
+[20:40:11][DEBUG] [4] add => x: 15, y: 10
+[20:40:11][DEBUG] [3] add => x: 16, y: 10
+[20:40:11][DEBUG] [2] add => x: 14, y: 9
+[20:40:11][DEBUG] [1] add => x: 15, y: 9
+[20:40:11][DEBUG] [0] add => x: 16, y: 9
+[20:40:11][DEBUG] read => x: 16, y: 9 (pas de colision)
+[20:40:11][DEBUG] read => x: 15, y: 9 (pas de colision)
+[20:40:11][DEBUG] read => x: 14, y: 9 (pas de colision)
+[20:40:11][DEBUG] read => x: 16, y: 10 (pas de colision)
+[20:40:11][DEBUG] read => x: 15, y: 10 (pas de colision)
+[20:40:11][DEBUG] read => x: 14, y: 10 (pas de colision)
+[20:40:11][DEBUG] read => x: 16, y: 11 (pas de colision)
+[20:40:11][DEBUG] read => x: 15, y: 11 (pas de colision)
+[20:40:11][DEBUG] read => x: 14, y: 11 (pas de colision)
+[20:40:11][DEBUG] read => x: 16, y: 12 (pas de colision)
+[20:40:11][DEBUG] read => x: 15, y: 12 (pas de colision)
+[20:40:11][DEBUG] read => x: 14, y: 12 (pas de colision)
+[20:40:12][DEBUG] File loaded: level.lvl, 4
+[20:40:12][DEBUG] Save_level | level : 2
+[20:40:12][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 2, addrTable = 13, numTable = 0
+[20:40:12][DEBUG] get_table | addrTable = 13
+[20:40:12][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:12][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 2
+[20:40:12][DEBUG] find_tableEntryOfIdx | the index is not set
+[20:40:12][DEBUG] Save_level | table entry found: type: 0, addr: -1
+[20:40:12][INFO] Level Converter | Convert level to bytes: 158 items.
+[20:40:12][INFO] Level Converter | Convert level to bytes: Success! 10112 bytes.
+[20:40:12][DEBUG] Save_level | Success level converted to bytes: D0C1B390
+[20:40:12][DEBUG] add_data | data: , size: 10112, data_type: 3
+[20:40:12][DEBUG] find_av_tableEntry | addrTable = 13
+[20:40:12][DEBUG] get_table | addrTable = 13
+[20:40:12][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:12][DEBUG] find_av_tableEntry | entry not used found at index = 2 of table = 13
+[20:40:12][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 2, tableEntry.type_data: 0
+[20:40:12][DEBUG] get_table | addrTable = 13
+[20:40:12][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:12][DEBUG] get_empty | sizeNeeded = 10112, addrTable = 93
+[20:40:12][DEBUG] get_table | addrTable = 93
+[20:40:12][DEBUG] get_data_info | addr = 93
+[20:40:12][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:12][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:12][DEBUG] get_empty | Check table for an empty space...
+[20:40:12][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:40:12][DEBUG] get_data_info | addr = 189
+[20:40:12][INFO] get_data_info | retour : type = 1, size = 9984
+[20:40:12][DEBUG] get_empty | This empty had a size of 9984
+[20:40:12][DEBUG] get_empty | Empty found at index = 1 pointing to addr = 20381
+[20:40:12][DEBUG] get_data_info | addr = 20381
+[20:40:12][INFO] get_data_info | retour : type = 1, size = -16
+[20:40:12][DEBUG] get_empty | This empty had a size of -16
+[20:40:12][DEBUG] get_empty | The size is big enough compare to sizeNeeded
+[20:40:12][DEBUG] add_data | Empty space found, addr: 20381, size : -16
+[20:40:12][DEBUG] update_empty | addrEmpty = 20381, sizeNeeded = 10112
+[20:40:12][DEBUG] get_table | addrTable = 93
+[20:40:12][DEBUG] get_data_info | addr = 93
+[20:40:12][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:12][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:12][DEBUG] write_data_info | addr = 30509
+[20:40:12][INFO] write_data_info | retour : type = 1, size = -10144
+[20:40:12][DEBUG] update_empty | addrEmpty updated in table
+[20:40:12][DEBUG] write_table | addrTable = 93
+[20:40:12][DEBUG] write_table | not first table
+[20:40:12][DEBUG] write_table | retour : success!
+[20:40:12][DEBUG] update_empty | retour : success!
+[20:40:12][DEBUG] write_table | addrTable = 13
+[20:40:12][DEBUG] write_table | first table
+[20:40:12][DEBUG] write_table | retour : success!
+[20:40:12][DEBUG] add_data | Data added at addr = 20381, idx = 2, tableAddr = 13
+[20:40:12][DEBUG] Save_level | Success level created: res = 1
+[20:40:12][DEBUG] Get_level | level : 1
+[20:40:12][DEBUG] Get_level | File opened: level.lvl
+[20:40:12][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:12][DEBUG] get_table | addrTable = 13
+[20:40:12][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:12][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:40:12][DEBUG] get_data_info | addr = 10189
+[20:40:12][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:12][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 10189, addr_table = 13, idx_table = 1, type_data = 3
+[20:40:12][DEBUG] Get_level | table entry read: type = 3, addr = 10189
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:12][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:12][DEBUG] Get_data | Success! data : D0C1E080
+[20:40:12][DEBUG] Get_level | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:12][DEBUG] Get_level | data = D0C1E080
+[20:40:12][INFO] Level Converter | Convert bytes to level: 10176 bytes.
+[20:40:12][INFO] Level Converter | Convert bytes to level: Success! 159 items.
+[20:40:12][DEBUG] Get_level | level : 1, success! 159 items loaded!
+[20:40:12][DEBUG] get_table | addrTable = 13
+[20:40:12][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:12][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:12][DEBUG] Get_data | Success! data : D0C309D0
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:12][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:12][DEBUG] Get_data | Success! data : D0C33160
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:12][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:12][DEBUG] Get_data | Success! data : D0C35930
+[20:40:12][DEBUG] get_table | addrTable = 93
+[20:40:12][DEBUG] get_data_info | addr = 93
+[20:40:12][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:12][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 189
+[20:40:12][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:40:12][DEBUG] Get_data | Success! data : D0C380C0
+[20:40:12][DEBUG] Get_data | Set cursor at addr = 30509
+[20:40:12][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -10144
+[20:40:12][DEBUG] Get_data | error read data
+[20:40:12][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 20381
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 10189
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : 20381
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 30509
+   Data : ERROR
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:40:12][DEBUG] free_file | file = level.lvl
+[20:40:12][INFO] Main | New level load : 2, Old level save : 3
+[20:40:12][INFO] Main | Level 2 : 159 items loaded
+[20:40:13][DEBUG] File loaded: level.lvl, 4
+[20:40:13][DEBUG] Save_level | level : 1
+[20:40:13][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:40:13][DEBUG] get_data_info | addr = 10189
+[20:40:13][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:13][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 10189, addr_table = 13, idx_table = 1, type_data = 3
+[20:40:13][DEBUG] Save_level | table entry found: type: 3, addr: 10189
+[20:40:13][INFO] Level Converter | Convert level to bytes: 159 items.
+[20:40:13][INFO] Level Converter | Convert level to bytes: Success! 10176 bytes.
+[20:40:13][DEBUG] Save_level | Success level converted to bytes: D0C3A7D0
+[20:40:13][DEBUG] remove_entry | index: 1
+[20:40:13][DEBUG] transform_to_empty | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] transform_to_empty | entry find ! localIndex = 1
+[20:40:13][DEBUG] get_data_info | addr = 10189
+[20:40:13][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:13][DEBUG] transform_to_empty | Erase data at 10189
+[20:40:13][DEBUG] find_av_tableEntry | addrTable = 93
+[20:40:13][DEBUG] get_table | addrTable = 93
+[20:40:13][DEBUG] get_data_info | addr = 93
+[20:40:13][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:13][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:13][DEBUG] find_av_tableEntry | entry not used found at index = 2 of table = 93
+[20:40:13][DEBUG] transform_to_empty: Find space on empty table at 93 on index 2
+[20:40:13][DEBUG] get_table | addrTable = 93
+[20:40:13][DEBUG] get_data_info | addr = 93
+[20:40:13][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:13][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:13][DEBUG] write_table | addrTable = 93
+[20:40:13][DEBUG] write_table | not first table
+[20:40:13][DEBUG] write_table | retour : success!
+[20:40:13][DEBUG] transform_to_empty: Register the empty space successfully
+[20:40:13][DEBUG] write_data_info | addr = 10189
+[20:40:13][INFO] write_data_info | retour : type = 1, size = 10176
+[20:40:13][DEBUG] transform_to_empty | Update the data_info
+[20:40:13][DEBUG] transform_to_empty | Unregister the old data address
+[20:40:13][DEBUG] write_table | addrTable = 13
+[20:40:13][DEBUG] write_table | first table
+[20:40:13][DEBUG] write_table | retour : success!
+[20:40:13][DEBUG] transform_to_empty | End of transformation
+[20:40:13][DEBUG] remove_entry | Entry removed, result = 1
+[20:40:13][DEBUG] add_data | data: 
+, size: 10176, data_type: 3
+[20:40:13][DEBUG] find_av_tableEntry | addrTable = 13
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] find_av_tableEntry | entry not used found at index = 1 of table = 13
+[20:40:13][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 1, tableEntry.type_data: 0
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] get_empty | sizeNeeded = 10176, addrTable = 93
+[20:40:13][DEBUG] get_table | addrTable = 93
+[20:40:13][DEBUG] get_data_info | addr = 93
+[20:40:13][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:13][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:13][DEBUG] get_empty | Check table for an empty space...
+[20:40:13][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:40:13][DEBUG] get_data_info | addr = 189
+[20:40:13][INFO] get_data_info | retour : type = 1, size = 9984
+[20:40:13][DEBUG] get_empty | This empty had a size of 9984
+[20:40:13][DEBUG] get_empty | Empty found at index = 1 pointing to addr = 30509
+[20:40:13][DEBUG] get_data_info | addr = 30509
+[20:40:13][INFO] get_data_info | retour : type = 1, size = -10144
+[20:40:13][DEBUG] get_empty | This empty had a size of -10144
+[20:40:13][DEBUG] get_empty | The size is big enough compare to sizeNeeded
+[20:40:13][DEBUG] add_data | Empty space found, addr: 30509, size : -10144
+[20:40:13][DEBUG] update_empty | addrEmpty = 30509, sizeNeeded = 10176
+[20:40:13][DEBUG] get_table | addrTable = 93
+[20:40:13][DEBUG] get_data_info | addr = 93
+[20:40:13][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:13][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:13][DEBUG] write_data_info | addr = 40701
+[20:40:13][INFO] write_data_info | retour : type = 1, size = -20336
+[20:40:13][DEBUG] update_empty | addrEmpty updated in table
+[20:40:13][DEBUG] write_table | addrTable = 93
+[20:40:13][DEBUG] write_table | not first table
+[20:40:13][DEBUG] write_table | retour : success!
+[20:40:13][DEBUG] update_empty | retour : success!
+[20:40:13][DEBUG] write_table | addrTable = 13
+[20:40:13][DEBUG] write_table | first table
+[20:40:13][DEBUG] write_table | retour : success!
+[20:40:13][DEBUG] add_data | Data added at addr = 30509, idx = 1, tableAddr = 13
+[20:40:13][DEBUG] Save_level | Success level updated: res = 1
+[20:40:13][DEBUG] Get_level | level : 0
+[20:40:13][DEBUG] Get_level | File opened: level.lvl
+[20:40:13][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:40:13][DEBUG] get_data_info | addr = 20381
+[20:40:13][INFO] get_data_info | retour : type = 3, size = 10112
+[20:40:13][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 20381, addr_table = 13, idx_table = 0, type_data = 3
+[20:40:13][DEBUG] Get_level | table entry read: type = 3, addr = 20381
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:13][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:13][DEBUG] Get_data | Success! data : D0C3D5E0
+[20:40:13][DEBUG] Get_level | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:13][DEBUG] Get_level | data = D0C3D5E0
+[20:40:13][INFO] Level Converter | Convert bytes to level: 10112 bytes.
+[20:40:13][INFO] Level Converter | Convert bytes to level: Success! 158 items.
+[20:40:13][DEBUG] Get_level | level : 0, success! 158 items loaded!
+[20:40:13][DEBUG] get_table | addrTable = 13
+[20:40:13][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:13][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:13][DEBUG] Get_data | Success! data : D0C4FE40
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 30509
+[20:40:13][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:13][DEBUG] Get_data | Success! data : D0C525D0
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:13][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:13][DEBUG] Get_data | Success! data : D0C54DA0
+[20:40:13][DEBUG] get_table | addrTable = 93
+[20:40:13][DEBUG] get_data_info | addr = 93
+[20:40:13][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:13][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 189
+[20:40:13][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:40:13][DEBUG] Get_data | Success! data : D0C57530
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 40701
+[20:40:13][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -20336
+[20:40:13][DEBUG] Get_data | error read data
+[20:40:13][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:13][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[20:40:13][DEBUG] Get_data | Success! data : D0C59C40
+[20:40:13][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 20381
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 30509
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : 20381
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 40701
+   Data : ERROR
+ CELL[2] : 10189
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:40:13][DEBUG] free_file | file = level.lvl
+[20:40:13][INFO] Main | New level load : 1, Old level save : 2
+[20:40:13][INFO] Main | Level 1 : 158 items loaded
+[20:40:18][DEBUG] File loaded: level.lvl, 4
+[20:40:18][DEBUG] Save_level | level : 0
+[20:40:18][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:18][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[20:40:18][DEBUG] get_data_info | addr = 20381
+[20:40:18][INFO] get_data_info | retour : type = 3, size = 10112
+[20:40:18][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 20381, addr_table = 13, idx_table = 0, type_data = 3
+[20:40:18][DEBUG] Save_level | table entry found: type: 3, addr: 20381
+[20:40:18][INFO] Level Converter | Convert level to bytes: 158 items.
+[20:40:18][INFO] Level Converter | Convert level to bytes: Success! 10112 bytes.
+[20:40:18][DEBUG] Save_level | Success level converted to bytes: D0C5C410
+[20:40:18][DEBUG] remove_entry | index: 0
+[20:40:18][DEBUG] transform_to_empty | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 20381, lastAddress = -1
+[20:40:18][DEBUG] transform_to_empty | entry find ! localIndex = 0
+[20:40:18][DEBUG] get_data_info | addr = 20381
+[20:40:18][INFO] get_data_info | retour : type = 3, size = 10112
+[20:40:18][DEBUG] transform_to_empty | Erase data at 20381
+[20:40:18][DEBUG] find_av_tableEntry | addrTable = 93
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] find_av_tableEntry | entry not used found at index = 3 of table = 93
+[20:40:18][DEBUG] transform_to_empty: Find space on empty table at 93 on index 3
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] write_table | addrTable = 93
+[20:40:18][DEBUG] write_table | not first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] transform_to_empty: Register the empty space successfully
+[20:40:18][DEBUG] write_data_info | addr = 20381
+[20:40:18][INFO] write_data_info | retour : type = 1, size = 10112
+[20:40:18][DEBUG] transform_to_empty | Update the data_info
+[20:40:18][DEBUG] transform_to_empty | Unregister the old data address
+[20:40:18][DEBUG] write_table | addrTable = 13
+[20:40:18][DEBUG] write_table | first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] transform_to_empty | End of transformation
+[20:40:18][DEBUG] remove_entry | Entry removed, result = 1
+[20:40:18][DEBUG] add_data | data: , size: 10112, data_type: 3
+[20:40:18][DEBUG] find_av_tableEntry | addrTable = 13
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:40:18][DEBUG] find_av_tableEntry | entry not used found at index = 0 of table = 13
+[20:40:18][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 0, tableEntry.type_data: 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = -1, lastAddress = -1
+[20:40:18][DEBUG] get_empty | sizeNeeded = 10112, addrTable = 93
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] get_empty | Check table for an empty space...
+[20:40:18][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:40:18][DEBUG] get_data_info | addr = 189
+[20:40:18][INFO] get_data_info | retour : type = 1, size = 9984
+[20:40:18][DEBUG] get_empty | This empty had a size of 9984
+[20:40:18][DEBUG] get_empty | Empty found at index = 1 pointing to addr = 40701
+[20:40:18][DEBUG] get_data_info | addr = 40701
+[20:40:18][INFO] get_data_info | retour : type = 1, size = -20336
+[20:40:18][DEBUG] get_empty | This empty had a size of -20336
+[20:40:18][DEBUG] get_empty | The size is big enough compare to sizeNeeded
+[20:40:18][DEBUG] add_data | Empty space found, addr: 40701, size : -20336
+[20:40:18][DEBUG] update_empty | addrEmpty = 40701, sizeNeeded = 10112
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] write_data_info | addr = 50829
+[20:40:18][INFO] write_data_info | retour : type = 1, size = -30464
+[20:40:18][DEBUG] update_empty | addrEmpty updated in table
+[20:40:18][DEBUG] write_table | addrTable = 93
+[20:40:18][DEBUG] write_table | not first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] update_empty | retour : success!
+[20:40:18][DEBUG] write_table | addrTable = 13
+[20:40:18][DEBUG] write_table | first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] add_data | Data added at addr = 40701, idx = 0, tableAddr = 13
+[20:40:18][DEBUG] Save_level | Success level updated: res = 1
+[20:40:18][DEBUG] Get_level | level : 1
+[20:40:18][DEBUG] Get_level | File opened: level.lvl
+[20:40:18][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:40:18][DEBUG] get_data_info | addr = 30509
+[20:40:18][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:18][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 30509, addr_table = 13, idx_table = 1, type_data = 3
+[20:40:18][DEBUG] Get_level | table entry read: type = 3, addr = 30509
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 30509
+[20:40:18][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C5F280
+[20:40:18][DEBUG] Get_level | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_level | data = D0C5F280
+[20:40:18][INFO] Level Converter | Convert bytes to level: 10176 bytes.
+[20:40:18][INFO] Level Converter | Convert bytes to level: Success! 159 items.
+[20:40:18][DEBUG] Get_level | level : 1, success! 159 items loaded!
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 40701
+[20:40:18][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C71BD0
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 30509
+[20:40:18][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C74360
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C76B30
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 189
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:40:18][DEBUG] Get_data | Success! data : D0C792C0
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 50829
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -30464
+[20:40:18][DEBUG] Get_data | error read data
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C7B9D0
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C7E1A0
+[20:40:18][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 40701
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 30509
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 50829
+   Data : ERROR
+ CELL[2] : 10189
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:40:18][DEBUG] free_file | file = level.lvl
+[20:40:18][INFO] Main | New level load : 2, Old level save : 1
+[20:40:18][INFO] Main | Level 2 : 159 items loaded
+[20:40:18][DEBUG] File loaded: level.lvl, 4
+[20:40:18][DEBUG] Save_level | level : 1
+[20:40:18][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[20:40:18][DEBUG] get_data_info | addr = 30509
+[20:40:18][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:18][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 30509, addr_table = 13, idx_table = 1, type_data = 3
+[20:40:18][DEBUG] Save_level | table entry found: type: 3, addr: 30509
+[20:40:18][INFO] Level Converter | Convert level to bytes: 159 items.
+[20:40:18][INFO] Level Converter | Convert level to bytes: Success! 10176 bytes.
+[20:40:18][DEBUG] Save_level | Success level converted to bytes: D0C80930
+[20:40:18][DEBUG] remove_entry | index: 1
+[20:40:18][DEBUG] transform_to_empty | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] transform_to_empty | entry find ! localIndex = 1
+[20:40:18][DEBUG] get_data_info | addr = 30509
+[20:40:18][INFO] get_data_info | retour : type = 3, size = 10176
+[20:40:18][DEBUG] transform_to_empty | Erase data at 30509
+[20:40:18][DEBUG] find_av_tableEntry | addrTable = 93
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] find_av_tableEntry | entry not used found at index = 4 of table = 93
+[20:40:18][DEBUG] transform_to_empty: Find space on empty table at 93 on index 4
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] write_table | addrTable = 93
+[20:40:18][DEBUG] write_table | not first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] transform_to_empty: Register the empty space successfully
+[20:40:18][DEBUG] write_data_info | addr = 30509
+[20:40:18][INFO] write_data_info | retour : type = 1, size = 10176
+[20:40:18][DEBUG] transform_to_empty | Update the data_info
+[20:40:18][DEBUG] transform_to_empty | Unregister the old data address
+[20:40:18][DEBUG] write_table | addrTable = 13
+[20:40:18][DEBUG] write_table | first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] transform_to_empty | End of transformation
+[20:40:18][DEBUG] remove_entry | Entry removed, result = 1
+[20:40:18][DEBUG] add_data | data: , size: 10176, data_type: 3
+[20:40:18][DEBUG] find_av_tableEntry | addrTable = 13
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] find_av_tableEntry | entry not used found at index = 1 of table = 13
+[20:40:18][DEBUG] add_data | tableEntry.addr_cell: -1, tableEntry.addr_table: 13, tableEntry.idx_table: 1, tableEntry.type_data: 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] get_empty | sizeNeeded = 10176, addrTable = 93
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] get_empty | Check table for an empty space...
+[20:40:18][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 189
+[20:40:18][DEBUG] get_data_info | addr = 189
+[20:40:18][INFO] get_data_info | retour : type = 1, size = 9984
+[20:40:18][DEBUG] get_empty | This empty had a size of 9984
+[20:40:18][DEBUG] get_empty | Empty found at index = 1 pointing to addr = 50829
+[20:40:18][DEBUG] get_data_info | addr = 50829
+[20:40:18][INFO] get_data_info | retour : type = 1, size = -30464
+[20:40:18][DEBUG] get_empty | This empty had a size of -30464
+[20:40:18][DEBUG] get_empty | The size is big enough compare to sizeNeeded
+[20:40:18][DEBUG] add_data | Empty space found, addr: 50829, size : -30464
+[20:40:18][DEBUG] update_empty | addrEmpty = 50829, sizeNeeded = 10176
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] write_data_info | addr = 61021
+[20:40:18][INFO] write_data_info | retour : type = 1, size = -40656
+[20:40:18][DEBUG] update_empty | addrEmpty updated in table
+[20:40:18][DEBUG] write_table | addrTable = 93
+[20:40:18][DEBUG] write_table | not first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] update_empty | retour : success!
+[20:40:18][DEBUG] write_table | addrTable = 13
+[20:40:18][DEBUG] write_table | first table
+[20:40:18][DEBUG] write_table | retour : success!
+[20:40:18][DEBUG] add_data | Data added at addr = 50829, idx = 1, tableAddr = 13
+[20:40:18][DEBUG] Save_level | Success level updated: res = 1
+[20:40:18][DEBUG] Get_level | level : 2
+[20:40:18][DEBUG] Get_level | File opened: level.lvl
+[20:40:18][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 2, addrTable = 13, numTable = 0
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 2
+[20:40:18][DEBUG] get_data_info | addr = 20381
+[20:40:18][INFO] get_data_info | retour : type = 1, size = 10112
+[20:40:18][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 20381, addr_table = 13, idx_table = 2, type_data = 1
+[20:40:18][DEBUG] Get_level | table entry read: type = 1, addr = 20381
+[20:40:18][DEBUG] Get_level | level : 2, not found!
+[20:40:18][INFO] Main | Level 3 not found, empty level generated
+[20:40:18][DEBUG] get_table | addrTable = 13
+[20:40:18][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 40701
+[20:40:18][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C83800
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 50829
+[20:40:18][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C85F90
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C88760
+[20:40:18][DEBUG] get_table | addrTable = 93
+[20:40:18][DEBUG] get_data_info | addr = 93
+[20:40:18][INFO] get_data_info | retour : type = 2, size = 80
+[20:40:18][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 189
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[20:40:18][DEBUG] Get_data | Success! data : D0C8AEF0
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 61021
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -40656
+[20:40:18][DEBUG] Get_data | error read data
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 10189
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C8D600
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 20381
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[20:40:18][DEBUG] Get_data | Success! data : D0C8FDD0
+[20:40:18][DEBUG] Get_data | Set cursor at addr = 30509
+[20:40:18][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[20:40:18][DEBUG] Get_data | Success! data : D0C92560
+[20:40:18][INFO] 
+======================Affichage Tables======================
+
+°³üÖžTables :
+Table 0 :
+ CELL[0] : 40701
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 50829
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 61021
+   Data : ERROR
+ CELL[2] : 10189
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : 30509
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[20:40:18][DEBUG] free_file | file = level.lvl
+[20:40:18][INFO] Main | New level load : 3, Old level save : 2
+[20:40:18][INFO] Main | Level 3 : 156 items loaded
+[21:58:32][INFO] Main | Ncurses windows deleted, now loading file...
+[21:58:32][DEBUG] File loaded: level.lvl, 4
+[21:58:32][INFO] Main | Saving level 3...
+[21:58:32][DEBUG] Save_level | level : 2
+[21:58:32][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 2, addrTable = 13, numTable = 0
+[21:58:32][DEBUG] get_table | addrTable = 13
+[21:58:32][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[21:58:32][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 2
+[21:58:32][DEBUG] get_data_info | addr = 20381
+[21:58:32][INFO] get_data_info | retour : type = 1, size = 10112
+[21:58:32][DEBUG] find_tableEntryOfIdx | return the cell info, addr_cell = 20381, addr_table = 13, idx_table = 2, type_data = 1
+[21:58:32][DEBUG] Save_level | table entry found: type: 1, addr: 20381
+[21:58:32][INFO] Level Converter | Convert level to bytes: 156 items.
+[21:58:32][INFO] Level Converter | Convert level to bytes: Success! 9984 bytes.
+[21:58:32][DEBUG] Save_level | Success level converted to bytes: D0C94D30
+[21:58:32][DEBUG] Save_level | Error, unexpected type: 1
+[21:58:32][INFO] Main | Level 3 saved
+[21:58:32][DEBUG] get_table | addrTable = 13
+[21:58:32][DEBUG] get_table | retour : firstAddress = 40701, lastAddress = -1
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 40701
+[21:58:32][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10112
+[21:58:32][DEBUG] Get_data | Success! data : D0C96D40
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 50829
+[21:58:32][DEBUG] Get_data | dataInfo.type = 3, dataInfo.size = 10176
+[21:58:32][DEBUG] Get_data | Success! data : D0C994D0
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 20381
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[21:58:32][DEBUG] Get_data | Success! data : D0C9BCA0
+[21:58:32][DEBUG] get_table | addrTable = 93
+[21:58:32][DEBUG] get_data_info | addr = 93
+[21:58:32][INFO] get_data_info | retour : type = 2, size = 80
+[21:58:32][DEBUG] get_table | retour : firstAddress = 189, lastAddress = -1
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 189
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 9984
+[21:58:32][DEBUG] Get_data | Success! data : D0C9E430
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 61021
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = -40656
+[21:58:32][DEBUG] Get_data | error read data
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 10189
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[21:58:32][DEBUG] Get_data | Success! data : D0CA0B40
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 20381
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10112
+[21:58:32][DEBUG] Get_data | Success! data : D0CA3310
+[21:58:32][DEBUG] Get_data | Set cursor at addr = 30509
+[21:58:32][DEBUG] Get_data | dataInfo.type = 1, dataInfo.size = 10176
+[21:58:32][DEBUG] Get_data | Success! data : D0CA5AA0
+[21:58:32][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : 40701
+   Data size : 10112
+   Data type : 3
+   Data : 158 map's items
+ CELL[1] : 50829
+   Data size : 10176
+   Data type : 3
+   Data : 159 map's items
+ CELL[2] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 61021
+   Data : ERROR
+ CELL[2] : 10189
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20381
+   Data size : 10112
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : 30509
+   Data size : 10176
+   Data type : 1
+   Data : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[21:58:32][DEBUG] free_file | file = level.lvl
+[21:58:32][INFO] End of the session of the game.
