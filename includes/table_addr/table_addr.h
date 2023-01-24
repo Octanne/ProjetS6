@@ -17,8 +17,6 @@
 
 typedef struct file {
     char* filename;
-    off_t table[TAILLE_TABLE];
-    off_t tableOfEmpty[TAILLE_TABLE];
 } file_t;
 
 typedef struct data_info {

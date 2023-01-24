@@ -108,6 +108,9 @@ void load_level(int newLevel, int oldLevel) {
         logs(L_INFO, "Main | Level %d not found, empty level generated", newLevel);
     }
 
+    // show table
+    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
+
     free_file(file);
 
     logs(L_INFO, "Main | New level load : %d, Old level save : %d", newLevel, oldLevel);

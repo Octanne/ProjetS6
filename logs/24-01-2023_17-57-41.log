@@ -1,0 +1,154 @@
+[17:56:40][INFO] Main | Loading first level from file...
+[17:56:40][INFO] Main | File loaded
+[17:56:40][INFO] Show table: 13, 0
+[17:56:40][INFO] get_table | retour : firstAddress = 189, lastAddress = -1
+[17:56:40][INFO] show_table: begin show table 0
+[17:56:40][INFO] show_table: cell 0 is not empty
+[17:56:40][INFO] Get data: cursor set at 189
+[17:56:40][INFO] get_data: data info read: type: 3, size: 9984
+[17:56:40][INFO] get_data: Success! data : 37934430
+[17:56:40][INFO] show_table: data info read: type: 3, size: 9984
+[17:56:40][INFO] Show table: 93, 0
+[17:56:40][INFO] get_data_info | retour : type = 2, size = 80
+[17:56:40][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:56:40][INFO] show_table: begin show table 0
+[17:56:40][INFO] show_table: cell 0 is not empty
+[17:56:40][INFO] Get data: cursor set at 10189
+[17:56:40][INFO] get_data: data info read: type: 1, size: 0
+[17:56:40][INFO] get_data: Success! data : 37930FE0
+[17:56:40][INFO] show_table: data info read: type: 1, size: 0
+[17:56:40][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 10189
+   Data size : 0
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[17:56:40][INFO] get_level: file opened: level.lvl
+[17:56:40][INFO] get_table | retour : firstAddress = 189, lastAddress = -1
+[17:56:40][INFO] get_data_info | retour : type = 3, size = 9984
+[17:56:40][INFO] get_level: table entry read: type: 3, addr: 189
+[17:56:40][INFO] Get data: cursor set at 189
+[17:56:40][INFO] get_data: data info read: type: 3, size: 9984
+[17:56:40][INFO] get_data: Success! data : 37936B40
+[17:56:40][INFO] get_level: data read: 37936B40
+[17:56:40][INFO] Convert bytes to level: 9984 bytes.
+[17:56:40][INFO] Convert bytes to level: Success! 156 items.
+[17:56:40][INFO] Main | First level found and loaded.
+[17:56:40][INFO] Main | First level : 156 items loaded
+[17:57:41][INFO] Main | Ncurses windows deleted, now loading file...
+[17:57:41][INFO] Main | Saving level 1...
+[17:57:41][INFO] get_table | retour : firstAddress = 189, lastAddress = -1
+[17:57:41][INFO] get_data_info | retour : type = 3, size = 9984
+[17:57:41][INFO] Convert level to bytes: 156 items.
+[17:57:41][INFO] Convert level to bytes: Success! 9984 bytes.
+[17:57:41][INFO] get_table | retour : firstAddress = 189, lastAddress = -1
+[17:57:41][INFO] get_data_info | retour : type = 3, size = 9984
+[17:57:41][INFO] get_data_info | retour : type = 2, size = 80
+[17:57:41][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:57:41][INFO] get_data_info | retour : type = 2, size = 80
+[17:57:41][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:57:41][INFO] write_data_info | retour : type = 1, size = 9984
+[17:57:41][INFO] get_table | retour : firstAddress = -1, lastAddress = -1
+[17:57:41][INFO] get_table | retour : firstAddress = -1, lastAddress = -1
+[17:57:41][INFO] get_data_info | retour : type = 2, size = 80
+[17:57:41][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:57:41][INFO] get_data_info | retour : type = 1, size = 0
+[17:57:41][INFO] get_data_info | retour : type = 1, size = 9984
+[17:57:41][INFO] Empty data found: addr: 189, size : 9984
+[17:57:41][INFO] get_data_info | retour : type = 2, size = 80
+[17:57:41][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:57:41][INFO] write_data_info | retour : type = 1, size = 0
+[17:57:41][INFO] Data added: 3794ACA0, 4
+[17:57:41][INFO] Main | Level 1 saved
+[17:57:41][INFO] Show table: 13, 0
+[17:57:41][INFO] get_table | retour : firstAddress = 189, lastAddress = -1
+[17:57:41][INFO] show_table: begin show table 0
+[17:57:41][INFO] show_table: cell 0 is not empty
+[17:57:41][INFO] Get data: cursor set at 189
+[17:57:41][INFO] get_data: data info read: type: 3, size: 9984
+[17:57:41][INFO] get_data: Success! data : 3794ACA0
+[17:57:41][INFO] show_table: data info read: type: 3, size: 9984
+[17:57:41][INFO] Show table: 93, 0
+[17:57:41][INFO] get_data_info | retour : type = 2, size = 80
+[17:57:41][INFO] get_table | retour : firstAddress = 10189, lastAddress = -1
+[17:57:41][INFO] show_table: begin show table 0
+[17:57:41][INFO] show_table: cell 0 is not empty
+[17:57:41][INFO] Get data: cursor set at 10189
+[17:57:41][INFO] get_data: data info read: type: 1, size: 0
+[17:57:41][INFO] get_data: Success! data : 379302B0
+[17:57:41][INFO] show_table: data info read: type: 1, size: 0
+[17:57:41][INFO] show_table: cell 1 is not empty
+[17:57:41][INFO] Get data: cursor set at 10189
+[17:57:41][INFO] get_data: data info read: type: 1, size: 0
+[17:57:41][INFO] get_data: Success! data : 37938C10
+[17:57:41][INFO] show_table: data info read: type: 1, size: 0
+[17:57:41][INFO] 
+======================Affichage Tables======================
+
+°óËbòTables :
+Table 0 :
+ CELL[0] : 189
+   Data size : 9984
+   Data type : 3
+   Data : 156 map's items
+ CELL[1] : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 10189
+   Data size : 0
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 10189
+   Data size : 0
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[17:57:41][INFO] End of the session of the game.

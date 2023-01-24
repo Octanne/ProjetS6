@@ -2,6 +2,7 @@
 #define _FUNCTIONS_
 
 #include "constants.h"
+#include "st_benchmark.h"
 
 /**
  * ncurses initialisation.

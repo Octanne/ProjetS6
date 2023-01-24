@@ -10,7 +10,7 @@ main.o : ../main.c $(INCL)/level/level.h $(INCL)/level_edit/level_edit.h $(INCL)
 table_addr.o : $(INCL)/table_addr/table_addr.c $(INCL)/table_addr/table_addr.h $(INCL)/level/level.h $(INCL)/utils/utils.h
 	$(CC) -c $(INCL)/table_addr/table_addr.c
 
-utils.o : $(INCL)/utils/utils.c $(INCL)/utils/utils.h $(INCL)/utils/constants.h
+utils.o : $(INCL)/utils/utils.c $(INCL)/utils/utils.h $(INCL)/utils/constants.h $(INCL)/utils/st_benchmark.h
 	$(CC) -c $(INCL)/utils/utils.c -lm -lncurses
 
 level.o : $(INCL)/level/level.c $(INCL)/level/level.h $(INCL)/liste/liste.h $(INCL)/utils/utils.h
