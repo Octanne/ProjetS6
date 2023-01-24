@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <error.h>
+#include <sys/stat.h>
 
 /**
  * ncurses initialisation.
