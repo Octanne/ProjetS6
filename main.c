@@ -98,8 +98,11 @@ void gen_level_empty() {
 }
 
 void load_level(int newLevel, int oldLevel) {
-    // TODO: Load level from file or empty level if not found
     file_t* file = load_file(FILENAME);
+
+    // decalage des niveaux
+    oldLevel--;
+    newLevel--;
 
     if (save_level(file, oldLevel, level) == -1) logs(L_INFO, "Main | Error while saving level %d", oldLevel);
     if (get_level(file, newLevel, &level) == -1) {
@@ -128,7 +131,7 @@ void load_level_file() {
     // show table
     logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
 
-    if (get_level(file, 1, &level) == -1) {
+    if (get_level(file, 0, &level) == -1) {
         // Pas de niveau dans le fichier
         gen_level_empty();
         logs(L_INFO, "Main | First level not found, empty level generated.");

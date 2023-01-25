@@ -77,14 +77,14 @@ int get_table(int fd, off_t addrTable, off_t* tableToFill) {
 int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
     // set cursor
     if (lseek(fd, addrFromTable, SEEK_SET) != addrFromTable) {
-        logs(L_DEBUG, "Get_data | Impossible to set cursor at addr = %ld", addrFromTable);
+        logs(L_DEBUG, "Get_data | ERROR Impossible to set cursor at addr = %ld", addrFromTable);
         return -1;
     }
     logs(L_DEBUG, "Get_data | Set cursor at addr = %ld", lseek(fd, 0, SEEK_CUR));
 
     // read data info
     if (get_data_info(fd,addrFromTable,dataInfo) == -1) {
-        logs(L_DEBUG, "Get_data | error read data info");
+        logs(L_DEBUG, "Get_data | ERROR read data info");
         return -1;
     }
 
@@ -94,7 +94,7 @@ int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
     char *dataS = malloc(dataInfo->size);
     // read data
     if (read(fd, dataS, dataInfo->size) == -1) {
-        logs(L_DEBUG, "Get_data | error read data");
+        logs(L_DEBUG, "Get_data | ERROR read data");
         return -1;
     }
     *data = dataS;
@@ -670,131 +670,6 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     logs(L_DEBUG, "transform_to_empty | End of transformation");
     return 1;
 }
-////
-
-int remove_level(file_t* file, int numLevel) {
-    logs(L_DEBUG, "Remove_level | level : %d", numLevel);
-    int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
-
-    if (fd == -1) {
-        logs(L_DEBUG, "Remove_level | ERROR open file, %s", file->filename);
-        return -1;
-    }
-    int res = transform_to_empty(fd, numLevel, ADDR_FIRST_TABLE, 0);
-
-    if (res == -2) logs(L_DEBUG, "The level was already inexistant");
-    else if(res == -1) logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
-
-    // close file
-    close(fd);
-    logs(L_DEBUG, "Remove_level | level : %d, success : %d", numLevel, res);
-    return res;
-}
-
-int get_level(file_t* file, int numLevel, Level** level) {
-    logs(L_DEBUG, "Get_level | level : %d", numLevel);
-    int fd = open(file->filename, O_RDONLY);
-    if (fd == -1) {
-        logs(L_DEBUG, "Get_level | Error open file: %s", file->filename);
-        return -1;
-    }
-
-    logs(L_DEBUG, "Get_level | File opened: %s", file->filename);
-
-    // get table entry
-    table_entry_t entry;
-    if (find_tableEntryOfIdx(fd,numLevel,ADDR_FIRST_TABLE,0,&entry)) {
-        return -1;
-    }
-    logs(L_DEBUG, "Get_level | table entry read: type = %d, addr = %ld", entry.type_data, entry.addr_cell);
-
-    if (entry.type_data == TABLE_TYPE_NONE) {
-        // Level not found
-        logs(L_DEBUG, "Get_level | Level not found");
-        close(fd);
-        return -1;
-    } else if (entry.type_data == TABLE_TYPE_LEVEL) {
-        // get data info
-        data_info_t dataInfo;
-        char* data;
-        if (get_data(fd, entry.addr_cell, &dataInfo, &data) == -1) {
-            close(fd);
-            return -1;
-        }
-
-        logs(L_DEBUG, "Get_level | dataInfo.type = %d, dataInfo.size = %ld", dataInfo.type, dataInfo.size);
-        logs(L_DEBUG, "Get_level | data = %X", data);
-
-        // convert bytes to level
-        *level = convert_bytes_to_level(data, dataInfo.size);
-        if (level == NULL) {
-            close(fd);
-            return -1;
-        }
-
-        free(data);
-
-        // close file
-        close(fd);
-        logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, (*level)->listeObjet->taille);
-
-        return 1;
-    }
-
-    // close file
-    close(fd);
-
-    logs(L_DEBUG, "Get_level | level : %d, not found, unexpected type : %d", numLevel, entry.type_data);
-
-    return -1;
-}
-
-int save_level(file_t* file, int numLevel, Level* level) {
-    logs(L_DEBUG, "Save_level | level : %d", numLevel);
-    // open 
-    int fd = open(file->filename, O_RDWR);
-    if (fd == -1) {
-        logs(L_DEBUG, "Save_level | Error open file: %s", file->filename);
-        return -1;
-    }
-    table_entry_t result = find_tableEntryOfIdx(fd, numLevel, ADDR_FIRST_TABLE, 0);
-    
-    logs(L_DEBUG, "Save_level | table entry found: type: %d, addr: %ld, idx: %d", result.type_data, result.addr_cell, result.idx_table);
-
-    int size;
-    char* bytes = convert_level_to_bytes(level, &size);
-
-    logs(L_DEBUG, "Save_level | Success level converted to bytes: %X", bytes);
-    if (result.type_data == TABLE_TYPE_NONE) {
-        close(fd);
-        // create new level
-        int i = add_data(file, bytes, size, TABLE_TYPE_LEVEL);
-        logs(L_DEBUG, "Save_level | Success level created: res = %d", i);
-        free(bytes);
-        return i;
-    } else if (result.type_data == TABLE_TYPE_LEVEL){
-        close(fd);
-        // update level
-        if (remove_level(file, numLevel) == -1) {
-            free(bytes);
-            logs(L_DEBUG, "Save_level | Error remove entry");
-            return -1;
-        }
-        // create new level
-        int i = add_data(file, bytes, size, TABLE_TYPE_LEVEL);
-        logs(L_DEBUG, "Save_level | Success level updated: res = %d", i);
-        free(bytes);
-        return i;
-    }
-
-    free(bytes);
-
-    close(fd);
-
-    logs(L_DEBUG, "Save_level | Error, unexpected type: %d", result.type_data);
-
-    return -1;
-}
 
 int show_table_c(int fd, off_t addr_table, int level, char* output) {
     //logs(L_DEBUG, "Show table | addrTable = %ld, table_level = %d", addr_table, level);
@@ -859,6 +734,150 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
     }
 
     return 1;
+}
+////
+
+int remove_level(file_t* file, int numLevel) {
+    logs(L_DEBUG, "Remove_level | level : %d", numLevel);
+    int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
+
+    if (fd == -1) {
+        logs(L_DEBUG, "Remove_level | ERROR open file, %s", file->filename);
+        return -1;
+    }
+    int res = transform_to_empty(fd, numLevel, ADDR_FIRST_TABLE, 0);
+
+    if (res == -2) logs(L_DEBUG, "The level was already inexistant");
+    else if(res == -1) logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
+
+    // close file
+    close(fd);
+    logs(L_DEBUG, "Remove_level | level : %d, success : %d", numLevel, res);
+    return res;
+}
+
+int get_level(file_t* file, int numLevel, Level** level) {
+    logs(L_DEBUG, "Get_level | level : %d", numLevel);
+    int fd = open(file->filename, O_RDONLY);
+    if (fd == -1) {
+        logs(L_DEBUG, "Get_level | Error open file: %s", file->filename);
+        return -1;
+    }
+
+    logs(L_DEBUG, "Get_level | File opened: %s", file->filename);
+
+    // get table entry
+    table_entry_t entry;
+    if (find_tableEntryOfIdx(fd,numLevel,ADDR_FIRST_TABLE,0,&entry)) {
+        logs(L_DEBUG, "Get_level | ERROR while searching for the table entry");
+        return -1;
+    }
+    logs(L_DEBUG, "Get_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
+         entry.type_data, entry.addr_cell, entry.addr_table, entry.idx_table);
+
+    if (entry.type_data == TABLE_TYPE_NONE && entry.idx_table == -1) {
+        // Level not found
+        logs(L_DEBUG, "Get_level | Level not found");
+        close(fd);
+        return -1;
+    } else if (entry.type_data == TABLE_TYPE_LEVEL) {
+        // get data info
+        data_info_t dataInfo;
+        char* data;
+        if (get_data(fd, entry.addr_cell, &dataInfo, &data) == -1) {
+            close(fd);
+            return -1;
+        }
+
+        logs(L_DEBUG, "Get_level | dataInfo.type = %d, dataInfo.size = %ld", dataInfo.type, dataInfo.size);
+        logs(L_DEBUG, "Get_level | data = %X", data);
+
+        // convert bytes to level
+        *level = convert_bytes_to_level(data, dataInfo.size);
+        if (level == NULL) {
+            logs(L_DEBUG, "Get_level | ERROR while converting bytes to level");
+            close(fd);
+            return -1;
+        }
+
+        free(data);
+
+        // close file
+        close(fd);
+        logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, (*level)->listeObjet->taille);
+
+        return 1;
+    }
+
+    // close file
+    close(fd);
+
+    logs(L_DEBUG, "Get_level | ERROR level : %d, not found, unexpected type : %d", numLevel, entry.type_data);
+
+    return -1;
+}
+
+int save_level(file_t* file, int numLevel, Level* level) {
+    logs(L_DEBUG, "Save_level | level : %d", numLevel);
+    // open 
+    int fd = open(file->filename, O_RDWR);
+    if (fd == -1) {
+        logs(L_DEBUG, "Save_level | Error open file: %s", file->filename);
+        return -1;
+    }
+    table_entry_t result;
+    if (find_tableEntryOfIdx(fd, numLevel, ADDR_FIRST_TABLE, 0, &result) == -1) {
+        logs(L_DEBUG, "Save_level | ERROR while searching for the table entry");
+        return -1;
+    }
+    
+    logs(L_DEBUG, "Save_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
+         result.type_data, result.addr_cell, result.addr_table, result.idx_table);
+
+    int size;
+    char* bytes = convert_level_to_bytes(level, &size);
+
+    logs(L_DEBUG, "Save_level | Success level converted to bytes: %X, size = %d bytes", bytes, size);
+    if (result.idx_table == -1 && result.type_data == TABLE_TYPE_NONE) {
+        // add new level data
+        if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
+            logs(L_DEBUG, "Save_level | Error write data");
+            free(bytes);
+            close(fd);
+            return -1;
+        }
+        logs(L_DEBUG, "Save_level | Success level %d save created", numLevel);
+        free(bytes);
+        close(fd);
+        return 1;
+    } else if (result.type_data == TABLE_TYPE_LEVEL){
+        // remove old level data
+        if (remove_level(file, numLevel) == -1) {
+            free(bytes);
+            logs(L_DEBUG, "Save_level | Error while remove level %d", numLevel);
+            close(fd);
+            return -1;
+        }
+        // add new level data
+        if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
+            logs(L_DEBUG, "Save_level | Error write data");
+            free(bytes);
+            close(fd);
+            return -1;
+        }
+        logs(L_DEBUG, "Save_level | Success level %d updated", numLevel);
+        free(bytes);
+        close(fd);
+        return 1;
+    }
+
+    free(bytes);
+
+    close(fd);
+
+    logs(L_DEBUG, "Save_level | Error, unexpected type: %d", result.type_data);
+
+    return -1;
 }
 
 char* show_table(file_t* file){
