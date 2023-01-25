@@ -94,7 +94,7 @@ int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
     char *dataS = malloc(dataInfo->size);
     // read data
     if (read(fd, dataS, dataInfo->size) == -1) {
-        logs(L_DEBUG, "Get_data | ERROR read data");
+        logs(L_DEBUG, "Get_data | ERROR read data : %s", strerror(errno));
         return -1;
     }
     *data = dataS;
@@ -440,7 +440,7 @@ int find_tableEntryOfIdx(int fd, int globalIndexEntry, off_t addrTable, int numT
     }
 
     // calculate the index in the table
-    int localIndex = globalIndexEntry - (TAILLE_TABLE-1) * numTable;
+    int localIndex = globalIndexEntry - (TAILLE_TABLE-1) * (numTable+1); // TODO ERROR HERE
     logs(L_DEBUG, "find_tableEntryOfIdx | entry find ! localIndex = %d", localIndex);
 
     // check if the index is present
@@ -549,8 +549,9 @@ int update_empty(int fd, empty_data_t* emptyData, size_t sizeNeeded) {
         if (write_data_info(fd, addrOfNewEmpty, &dataInfo) == -1) return -1;
 
         // update addr in empty table
-        table[emptyData->index] = addrOfNewEmpty;
-        logs(L_DEBUG, "update_empty | addrEmpty updated in table");
+        table[emptyData->index] = addrOfNewEmpty; // TODO ERROR HERE
+        logs(L_DEBUG, "update_empty | addrEmpty updated in table sizeLeft = %ld, addrOfNewEmpty = %ld", 
+            sizeLeft, addrOfNewEmpty);
     } else {
         // remove addrEmpty from table
         table[emptyData->index] = ADDR_UNUSED;
@@ -584,7 +585,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     }
 
     // calculate the index in the table
-    int localIndex = globalIndexEntry - numTable*(TAILLE_TABLE-1);
+    int localIndex = globalIndexEntry - (TAILLE_TABLE-1)*(numTable+1); // TODO ERROR HERE
     logs(L_DEBUG, "transform_to_empty | entry find ! localIndex = %d", localIndex);
 
     // check if the data is already empty
@@ -635,7 +636,8 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 
     // write the buffer
     if (write(fd, buffer, dataInfo.size + SIZE_DATA_INFO) == -1) return -1;
-    logs(L_DEBUG, "transform_to_empty | Rewrite DataInfo and Erase data at %d", table[localIndex]);
+    logs(L_DEBUG, "transform_to_empty | Rewrite DataInfo and Erase data from %d to %d",
+         table[localIndex], lseek(fd, 0, SEEK_CUR));
 
     // 
     // Register the empty space to the empty table
@@ -739,7 +741,7 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
 
 int remove_level(file_t* file, int numLevel) {
     logs(L_DEBUG, "Remove_level | level : %d", numLevel);
-    int fd = open(file->filename, O_RDWR, S_IRUSR | S_IWUSR);
+    int fd = open(file->filename, O_RDWR);
 
     if (fd == -1) {
         logs(L_DEBUG, "Remove_level | ERROR open file, %s", file->filename);
@@ -768,7 +770,7 @@ int get_level(file_t* file, int numLevel, Level** level) {
 
     // get table entry
     table_entry_t entry;
-    if (find_tableEntryOfIdx(fd,numLevel,ADDR_FIRST_TABLE,0,&entry)) {
+    if (find_tableEntryOfIdx(fd,numLevel,ADDR_FIRST_TABLE,0,&entry) == -1) {
         logs(L_DEBUG, "Get_level | ERROR while searching for the table entry");
         return -1;
     }
@@ -839,6 +841,7 @@ int save_level(file_t* file, int numLevel, Level* level) {
 
     logs(L_DEBUG, "Save_level | Success level converted to bytes: %X, size = %d bytes", bytes, size);
     if (result.idx_table == -1 && result.type_data == TABLE_TYPE_NONE) {
+        logs(L_DEBUG, "Save_level | Level %d not found, write new level...", numLevel);
         // add new level data
         if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
             logs(L_DEBUG, "Save_level | Error write data");
@@ -851,6 +854,7 @@ int save_level(file_t* file, int numLevel, Level* level) {
         close(fd);
         return 1;
     } else if (result.type_data == TABLE_TYPE_LEVEL){
+        logs(L_DEBUG, "Save_level | Level %d found, update level..", numLevel);
         // remove old level data
         if (remove_level(file, numLevel) == -1) {
             free(bytes);
@@ -881,6 +885,7 @@ int save_level(file_t* file, int numLevel, Level* level) {
 }
 
 char* show_table(file_t* file){
+    logs(L_DEBUG, "Show_table | reading file : %s", file->filename);
     char * result = malloc(8192);
     int fd = open(file->filename, O_RDONLY);
     if (fd == -1) {
@@ -890,9 +895,11 @@ char* show_table(file_t* file){
 
     strcat(result, "Tables :\n");
     if (show_table_c(fd, ADDR_FIRST_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
+    logs(L_DEBUG, "Show_table | Table vides");
     strcat(result, "Table de vides :\n");
     if (show_table_c(fd, ADDR_EMTPY_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
 
     close(fd);
+    logs(L_DEBUG, "Show_table | Success");
     return result;
 }

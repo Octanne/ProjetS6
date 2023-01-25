@@ -1,0 +1,552 @@
+[14:54:00][INFO] Main | Loading first level from file...
+[14:54:00][DEBUG] File loaded: level.lvl, 4
+[14:54:00][INFO] Main | File loaded
+[14:54:00][DEBUG] Show_table | reading file : level.lvl
+[14:54:00][DEBUG] get_table | addrTable = 13
+[14:54:00][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:00][DEBUG] get_data_info | addr = 20189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 45460430
+[14:54:00][DEBUG] Show_table | Table vides
+[14:54:00][DEBUG] get_table | addrTable = 93
+[14:54:00][DEBUG] get_data_info | addr = 93
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] get_table | retour : firstAddress = 120701, nextTable = 120701
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 120701
+[14:54:00][DEBUG] get_data_info | addr = 120701
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] Get_data | dataInfo : type = 2, size = 80
+[14:54:00][DEBUG] Get_data | Success! data : 4545D040
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 189
+[14:54:00][DEBUG] get_data_info | addr = 189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 45462B80
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 10189
+[14:54:00][DEBUG] get_data_info | addr = 10189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 45465290
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:00][DEBUG] get_data_info | addr = 20189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454679A0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 30253
+[14:54:00][DEBUG] get_data_info | addr = 30253
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 4546A0F0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 40253
+[14:54:00][DEBUG] get_data_info | addr = 40253
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 4546C800
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 50317
+[14:54:00][DEBUG] get_data_info | addr = 50317
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 4546EF50
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 80509
+[14:54:00][DEBUG] get_data_info | addr = 80509
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454716A0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 70445
+[14:54:00][DEBUG] get_data_info | addr = 70445
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 45473DF0
+[14:54:00][DEBUG] get_table | addrTable = 120701
+[14:54:00][DEBUG] get_data_info | addr = 120701
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] get_table | retour : firstAddress = 60381, nextTable = -1
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 60381
+[14:54:00][DEBUG] get_data_info | addr = 60381
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 45476540
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 110637
+[14:54:00][DEBUG] get_data_info | addr = 110637
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 45478C90
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 100573
+[14:54:00][DEBUG] get_data_info | addr = 100573
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 4547B3E0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 90573
+[14:54:00][DEBUG] get_data_info | addr = 90573
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 4547DB30
+[14:54:00][DEBUG] Show_table | Success
+[14:54:00][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 120701
+   Data size : 80
+   Data type : 2
+   Data : FFFFFFDD FFFFFFEB 0 0 0 0 0 0 2D FFFFFFB0 1 0 0 0 0 0 FFFFFFDD FFFFFF88 1 0 0 0 0 0 FFFFFFCD 61 1 0 0 0 0 0 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+ CELL[1] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 10189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : 30253
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[5] : 40253
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[6] : 50317
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[7] : 80509
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[8] : 70445
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ Next table : YES
+
+Table 1 :
+ CELL[0] : 60381
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 110637
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 100573
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 90573
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[14:54:00][DEBUG] Get_level | level : 0
+[14:54:00][DEBUG] Get_level | File opened: level.lvl
+[14:54:00][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 0, addrTable = 13, numTable = 0
+[14:54:00][DEBUG] get_table | addrTable = 13
+[14:54:00][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:00][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 0
+[14:54:00][DEBUG] find_tableEntryOfIdx | L'indice n'a pas d'adresse définie.
+[14:54:00][DEBUG] Get_level | Table entry found : type = 0, addrCell = -1, addrTable = -1, idx = -1
+[14:54:00][DEBUG] Get_level | Level not found
+[14:54:00][INFO] Main | First level not found, empty level generated.
+[14:54:00][DEBUG] Show_table | reading file : level.lvl
+[14:54:00][DEBUG] get_table | addrTable = 13
+[14:54:00][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:00][DEBUG] get_data_info | addr = 20189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 45494600
+[14:54:00][DEBUG] Show_table | Table vides
+[14:54:00][DEBUG] get_table | addrTable = 93
+[14:54:00][DEBUG] get_data_info | addr = 93
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] get_table | retour : firstAddress = 120701, nextTable = 120701
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 120701
+[14:54:00][DEBUG] get_data_info | addr = 120701
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] Get_data | dataInfo : type = 2, size = 80
+[14:54:00][DEBUG] Get_data | Success! data : 45496E90
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 189
+[14:54:00][DEBUG] get_data_info | addr = 189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 45496F90
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 10189
+[14:54:00][DEBUG] get_data_info | addr = 10189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 45499740
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:00][DEBUG] get_data_info | addr = 20189
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 4549BEF0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 30253
+[14:54:00][DEBUG] get_data_info | addr = 30253
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 4549E6E0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 40253
+[14:54:00][DEBUG] get_data_info | addr = 40253
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454A0E90
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 50317
+[14:54:00][DEBUG] get_data_info | addr = 50317
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454A3680
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 80509
+[14:54:00][DEBUG] get_data_info | addr = 80509
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454A5E70
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 70445
+[14:54:00][DEBUG] get_data_info | addr = 70445
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454A8660
+[14:54:00][DEBUG] get_table | addrTable = 120701
+[14:54:00][DEBUG] get_data_info | addr = 120701
+[14:54:00][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:00][DEBUG] get_table | retour : firstAddress = 60381, nextTable = -1
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 60381
+[14:54:00][DEBUG] get_data_info | addr = 60381
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454AAED0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 110637
+[14:54:00][DEBUG] get_data_info | addr = 110637
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454AD6C0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 100573
+[14:54:00][DEBUG] get_data_info | addr = 100573
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:00][DEBUG] Get_data | Success! data : 454AFEB0
+[14:54:00][DEBUG] Get_data | Set cursor at addr = 90573
+[14:54:00][DEBUG] get_data_info | addr = 90573
+[14:54:00][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:00][DEBUG] Get_data | Success! data : 454B26A0
+[14:54:00][DEBUG] Show_table | Success
+[14:54:00][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 120701
+   Data size : 80
+   Data type : 2
+   Data : FFFFFFDD FFFFFFEB 0 0 0 0 0 0 2D FFFFFFB0 1 0 0 0 0 0 FFFFFFDD FFFFFF88 1 0 0 0 0 0 FFFFFFCD 61 1 0 0 0 0 0 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+ CELL[1] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 10189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : 30253
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[5] : 40253
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[6] : 50317
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[7] : 80509
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[8] : 70445
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ Next table : YES
+
+Table 1 :
+ CELL[0] : 60381
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 110637
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 100573
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 90573
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[14:54:00][DEBUG] free_file | file = level.lvl
+[14:54:23][INFO] Main | Ncurses windows deleted, now loading file...
+[14:54:23][DEBUG] File loaded: level.lvl, 4
+[14:54:23][INFO] Main | Saving level 1...
+[14:54:23][DEBUG] Save_level | level : 1
+[14:54:23][DEBUG] find_tableEntryOfIdx | globalIndexEntry = 1, addrTable = 13, numTable = 0
+[14:54:23][DEBUG] get_table | addrTable = 13
+[14:54:23][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:23][DEBUG] find_tableEntryOfIdx | entry find ! localIndex = 1
+[14:54:23][DEBUG] find_tableEntryOfIdx | L'indice n'a pas d'adresse définie.
+[14:54:23][DEBUG] Save_level | Table entry found : type = 0, addrCell = -1, addrTable = -1, idx = -1
+[14:54:23][INFO] Level Converter | Convert level to bytes: 156 items.
+[14:54:23][INFO] Level Converter | Convert level to bytes: Success! 9984 bytes.
+[14:54:23][DEBUG] Save_level | Success level converted to bytes: 454B4E30, size = 9984 bytes
+[14:54:23][DEBUG] Save_level | Level 1 not found, write new level...
+[14:54:23][DEBUG] add_data | data: 454B4E30, size: 9984, data_type: 3
+[14:54:23][DEBUG] find_av_tableEntry | addrTable = 13
+[14:54:23][DEBUG] get_table | addrTable = 13
+[14:54:23][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:23][DEBUG] find_av_tableEntry | entry not used found at index = 0 of table = 13
+[14:54:23][DEBUG] add_data | tableEntry : addr_table = 13, idx_table = 0, type_data = 0, addr_cell = -1
+[14:54:23][DEBUG] get_table | addrTable = 13
+[14:54:23][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:23][DEBUG] get_empty | sizeNeeded = 9984, addrTable = 93
+[14:54:23][DEBUG] get_table | addrTable = 93
+[14:54:23][DEBUG] get_data_info | addr = 93
+[14:54:23][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:23][DEBUG] get_table | retour : firstAddress = 120701, nextTable = 120701
+[14:54:23][DEBUG] get_empty | Check table for an empty space...
+[14:54:23][DEBUG] get_empty | Empty found at index = 0 pointing to addr = 120701
+[14:54:23][DEBUG] get_data_info | addr = 120701
+[14:54:23][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:23][DEBUG] get_empty | ERROR This empty is not an empty
+[14:54:23][DEBUG] add_data | Error while searching empty space
+[14:54:23][DEBUG] Save_level | Error write data
+[14:54:23][INFO] Main | Level 1 saved
+[14:54:23][DEBUG] Show_table | reading file : level.lvl
+[14:54:23][DEBUG] get_table | addrTable = 13
+[14:54:23][DEBUG] get_table | retour : firstAddress = -1, nextTable = -1
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:23][DEBUG] get_data_info | addr = 20189
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454B6E40
+[14:54:23][DEBUG] Show_table | Table vides
+[14:54:23][DEBUG] get_table | addrTable = 93
+[14:54:23][DEBUG] get_data_info | addr = 93
+[14:54:23][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:23][DEBUG] get_table | retour : firstAddress = 120701, nextTable = 120701
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 120701
+[14:54:23][DEBUG] get_data_info | addr = 120701
+[14:54:23][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:23][DEBUG] Get_data | dataInfo : type = 2, size = 80
+[14:54:23][DEBUG] Get_data | Success! data : 4545C530
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 189
+[14:54:23][DEBUG] get_data_info | addr = 189
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | Success! data : 454B9590
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 10189
+[14:54:23][DEBUG] get_data_info | addr = 10189
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | Success! data : 454BBCA0
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 20189
+[14:54:23][DEBUG] get_data_info | addr = 20189
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454BE3B0
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 30253
+[14:54:23][DEBUG] get_data_info | addr = 30253
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | Success! data : 454C0B00
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 40253
+[14:54:23][DEBUG] get_data_info | addr = 40253
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454C3210
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 50317
+[14:54:23][DEBUG] get_data_info | addr = 50317
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454C5960
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 80509
+[14:54:23][DEBUG] get_data_info | addr = 80509
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454C80B0
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 70445
+[14:54:23][DEBUG] get_data_info | addr = 70445
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454CA800
+[14:54:23][DEBUG] get_table | addrTable = 120701
+[14:54:23][DEBUG] get_data_info | addr = 120701
+[14:54:23][INFO] get_data_info | retour : type = 2, size = 80
+[14:54:23][DEBUG] get_table | retour : firstAddress = 60381, nextTable = -1
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 60381
+[14:54:23][DEBUG] get_data_info | addr = 60381
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454CCF50
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 110637
+[14:54:23][DEBUG] get_data_info | addr = 110637
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454CF6A0
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 100573
+[14:54:23][DEBUG] get_data_info | addr = 100573
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 10048
+[14:54:23][DEBUG] Get_data | Success! data : 454D1DF0
+[14:54:23][DEBUG] Get_data | Set cursor at addr = 90573
+[14:54:23][DEBUG] get_data_info | addr = 90573
+[14:54:23][INFO] get_data_info | retour : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | dataInfo : type = 1, size = 9984
+[14:54:23][DEBUG] Get_data | Success! data : 454D4540
+[14:54:23][DEBUG] Show_table | Success
+[14:54:23][INFO] 
+======================Affichage Tables======================
+
+Tables :
+Table 0 :
+ CELL[0] : EMPTY
+ CELL[1] : EMPTY
+ CELL[2] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+Table de vides :
+Table 0 :
+ CELL[0] : 120701
+   Data size : 80
+   Data type : 2
+   Data : FFFFFFDD FFFFFFEB 0 0 0 0 0 0 2D FFFFFFB0 1 0 0 0 0 0 FFFFFFDD FFFFFF88 1 0 0 0 0 0 FFFFFFCD 61 1 0 0 0 0 0 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+ CELL[1] : 189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 10189
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 20189
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : 30253
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[5] : 40253
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[6] : 50317
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[7] : 80509
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[8] : 70445
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ Next table : YES
+
+Table 1 :
+ CELL[0] : 60381
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[1] : 110637
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[2] : 100573
+   Data size : 10048
+   Data type : 1
+   Data : EMPTY
+ CELL[3] : 90573
+   Data size : 9984
+   Data type : 1
+   Data : EMPTY
+ CELL[4] : EMPTY
+ CELL[5] : EMPTY
+ CELL[6] : EMPTY
+ CELL[7] : EMPTY
+ CELL[8] : EMPTY
+ Next table : NO
+
+======================Affichage Tables======================
+[14:54:23][DEBUG] free_file | file = level.lvl
+[14:54:23][INFO] End of the session of the game.

@@ -104,6 +104,10 @@ void load_level(int newLevel, int oldLevel) {
     oldLevel--;
     newLevel--;
 
+    // show table
+    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
+
+
     if (save_level(file, oldLevel, level) == -1) logs(L_INFO, "Main | Error while saving level %d", oldLevel);
     if (get_level(file, newLevel, &level) == -1) {
         // Pas de niveau dans le fichier
@@ -140,6 +144,9 @@ void load_level_file() {
         logs(L_INFO, "Main | First level : %d items loaded", level->listeObjet->taille);
         refresh_level();
     }
+
+    // show table
+    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
 
     free_file(file);
 }
