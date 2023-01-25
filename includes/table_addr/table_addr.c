@@ -422,7 +422,7 @@ int find_tableEntryOfIdx(int fd, int globalIndexEntry, off_t addrTable, int numT
     if (get_table(fd, addrTable, table) == -1) return -1; 
 
     // check index presence
-    if (globalIndexEntry > (TAILLE_TABLE-1) * (numTable+1)) {
+    if (globalIndexEntry >= (TAILLE_TABLE-1) * (numTable+1)) {
         logs(L_DEBUG, "find_tableEntryOfIdx | L'indice est dans une table plus loin");
         if (table[TAILLE_TABLE - 1] == ADDR_UNUSED) {
             logs(L_DEBUG, "find_tableEntryOfIdx | no more table to check, the index is not present");
@@ -440,7 +440,7 @@ int find_tableEntryOfIdx(int fd, int globalIndexEntry, off_t addrTable, int numT
     }
 
     // calculate the index in the table
-    int localIndex = globalIndexEntry - (TAILLE_TABLE-1) * (numTable+1); // TODO ERROR HERE
+    int localIndex = globalIndexEntry - (TAILLE_TABLE-1) * numTable;
     logs(L_DEBUG, "find_tableEntryOfIdx | entry find ! localIndex = %d", localIndex);
 
     // check if the index is present
@@ -539,7 +539,7 @@ int update_empty(int fd, empty_data_t* emptyData, size_t sizeNeeded) {
     if (get_table(fd, emptyData->addr_table, table) == -1) return -1;
 
     // if size not fully used
-    size_t sizeLeft = emptyData->size - sizeNeeded - SIZE_DATA_INFO;
+    long sizeLeft = emptyData->size - sizeNeeded - SIZE_DATA_INFO; // Comme peut être négatif, on utilise long
     if (sizeLeft > 0) {
         // update data_info
         data_info_t dataInfo;
@@ -550,7 +550,7 @@ int update_empty(int fd, empty_data_t* emptyData, size_t sizeNeeded) {
 
         // update addr in empty table
         table[emptyData->index] = addrOfNewEmpty; // TODO ERROR HERE
-        logs(L_DEBUG, "update_empty | addrEmpty updated in table sizeLeft = %ld, addrOfNewEmpty = %ld", 
+        logs(L_DEBUG, "update_empty | addrEmpty updated in table sizeLeft = %lu, addrOfNewEmpty = %ld", 
             sizeLeft, addrOfNewEmpty);
     } else {
         // remove addrEmpty from table
@@ -571,7 +571,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     if (get_table(fd, addrTable, table) == -1) return -1;
 
     // check index presence
-    if (globalIndexEntry > (TAILLE_TABLE-1) * (numTable+1)) {
+    if (globalIndexEntry >= (TAILLE_TABLE-1) * (numTable+1)) {
         logs(L_DEBUG, "transform_to_empty | L'indice est dans une table plus loin");
         if (table[TAILLE_TABLE - 1] == ADDR_UNUSED) {
             // the table is empty
@@ -585,7 +585,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     }
 
     // calculate the index in the table
-    int localIndex = globalIndexEntry - (TAILLE_TABLE-1)*(numTable+1); // TODO ERROR HERE
+    int localIndex = globalIndexEntry - (TAILLE_TABLE-1)*numTable;
     logs(L_DEBUG, "transform_to_empty | entry find ! localIndex = %d", localIndex);
 
     // check if the data is already empty
