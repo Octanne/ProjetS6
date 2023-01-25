@@ -5,10 +5,11 @@
 #define L_DEBUG 2
 #define LOGS_FILE "logs/latest.log"
 #define LOGS_FOLDER "logs/"
+#define LOGS_FOLDER_ARCHIVES "logs/archives/"
 #define LOGS_ACTIVE 2 // 2 = debug, 1 = info, 0 = inactive
 #define LOGS_MAX_LENGTH 3500
 
-#define FILENAME "level.lvl"
+#define FILENAME "level.dat"
 
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10

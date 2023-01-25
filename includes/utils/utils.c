@@ -108,8 +108,9 @@ void initLogs() {
             exit(EXIT_FAILURE);
         }
     }
+
     // Open the file with open
-    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+    file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
     // check if the file is open
     if (file_logs_desc == -1) {
         fprintf(stderr, "Error: can't open the logs file.\n");
@@ -177,8 +178,14 @@ void closeLogs() {
     }
     
     logs(L_INFO, "End of the session of the game.");
-    if(close(file_logs_desc) == -1) {
-        fprintf(stderr, "Error while closing the logs file.\n");
+
+    // Create the logs folder archives if it doesn't exist
+    if (mkdir(LOGS_FOLDER_ARCHIVES, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
+        // show erno
+        if (errno != EEXIST) {
+            fprintf(stderr, "Error: can't create the logs folder.\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
     // Move the file to the logs folder
@@ -188,11 +195,27 @@ void closeLogs() {
     char time[30];
     strftime(time, sizeof(time), "%d-%m-%Y_%H-%M-%S", t);
 
-    char file_name[30] = LOGS_FOLDER;
+    char file_name[30] = LOGS_FOLDER_ARCHIVES;
     strcat(file_name, time);
     strcat(file_name, ".log");
-    if(rename(LOGS_FILE, file_name) == -1) {
-        fprintf(stderr, "Error while moving the logs file.\n");
+
+    // Copy the file
+
+    // Open the destination file for writing
+    int dest_fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+
+    // Allocate a buffer for reading the file
+    char buffer[4096];
+
+    // Read from the logs file and write to the archived dests file
+    ssize_t bytes_read;
+    while ((bytes_read = read(file_logs_desc, buffer, sizeof(buffer))) > 0) {
+        write(dest_fd, buffer, bytes_read);
+    }
+
+    // Close the source and destination files
+    if(close(file_logs_desc) == -1 || close(dest_fd) == -1) {
+        fprintf(stderr, "Error while closing the logs file.\n");
     }
 
     // Reset the file_logs_desc
