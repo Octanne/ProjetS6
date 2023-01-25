@@ -2,58 +2,45 @@
 #define OBJET_H
 
 typedef struct {
-    int *x, *y;
 } Block_obj;
 
 typedef struct {
-    int *x, *y;
 } Ladder_obj;
 
 typedef struct {
-    int *x, *y;
 } Trap_obj;
 
 typedef struct {
-    int *x, *y;
     int numkey;
 } Key_obj;
 
 typedef struct {
-    int *x, *y;
     int numgate;
 } Gate_obj;
 
 typedef struct {
-    int *x, *y;
     int numdoor;
 } Door_obj;
 
 typedef struct {
-    int *x, *y;
 } Exit_obj;
 
 typedef struct {
-    int *x, *y;
 } Start_obj;
 
 typedef struct {
-    int *x, *y;
 } Robot_obj;
 
 typedef struct {
-    int *x, *y;
 } Probe_obj;
 
 typedef struct {
-    int *x, *y;
 } Heart_obj;
 
 typedef struct {
-    int *x, *y;
 } Bomb_obj;
 
 typedef struct {
-    int *x, *y;
     int life;
     int color;
     int orientation;
