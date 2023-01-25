@@ -10,7 +10,7 @@
 #define TAG_FILE "GAMEOFTABLES"
 #define TAILLE_TABLE 10
 
-#define TABLE_TYPE_NONE 0
+#define TABLE_TYPE_NONE 0 // Jamais écris une valeur de retour.
 #define TABLE_TYPE_EMPTY 1
 #define TABLE_TYPE_TABLE 2
 #define TABLE_TYPE_LEVEL 3
@@ -28,7 +28,7 @@ typedef struct empty_data {
     off_t addr_table;
     off_t addr_empty;
     size_t size;
-    int found;
+    int index;
 } empty_data_t;
 
 typedef struct table_entry {
@@ -48,9 +48,6 @@ typedef struct table_entry {
 
 file_t* load_file(char* filename);
 void free_file(file_t* file);
-
-int add_data(file_t* file, char* data, size_t size, char data_type);
-int remove_entry(file_t* file, int index); // Retourne -1 si l'index n'est pas set dans les tables.
 
 int save_level(file_t* file, int numLevel, Level* level); // Retourne -1 en cas d'erreur. 0 sinon.
 int remove_level(file_t* file, int numLevel); // Retourne -1 si level n'est pas dans les tables. 0 sinon.
