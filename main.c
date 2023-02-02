@@ -11,7 +11,6 @@
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
 Level* level = NULL;
-GameInterface* gameInterface = NULL;
 
 void clear_level(Level* level) {
     level_free(level);
@@ -68,17 +67,17 @@ void load_level_file() {
 }
 
 void stop_game() {
+    int actualLevel = gameInterface->toolsMenu->levelNumberSelected;
     stop_gui();
 
     file_t* file = load_file(FILENAME);
-    logs(L_INFO, "Main | Saving level %d...", toolsMenu->levelNumberSelected);
-    save_level(file, toolsMenu->levelNumberSelected, level);
-    logs(L_INFO, "Main | Level %d saved", toolsMenu->levelNumberSelected);
+    logs(L_INFO, "Main | Saving level %d...", actualLevel);
+    save_level(file, actualLevel, level);
+    logs(L_INFO, "Main | Level %d saved", actualLevel);
     // show table
     logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
     free_file(file);
 
-    free(toolsMenu);
     level_free(level);
     closeLogs();
 }
@@ -87,29 +86,29 @@ void mouse_toolsWindow(int posX, int posY) {
     if (posX >= 62 && posX < 77 && posY >= 0 && posY < 20) {
         // increase level number
         if (posY == 16 && posX == 71) {
-            if (toolsMenu->levelNumberSelected < 999) {
-                toolsMenu->levelNumberSelected++;
+            if (gameInterface->toolsMenu->levelNumberSelected < 999) {
+                gameInterface->toolsMenu->levelNumberSelected++;
                 char text[100];
-                sprintf(text, "Chargement du niveau '%03i'.", toolsMenu->levelNumberSelected);
-                load_level(toolsMenu->levelNumberSelected, toolsMenu->levelNumberSelected - 1);
+                sprintf(text, "Chargement du niveau '%03i'.", gameInterface->toolsMenu->levelNumberSelected);
+                load_level(gameInterface->toolsMenu->levelNumberSelected, gameInterface->toolsMenu->levelNumberSelected - 1);
                 set_text_info(text, 1, WHITE_COLOR);
                 refresh_tools_menu();
             }
         }
         // decrease level number
         else if (posY == 16 && posX == 65) {
-            if (toolsMenu->levelNumberSelected > 1) {
-                toolsMenu->levelNumberSelected--;
+            if (gameInterface->toolsMenu->levelNumberSelected > 1) {
+                gameInterface->toolsMenu->levelNumberSelected--;
                 char text[100];
-                sprintf(text, "Chargement du niveau '%03i'.", toolsMenu->levelNumberSelected);
+                sprintf(text, "Chargement du niveau '%03i'.", gameInterface->toolsMenu->levelNumberSelected);
                 set_text_info(text, 1, WHITE_COLOR);
-                load_level(toolsMenu->levelNumberSelected, toolsMenu->levelNumberSelected + 1);
+                load_level(gameInterface->toolsMenu->levelNumberSelected, gameInterface->toolsMenu->levelNumberSelected + 1);
                 refresh_tools_menu();
             }
         }
         // delete level
         else if (posY == 18 && posX >= 65 && posX <= 70) {
-            logs(L_INFO, "Main | Remise à zéro du niveau %d", toolsMenu->levelNumberSelected);
+            logs(L_INFO, "Main | Remise à zéro du niveau %d", gameInterface->toolsMenu->levelNumberSelected);
             clear_level(level);
             set_text_info("Le niveau est remis a zero.", 1, WHITE_COLOR);
         }
@@ -120,7 +119,7 @@ void mouse_levelWindow(int posX, int posY) {
     if (posX >= 0 && posX < 60 && posY >= 0 && posY < 20) {
         // check de l'outils selectionnée
         int success = 0;
-        switch(toolsMenu->toolsSelected) {
+        switch(gameInterface->toolsMenu->toolsSelected) {
             case 0:
                 // Delete
                 success = supprimerObjet(level, posX, posY);
@@ -139,15 +138,15 @@ void mouse_levelWindow(int posX, int posY) {
                 break;
             case 4:
                 // Gate
-                success = poserGate(level, posX, posY, toolsMenu->gateColorSelected);
+                success = poserGate(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
                 break;
             case 5:
                 // Key
-                success = poserKey(level, posX, posY, toolsMenu->gateColorSelected);
+                success = poserKey(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
                 break;
             case 6:
                 // Door
-                success = poserDoor(level, posX, posY, toolsMenu->doorNumberSelected);
+                success = poserDoor(level, posX, posY, gameInterface->toolsMenu->doorNumberSelected);
                 break;
             case 7:
                 // Exit
@@ -202,33 +201,33 @@ void control_handler() {
         switch(ch) {
             case KEY_UP:
                 set_text_info("Action: UP", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected > 0) {
-                        toolsMenu->toolsSelected--;
+                if (gameInterface->toolsMenu->inEdit) {
+                    if (gameInterface->toolsMenu->toolsSelected > 0) {
+                        gameInterface->toolsMenu->toolsSelected--;
                     }
                     refresh_tools_menu();
                 }
                 break;
             case KEY_DOWN:
                 set_text_info("Action: DOWN", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected < 12) {
-                        toolsMenu->toolsSelected++;
+                if (gameInterface->toolsMenu->inEdit) {
+                    if (gameInterface->toolsMenu->toolsSelected < 12) {
+                        gameInterface->toolsMenu->toolsSelected++;
                     }
                     refresh_tools_menu();
                 }
                 break;
             case KEY_LEFT:
                 set_text_info("Action: LEFT", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected == 4) {
-                        if (toolsMenu->gateColorSelected > 0) {
-                            toolsMenu->gateColorSelected--;
+                if (gameInterface->toolsMenu->inEdit) {
+                    if (gameInterface->toolsMenu->toolsSelected == 4) {
+                        if (gameInterface->toolsMenu->gateColorSelected > 0) {
+                            gameInterface->toolsMenu->gateColorSelected--;
                         }
                     }
-                    if (toolsMenu->toolsSelected == 6) {
-                        if (toolsMenu->doorNumberSelected > 1) {
-                            toolsMenu->doorNumberSelected--;
+                    if (gameInterface->toolsMenu->toolsSelected == 6) {
+                        if (gameInterface->toolsMenu->doorNumberSelected > 1) {
+                            gameInterface->toolsMenu->doorNumberSelected--;
                         }
                     }
                     refresh_tools_menu();
@@ -236,15 +235,15 @@ void control_handler() {
                 break;
             case KEY_RIGHT:
                 set_text_info("Action: RIGHT", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected == 4) {
-                        if (toolsMenu->gateColorSelected < 3) {
-                            toolsMenu->gateColorSelected++;
+                if (gameInterface->toolsMenu->inEdit) {
+                    if (gameInterface->toolsMenu->toolsSelected == 4) {
+                        if (gameInterface->toolsMenu->gateColorSelected < 3) {
+                            gameInterface->toolsMenu->gateColorSelected++;
                         }
                     }
-                    if (toolsMenu->toolsSelected == 6) {
-                        if (toolsMenu->doorNumberSelected < 99) {
-                            toolsMenu->doorNumberSelected++;
+                    if (gameInterface->toolsMenu->toolsSelected == 6) {
+                        if (gameInterface->toolsMenu->doorNumberSelected < 99) {
+                            gameInterface->toolsMenu->doorNumberSelected++;
                         }
                     }
                     refresh_tools_menu();

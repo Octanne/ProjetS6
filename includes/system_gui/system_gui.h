@@ -30,15 +30,17 @@ typedef struct {
     ToolsMenu* toolsMenu;
 } GameInterface;
 
-void init_gui(GameInterface *gameInterface);
-void stop_gui(GameInterface *gameInterface);
+GameInterface *gameInterface;
 
-void gen_game_editor_window(GameInterface *gameInterface);
-void gen_tools_menu(GameInterface *gameInterface);
+void init_gui();
+void stop_gui();
 
-void refresh_level(GameInterface *gameInterface, Level *level);
-void refresh_tools_menu(GameInterface *gameInterface);
+void gen_game_editor_window();
+void gen_tools_menu();
 
-void set_text_info(GameInterface *gameInterface, const char *text, int line, int color);
+void refresh_level(Level *level);
+void refresh_tools_menu();
+
+void set_text_info(const char *text, int line, int color);
 
 #endif
