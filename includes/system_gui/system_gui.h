@@ -1,3 +1,4 @@
+
 #ifndef SYSTEM_GUI_H
 #define SYSTEM_GUI_H
 
@@ -44,3 +45,4 @@ void refresh_tools_menu();
 void set_text_info(const char *text, int line, int color);
 
 #endif
+
