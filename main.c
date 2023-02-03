@@ -201,81 +201,110 @@ void mouse_event(short posX, short posY) {
     set_text_info(text, 2, LBLUE_COLOR);
 }
 
+/**
+ * Function managing the keyboard events
+ * Running indefinitely until the user press the key to quit the game
+ */
 void control_handler() {
     int ch;
     while((ch = getch()) != KEY_QUIT_GAME) {
         switch(ch) {
+
             case KEY_UP:
+				// Write down the action
                 set_text_info("Action: UP", 1, GREEN_COLOR);
+
+				// Move the cursor up in the tools menu if we are in edit mode
                 if (gameInterface->toolsMenu->inEdit) {
-                    if (gameInterface->toolsMenu->toolsSelected > 0) {
-                        gameInterface->toolsMenu->toolsSelected--;
-                    }
+					gameInterface->toolsMenu->toolsSelected--;
+                    if (gameInterface->toolsMenu->toolsSelected == 0)
+                        gameInterface->toolsMenu->toolsSelected = TOTAL_TOOLS - 1;
                     refresh_tools_menu();
                 }
-                break;
+            break;
+			
             case KEY_DOWN:
+				// Write down the action
                 set_text_info("Action: DOWN", 1, GREEN_COLOR);
+
+				// Move the cursor down in the tools menu if we are in edit mode
                 if (gameInterface->toolsMenu->inEdit) {
-                    if (gameInterface->toolsMenu->toolsSelected < 12) {
-                        gameInterface->toolsMenu->toolsSelected++;
-                    }
+					gameInterface->toolsMenu->toolsSelected++;
+                    if (gameInterface->toolsMenu->toolsSelected == TOTAL_TOOLS)
+						gameInterface->toolsMenu->toolsSelected = 1;
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_LEFT:
+				// Write down the action
                 set_text_info("Action: LEFT", 1, GREEN_COLOR);
+
+				// If we are in edit mode
                 if (gameInterface->toolsMenu->inEdit) {
-                    if (gameInterface->toolsMenu->toolsSelected == 4) {
-                        if (gameInterface->toolsMenu->gateColorSelected > 0) {
+
+					// If the tools selected is the gate, we can change the selected color
+                    if (gameInterface->toolsMenu->toolsSelected == 4)
+                        if (gameInterface->toolsMenu->gateColorSelected > 0)
                             gameInterface->toolsMenu->gateColorSelected--;
-                        }
-                    }
-                    if (gameInterface->toolsMenu->toolsSelected == 6) {
-                        if (gameInterface->toolsMenu->doorNumberSelected > 1) {
+
+					// If the tools selected is the door, we can change the selected door number
+                    if (gameInterface->toolsMenu->toolsSelected == 6)
+                        if (gameInterface->toolsMenu->doorNumberSelected > 1)
                             gameInterface->toolsMenu->doorNumberSelected--;
-                        }
-                    }
+
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_RIGHT:
+				// Write down the action
                 set_text_info("Action: RIGHT", 1, GREEN_COLOR);
+
+				// If we are in edit mode
                 if (gameInterface->toolsMenu->inEdit) {
-                    if (gameInterface->toolsMenu->toolsSelected == 4) {
-                        if (gameInterface->toolsMenu->gateColorSelected < 3) {
+
+					// If the tools selected is the gate, we can change the selected color
+                    if (gameInterface->toolsMenu->toolsSelected == 4)
+                        if (gameInterface->toolsMenu->gateColorSelected < 3)
                             gameInterface->toolsMenu->gateColorSelected++;
-                        }
-                    }
-                    if (gameInterface->toolsMenu->toolsSelected == 6) {
-                        if (gameInterface->toolsMenu->doorNumberSelected < 99) {
+					
+					// If the tools selected is the door, we can change the selected door number
+                    if (gameInterface->toolsMenu->toolsSelected == 6)
+                        if (gameInterface->toolsMenu->doorNumberSelected < 99)
                             gameInterface->toolsMenu->doorNumberSelected++;
-                        }
-                    }
+
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_VALIDATE:
+				// Write down the action
                 set_text_info("Action: VALIDATE", 1, GREEN_COLOR);
-                break;
+            break;
+
             case KEY_MOUSE:
+				// Mouse event handler
                 int posX, posY;
-                if (mouse_getpos(&posX,&posY) == OK) {
-                    short posXS = posX;
-                    short posYS = posY;
-                    mouse_event(posXS, posYS);
-                }
-                break;
+                if (mouse_getpos(&posX, &posY) == OK)
+                    mouse_event((short)posX, (short)posY);
+            break;
         }
     }
 }
 
+/**
+ * Exit function called at the exit of the program
+ */
 void main_exit() {
     stop_game();
 }
 
-int main(void)
-{
+/**
+ * Main function
+ * @return EXIT_SUCCESS
+ */
+int main(void) {
     // Register exit function
     atexit(main_exit);
 
@@ -288,5 +317,6 @@ int main(void)
     // Launch control handler
     control_handler();
 
-    return 0;
+	return EXIT_SUCCESS;
 }
+
