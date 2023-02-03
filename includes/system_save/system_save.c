@@ -1,3 +1,4 @@
+
 #include "system_save.h"
 
 #include <stdlib.h>
@@ -19,11 +20,6 @@ void optimize() {
     // Faire la defragmentation des données (déplacement des données vers le début du fichier)
 }
 
-////
-void free_file(file_t* file) {
-    logs(L_DEBUG, "free_file | file = %s", file->filename);
-    free(file);
-}
 void init_table(off_t* table) {
     logs(L_DEBUG, "init_table | Initialisation à ADDR_UNUSED des entrées de la table.");
     for (int i = 0; i < TAILLE_TABLE; i++) {
@@ -167,7 +163,7 @@ int write_data(int fd, char* data, size_t size, char data_type) {
 
     // search space for writing data
     empty_data_t emptyData;
-    if (get_empty(fd, size, ADDR_EMTPY_TABLE, &emptyData) == -1) {
+    if (get_empty(fd, size, ADDR_EMPTY_TABLE, &emptyData) == -1) {
         logs(L_DEBUG, "add_data | Error while searching empty space");
         return -1;
     }
@@ -214,92 +210,132 @@ int write_data(int fd, char* data, size_t size, char data_type) {
     return 1;
 }
 
-file_t* create_file(char* filename) {
-    // open file to create only if it doesn't exist
+/**
+ * @brief Create a new file
+ * @param filename Name of the file to create
+ * @return file_t
+ */
+file_t create_file(char* filename) {
+
+	// Open file (create if not exist)
     int fd = open(filename, O_CREAT | O_EXCL | O_RDWR, S_IRUSR | S_IWUSR);
     if (fd == -1) {
-
-        return (file_t*)NULL;
+		logs(L_DEBUG, "create_file | Error while opening file: %s", strerror(errno));
+		perror("Error while creating file");
+		exit(EXIT_FAILURE);
     }
 
-    // alocate file struct
-    file_t* file = malloc(sizeof(file_t));
-    file->filename = filename;
+    // Create file_t
+    file_t file = {
+		.filename = filename
+	};
+
+	// Create table
     off_t table[TAILLE_TABLE];
     init_table(table);
 
-    // write tag
+    // Write tag
     if (write(fd, TAG_FILE, SIZE_TAG) == -1) {
         close(fd);
-        return (file_t*)NULL;
+		logs(L_DEBUG, "create_file | Error while writing tag in file: %s", strerror(errno));
+		perror("Error while writing tag in file");
+		exit(EXIT_FAILURE);
     }
 
+	// Logs
     logs(L_DEBUG, "Tag written: %s, size_tag : %ld", TAG_FILE, SIZE_TAG);
 
-    // write table
-    if (write(fd, table, SIZE_TABLE) == -1) {
-        close(fd);
-        return (file_t*)NULL;
-    }
-
-    // data info 
+	// Data Info creation
     data_info_t dataInfo;
     dataInfo.type = TABLE_TYPE_TABLE;
     dataInfo.size = SIZE_TABLE;
+
+    // Write table
+    if (write(fd, table, dataInfo.size) == -1) {
+        close(fd);
+		logs(L_DEBUG, "create_file | Error while writing table in file: %s", strerror(errno));
+		perror("Error while writing table in file");
+		exit(EXIT_FAILURE);
+    }
+
+	// Write data info
     if (write(fd, &dataInfo, SIZE_DATA_INFO) == -1) {
         close(fd);
-        return (file_t*)NULL;
+		logs(L_DEBUG, "create_file | Error while writing data info in file: %s", strerror(errno));
+		perror("Error while writing data info in file");
+		exit(EXIT_FAILURE);
     }
+
+	// Logs
     logs(L_DEBUG, "Cursor at : %ld", lseek(fd, 0, SEEK_CUR));
-    // write tableOfEmpty
-    if (write(fd, table, SIZE_TABLE) == -1) {
+
+    // Write tableOfEmpty
+    if (write(fd, table, dataInfo.size) == -1) {
         close(fd);
-        return (file_t*)NULL;
+		logs(L_DEBUG, "create_file | Error while writing table of empty in file: %s", strerror(errno));
+		perror("Error while writing table of empty in file");
+		exit(EXIT_FAILURE);
     }
 
-    // close file
-    close(fd);
+    // Close file
+	if (close(fd) == -1) {
+		logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
+		perror("Error while closing file");
+		exit(EXIT_FAILURE);
+	}
 
+	// Logs
     logs(L_DEBUG, "File created: %s, %d", filename, fd);
 
     return file;
 }
-file_t* load_file(char* filename) {
-    // open file
-    int fd = open(filename, O_RDONLY);
-    if (fd == -1) {
+
+/**
+ * @brief Load a file
+ * @param filename Name of the file to create
+ * @return file_t
+ */
+file_t load_file(char* filename) {
+
+    // Open file
+    int fd;
+    if ((fd = open(filename, O_RDONLY)) == -1) {
+
+		// File doesn't exist so create it
         if (errno == ENOENT) {
-            // file doesn't exist so create it
-            file_t* file = create_file(filename);
-            logs(L_DEBUG, "load_file: file %s has been create.", filename);
+            file_t file = create_file(filename);
+            logs(L_DEBUG, "load_file: file %s has been created.", filename);
             return file;
-        } else {
-            // other error
+        }
+		// Other errors
+		else {
             logs(L_DEBUG, "load_file: error opening file %s, %s", filename, strerror(errno));
-            return (file_t*)NULL;
+			perror("Error while opening file");
+			exit(EXIT_FAILURE);
         }
     }
 
-    // alocate file struct
-    file_t* file = malloc(sizeof(file_t));
-    file->filename = filename;
+    // Create file_t
+    file_t file = {
+		.filename = filename
+	};
 
-    size_t readRes;
-
-    // check if it's a supported file
+    // Check if it's a supported file
     char tag[SIZE_TAG];
-    readRes = read(fd, tag, SIZE_TAG);
-    if (readRes == -1 || strcmp(tag, TAG_FILE) != 0) {
-        logs(L_DEBUG, "Tag unreconized! Tag: %s", tag);
-        free(file);
+    if (read(fd, tag, SIZE_TAG) == -1 || strcmp(tag, TAG_FILE) != 0) {
         close(fd);
-        return (file_t*)NULL;
+		logs(L_DEBUG, "Tag unreconized! Tag: %s", tag);
+		perror("Error while reading tag");
+		exit(EXIT_FAILURE);
     }
 
+	// Logs and close file descriptor
     logs(L_DEBUG, "File loaded: %s, %d", filename, fd);
-
-    // close file
-    close(fd);
+	if (close(fd) == -1) {
+		logs(L_DEBUG, "load_file | Error while closing file: %s", strerror(errno));
+		perror("Error while closing file");
+		exit(EXIT_FAILURE);
+	}
 
     return file;
 }
@@ -374,7 +410,7 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
 
         // search for an empty space
         empty_data_t emptyData;
-        if (get_empty(fd, SIZE_TABLE, ADDR_EMTPY_TABLE, &emptyData) == -1) return -1;
+        if (get_empty(fd, SIZE_TABLE, ADDR_EMPTY_TABLE, &emptyData) == -1) return -1;
 
         if (emptyData.index == -1) {
             // Aucun espace vide de trouvé => addresse utilisé = fin du fichier
@@ -643,7 +679,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     // Register the empty space to the empty table
     //
     table_entry_t tableEntry;
-    if (find_av_tableEntry(fd, ADDR_EMTPY_TABLE, &tableEntry) == -1) return -1;
+    if (find_av_tableEntry(fd, ADDR_EMPTY_TABLE, &tableEntry) == -1) return -1;
 
     logs(L_DEBUG, "transform_to_empty: Find space on empty table addr = %d on index %d", tableEntry.addr_table, tableEntry.idx_table);
 
@@ -739,51 +775,88 @@ int show_table_c(int fd, off_t addr_table, int level, char* output) {
 }
 ////
 
-int remove_level(file_t* file, int numLevel) {
-    logs(L_DEBUG, "Remove_level | level : %d", numLevel);
-    int fd = open(file->filename, O_RDWR);
+/**
+ * @brief Remove a level from the file
+ * 
+ * @param file The file
+ * @param numLevel The level to remove
+ * 
+ * @return 1 if the level has been removed, -1 if an error occured, -2 if the level was already inexistant
+ */
+int remove_level(file_t file, int numLevel) {
 
-    if (fd == -1) {
-        logs(L_DEBUG, "Remove_level | ERROR open file, %s", file->filename);
+	// Logs
+    logs(L_DEBUG, "Remove_level | level : %d", numLevel);
+
+	// Open file
+    int fd;
+    if ((fd = open(file.filename, O_RDWR)) == -1) {
+        logs(L_DEBUG, "Remove_level | ERROR open file, %s", file.filename);
         return -1;
     }
+
+	// Remove the level
     int res = transform_to_empty(fd, numLevel, ADDR_FIRST_TABLE, 0);
+    if (res == -2)
+		logs(L_DEBUG, "The level was already inexistant");
+    else if(res == -1)
+		logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
 
-    if (res == -2) logs(L_DEBUG, "The level was already inexistant");
-    else if(res == -1) logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
-
-    // close file
+    // Close file
     close(fd);
+
+	// Logs
     logs(L_DEBUG, "Remove_level | level : %d, success : %d", numLevel, res);
+
     return res;
 }
 
-int get_level(file_t* file, int numLevel, Level** level) {
+/**
+ * @brief Get the level object from the file and put it in the level pointer
+ * 
+ * @param file the file
+ * @param numLevel the level number
+ * @param level the level pointer
+ * 
+ * @return 1 if success, -1 if error
+ */
+int get_level(file_t file, int numLevel, Level** level) {
+
+	// Logs
     logs(L_DEBUG, "Get_level | level : %d", numLevel);
-    int fd = open(file->filename, O_RDONLY);
-    if (fd == -1) {
-        logs(L_DEBUG, "Get_level | Error open file: %s", file->filename);
+
+	// Open file
+    int fd;
+    if ((fd = open(file.filename, O_RDONLY)) == -1) {
+        logs(L_DEBUG, "Get_level | Error open file: %s", file.filename);
         return -1;
     }
 
-    logs(L_DEBUG, "Get_level | File opened: %s", file->filename);
+	// Logs
+    logs(L_DEBUG, "Get_level | File opened: %s", file.filename);
 
-    // get table entry
+    // Get table entry
     table_entry_t entry;
-    if (find_tableEntryOfIdx(fd,numLevel,ADDR_FIRST_TABLE,0,&entry) == -1) {
-        logs(L_DEBUG, "Get_level | ERROR while searching for the table entry");
+    if (find_tableEntryOfIdx(fd, numLevel, ADDR_FIRST_TABLE, 0, &entry) == -1) {
+        logs(L_DEBUG, "Get_level | ERROR while searching for the table entry of the level %d", numLevel);
         return -1;
     }
+
+	// Logs
     logs(L_DEBUG, "Get_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
          entry.type_data, entry.addr_cell, entry.addr_table, entry.idx_table);
 
+	// Check if the level exists
     if (entry.type_data == TABLE_TYPE_NONE && entry.idx_table == -1) {
-        // Level not found
         logs(L_DEBUG, "Get_level | Level not found");
         close(fd);
         return -1;
-    } else if (entry.type_data == TABLE_TYPE_LEVEL) {
-        // get data info
+    }
+
+	// Check if the entry is a level
+	if (entry.type_data == TABLE_TYPE_LEVEL) {
+
+		// Get data info
         data_info_t dataInfo;
         char* data;
         if (get_data(fd, entry.addr_cell, &dataInfo, &data) == -1) {
@@ -791,10 +864,11 @@ int get_level(file_t* file, int numLevel, Level** level) {
             return -1;
         }
 
+		// Logs
         logs(L_DEBUG, "Get_level | dataInfo.type = %d, dataInfo.size = %ld", dataInfo.type, dataInfo.size);
         logs(L_DEBUG, "Get_level | data = %X", data);
 
-        // convert bytes to level
+        // Convert bytes to level
         *level = convert_bytes_to_level(data, dataInfo.size);
         if (level == NULL) {
             logs(L_DEBUG, "Get_level | ERROR while converting bytes to level");
@@ -802,104 +876,155 @@ int get_level(file_t* file, int numLevel, Level** level) {
             return -1;
         }
 
+		// Free data
         free(data);
 
-        // close file
+        // Close file
         close(fd);
         logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, (*level)->listeObjet->taille);
 
         return 1;
     }
 
-    // close file
+    // Close file
     close(fd);
 
+	// Logs
     logs(L_DEBUG, "Get_level | ERROR level : %d, not found, unexpected type : %d", numLevel, entry.type_data);
 
     return -1;
 }
 
-int save_level(file_t* file, int numLevel, Level* level) {
+/**
+ * @brief Save the level in the file
+ * 
+ * @param file the file
+ * @param numLevel the level number
+ * @param level the level
+ * 
+ * @return 1 if success, -1 if error
+ */
+int save_level(file_t file, int numLevel, Level* level) {
+
+	// Logs
     logs(L_DEBUG, "Save_level | level : %d", numLevel);
-    // open 
-    int fd = open(file->filename, O_RDWR);
-    if (fd == -1) {
-        logs(L_DEBUG, "Save_level | Error open file: %s", file->filename);
+
+    // Open file 
+    int fd;
+    if ((fd = open(file.filename, O_RDWR)) == -1) {
+        logs(L_DEBUG, "Save_level | Error open file: %s", file.filename);
         return -1;
     }
+
+	// Search for the table entry
     table_entry_t result;
     if (find_tableEntryOfIdx(fd, numLevel, ADDR_FIRST_TABLE, 0, &result) == -1) {
         logs(L_DEBUG, "Save_level | ERROR while searching for the table entry");
         return -1;
     }
     
+	// Logs
     logs(L_DEBUG, "Save_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
          result.type_data, result.addr_cell, result.addr_table, result.idx_table);
 
+	// Convert level to bytes
     int size;
     char* bytes = convert_level_to_bytes(level, &size);
 
+	// Logs
     logs(L_DEBUG, "Save_level | Success level converted to bytes: %X, size = %d bytes", bytes, size);
+
+	// Write data if the table entry is empty
     if (result.idx_table == -1 && result.type_data == TABLE_TYPE_NONE) {
+
+		// Logs
         logs(L_DEBUG, "Save_level | Level %d not found, write new level...", numLevel);
-        // add new level data
+
+        // Add new level data
         if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
             logs(L_DEBUG, "Save_level | Error write data");
             free(bytes);
             close(fd);
             return -1;
         }
+
+		// Logs, free, close
         logs(L_DEBUG, "Save_level | Success level %d save created", numLevel);
         free(bytes);
         close(fd);
         return 1;
-    } else if (result.type_data == TABLE_TYPE_LEVEL){
+    }
+
+	// Update level
+	if (result.type_data == TABLE_TYPE_LEVEL) {
+
+		// Logs
         logs(L_DEBUG, "Save_level | Level %d found, update level..", numLevel);
-        // remove old level data
+
+        // Remove old level data
         if (remove_level(file, numLevel) == -1) {
             free(bytes);
             logs(L_DEBUG, "Save_level | Error while remove level %d", numLevel);
             close(fd);
             return -1;
         }
-        // add new level data
+
+        // Add new level data
         if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
             logs(L_DEBUG, "Save_level | Error write data");
             free(bytes);
             close(fd);
             return -1;
         }
+
+		// Logs, free, close
         logs(L_DEBUG, "Save_level | Success level %d updated", numLevel);
         free(bytes);
         close(fd);
         return 1;
     }
 
-    free(bytes);
-
-    close(fd);
-
+	// Logs, free, close
     logs(L_DEBUG, "Save_level | Error, unexpected type: %d", result.type_data);
-
+    free(bytes);
+    close(fd);
     return -1;
 }
 
-char* show_table(file_t* file){
-    logs(L_DEBUG, "Show_table | reading file : %s", file->filename);
-    char * result = malloc(8192);
-    int fd = open(file->filename, O_RDONLY);
-    if (fd == -1) {
-        logs(L_DEBUG, "Show_table | Error open file: %s", file->filename);
+/**
+ * @brief Show the table of the file
+ * 
+ * @param file the file
+ * 
+ * @return the table as a string
+ */
+char* show_table(file_t file){
+
+	// Logs
+    logs(L_DEBUG, "Show_table | reading file : %s", file.filename);
+
+	// Open file
+    int fd;
+    if ((fd = open(file.filename, O_RDONLY)) == -1) {
+        logs(L_DEBUG, "Show_table | Error open file: %s", file.filename);
         return "ERROR\n";
     }
 
+	// Copy the table in a string
+    char * result = malloc(8192);
     strcat(result, "Tables :\n");
-    if (show_table_c(fd, ADDR_FIRST_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
+    if (show_table_c(fd, ADDR_FIRST_TABLE, 0, result) == -1)
+		strcat(result,"ERROR\n");
+
     logs(L_DEBUG, "Show_table | Table vides");
     strcat(result, "Table de vides :\n");
-    if (show_table_c(fd, ADDR_EMTPY_TABLE, 0, result) == -1) strcat(result,"ERROR\n");
 
-    close(fd);
+    if (show_table_c(fd, ADDR_EMPTY_TABLE, 0, result) == -1)
+		strcat(result,"ERROR\n");
+
+	// Logs, close, return
     logs(L_DEBUG, "Show_table | Success");
+    close(fd);
     return result;
 }
+

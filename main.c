@@ -13,7 +13,7 @@
 Level* level = NULL;
 
 /**
- * Function to clear the level and generate a new one
+ * @brief Function to clear the level and generate a new one
  */
 void clear_level() {
 
@@ -28,12 +28,12 @@ void clear_level() {
 }
 
 /**
- * Function to load a level and save the old one
+ * @brief Function to load a level and save the old one
  */
 void load_level(int newLevel, int oldLevel) {
 
 	// Loading file
-    file_t* file = load_file(FILENAME);
+    file_t file = load_file(FILENAME);
 
     // Levels offset
     oldLevel--;
@@ -52,9 +52,6 @@ void load_level(int newLevel, int oldLevel) {
     // Show tables
     logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================", show_table(file));
 
-	// Free file
-    free_file(file);
-
 	// Logs and refresh level
     logs(L_INFO, "Main | New level load : %d, Old level save : %d", newLevel, oldLevel);
     logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level->listeObjet->taille);
@@ -63,14 +60,14 @@ void load_level(int newLevel, int oldLevel) {
 }
 
 /**
- * Function to load the first level from the file
+ * @brief Function to load the first level from the file.
  * Runned once at the start of the program
  */
 void load_level_file() {
 
 	// Loading file
     logs(L_INFO, "Main | Loading first level from file...");
-    file_t* file = load_file(FILENAME);
+    file_t file = load_file(FILENAME);
     logs(L_INFO, "Main | File loaded");
 
 	// Generate empty level if no level found
@@ -89,13 +86,10 @@ void load_level_file() {
     // Show tables
     logs(L_INFO, "Main | Level value : %X", level);
     logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================", show_table(file));
-
-	// Free file
-    free_file(file);
 }
 
 /**
- * Function runned when the game is stopped
+ * @brief Function runned when the game is stopped
  */
 void stop_game() {
 
@@ -107,14 +101,13 @@ void stop_game() {
     stop_gui();
 
 	// Save level
-    file_t* file = load_file(FILENAME);
+    file_t file = load_file(FILENAME);
     logs(L_INFO, "Main | Saving level %d...", actualLevel);
     save_level(file, actualLevel, level);
     logs(L_INFO, "Main | Level %d saved", actualLevel);
 
     // Show tables
     logs(L_INFO, "\n===================== Affichage Tables =====================\n\n%s===================== Affichage Tables =====================", show_table(file));
-    free_file(file);
 
 	// Free the level
     level_free(level);
@@ -124,7 +117,8 @@ void stop_game() {
 }
 
 /**
- * Function managing the mouse event on the tools window
+ * @brief Function managing the mouse event on the tools window
+ * 
  * @param posX : mouse position on X axis
  * @param posY : mouse position on Y axis
  */
@@ -169,7 +163,8 @@ void mouse_toolsWindow(short posX, short posY) {
 }
 
 /**
- * Function managing the mouse event on the level window
+ * @brief Function managing the mouse event on the level window
+ * 
  * @param posX : mouse position on X axis
  * @param posY : mouse position on Y axis
  */
@@ -248,7 +243,8 @@ void mouse_levelWindow(short posX, short posY) {
 }
 
 /**
- * Function managing the mouse events
+ * @brief Function managing the mouse events
+ * 
  * @param posX : mouse position on X axis
  * @param posY : mouse position on Y axis
  */
@@ -270,7 +266,7 @@ void mouse_event(short posX, short posY) {
 }
 
 /**
- * Function managing the keyboard events
+ * @brief Function managing the keyboard events.
  * Running indefinitely until the user press the key to quit the game
  */
 void control_handler() {
@@ -362,15 +358,15 @@ void control_handler() {
 }
 
 /**
- * Exit function called at the exit of the program
+ * @brief Exit function called at the exit of the program
  */
 void main_exit() {
     stop_game();
 }
 
 /**
- * Main function
- * @return EXIT_SUCCESS
+ * @brief Main function
+ * @return EXIT_SUCCESS if the program exit correctly
  */
 int main(void) {
     // Register exit function
