@@ -1,8 +1,13 @@
+
 #ifndef LEVEL_H
 #define LEVEL_H
 
 #include "../liste/liste.h"
 #include <ncurses.h>
+
+#define MATRICE_LEVEL_X 60
+#define MATRICE_LEVEL_Y 20
+#define MATRICE_LEVEL_SIZE 1200
 
 typedef struct {
     char sprite;
@@ -14,9 +19,8 @@ typedef struct {
 
 typedef struct {
     ListeObjet* listeObjet;
-    SpriteData* matriceSprite[60*20];
-    Objet* matriceCollide[60*20];
-
+    SpriteData* matriceSprite[MATRICE_LEVEL_SIZE];
+    Objet* matriceCollide[MATRICE_LEVEL_SIZE];
 } Level;
 
 SpriteData* creerSpriteData(char sprite, int color);
@@ -32,3 +36,4 @@ void levelUpdateMatriceSprite(Level* level);
 ListeObjet* rechercherObjet(Level* level, short x, short y);
 
 #endif
+

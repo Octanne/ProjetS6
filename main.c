@@ -174,7 +174,7 @@ void mouse_levelWindow(short posX, short posY) {
     logs(L_INFO, "Main | Level value : %X", level);
 
 	// Check if the mouse is inside the level window
-    if (posX >= 0 && posX < 60 && posY >= 0 && posY < 20) {
+    if (posX >= 0 && posX < MATRICE_LEVEL_X && posY >= 0 && posY < MATRICE_LEVEL_Y) {
 
         // Apply the selected tool on the level
         int success = 0;

@@ -71,10 +71,10 @@ void refresh_level(Level *level) {
 
 	// Draw level
     short y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
+    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
+        for (x = 0; x < MATRICE_LEVEL_X; x++) {
 			// Get sprite data
-            SpriteData* spriteD = level->matriceSprite[y+x*20];
+            SpriteData* spriteD = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
 
 			// Move cursor to sprite position
             wmove(gameInterface->gui->winLEVEL, y, x);
@@ -186,7 +186,7 @@ void gen_game_editor_window() {
     wrefresh(gameInterface->gui->cwinLEVEL);
 
 	// Create a subwindow using derwin
-    gameInterface->gui->winLEVEL = derwin(gameInterface->gui->cwinLEVEL, 20, 60, 1, 1);
+    gameInterface->gui->winLEVEL = derwin(gameInterface->gui->cwinLEVEL, MATRICE_LEVEL_Y, MATRICE_LEVEL_X, 1, 1);
     wrefresh(gameInterface->gui->winLEVEL);
 
     // Tools window

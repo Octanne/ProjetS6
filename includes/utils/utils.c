@@ -145,7 +145,7 @@ void get_log_tag(int log_level, char ** log_tag) {
  * @param log_level : log level (2 = debug, 1 = info, 0 = inactive)
  * @param text_to_log : text to log
  * @param ... : arguments to add to the text_to_log
-*/
+ */
 void logs(int log_level, char *text_to_log, ...) {
 	// Check log level
 	if (log_level > LOGS_ACTIVE) return;

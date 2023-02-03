@@ -1,21 +1,22 @@
+
 #include "level.h"
 
 #include <stdlib.h>
 
 #include "../utils/utils.h"
 
+/**
+ * @brief Create an empty level.
+ * 
+ * @return Level* : The level.
+ */
 Level* levelEmpty() {
     Level* level = malloc(sizeof(Level));
     level->listeObjet = creerListeObjet();
 
-    // Set default sprite
-    short y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            level->matriceSprite[y+x*20] = NULL;
-        }
-    }
-
+	int i;
+	for (i = 0; i < MATRICE_LEVEL_SIZE; i++)
+		level->matriceSprite[i] = NULL;
     levelUpdateMatriceSprite(level);
 
     return level;
@@ -45,13 +46,13 @@ Level* levelCreer() {
 
     // Ajouter les murs de la map
     short y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            if (y == 0 || y == 19 || x == 0 || x == 59) {
+    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
+        for (x = 0; x < MATRICE_LEVEL_X; x++) {
+            if (y == 0 || y == MATRICE_LEVEL_Y - 1 || x == 0 || x == MATRICE_LEVEL_X - 1) {
                 Objet* bloc = creerBlock(x,y);
-                listeAjouterObjet(level->listeObjet,bloc);
+                listeAjouterObjet(level->listeObjet, bloc);
             }
-            level->matriceSprite[y+x*20] = NULL;
+            level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
         }
     }
 
@@ -67,12 +68,12 @@ void level_free(Level* level) {
 
     // free all the SpriteData
     short y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            SpriteData* sprite = level->matriceSprite[y+x*20];
+    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
+        for (x = 0; x < MATRICE_LEVEL_X; x++) {
+            SpriteData* sprite = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
             if (sprite != NULL) {
                 free(sprite);
-                level->matriceSprite[y+x*20] = NULL;
+                level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
             }
         }
     }
@@ -120,13 +121,13 @@ ListeObjet* rechercherObjet(Level* level, short x, short y) {
 void levelUpdateMatriceSprite(Level* level) {
     // clear the matrice
     short y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            SpriteData* sprite = level->matriceSprite[y+x*20];
+    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
+        for (x = 0; x < MATRICE_LEVEL_X; x++) {
+            SpriteData* sprite = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
             if (sprite != NULL) {
                 free(sprite);
             }
-            level->matriceSprite[y+x*20] = NULL;
+            level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
         }
     }
 
@@ -140,19 +141,19 @@ void levelUpdateMatriceSprite(Level* level) {
         switch (objet->type) {
             case BLOCK_ID :
                 sprite = ' ';
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteData(sprite, LBLUE_BLOCK);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
                 break;
             case HEART_ID :
                 sprite = 'V';
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteData(sprite, RED_COLOR);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, RED_COLOR);
                 break;
             case TRAP_ID :
                 sprite = '#';
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteData(sprite, LBLUE_BLOCK);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
                 break;
             case BOMB_ID :
                 sprite = 'o';
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteData(sprite, WHITE_COLOR);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, WHITE_COLOR);
                 break;
             case GATE_ID :
                 color = WHITE_COLOR;
@@ -160,7 +161,7 @@ void levelUpdateMatriceSprite(Level* level) {
                 else if (objet->objet.gate.numgate == 1) color = GREEN_COLOR;
                 else if (objet->objet.gate.numgate == 2) color = YELLOW_COLOR;
                 else if (objet->objet.gate.numgate == 3) color = LBLUE_COLOR;
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteDataS(ACS_PLUS, color);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_PLUS, color);
                 break;
             case KEY_ID :
                 color = WHITE_COLOR;
@@ -179,9 +180,9 @@ void levelUpdateMatriceSprite(Level* level) {
                     colorB = LBLUE_BLOCK;
                 }
                 // Sprite #1
-                level->matriceSprite[objet->y-1 + objet->x*20] = creerSpriteData(' ', colorB);;
+                level->matriceSprite[objet->y-1 + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(' ', colorB);;
                 // Sprite #2
-                level->matriceSprite[objet->y + objet->x*20] = creerSpriteDataS(ACS_LLCORNER, color);
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LLCORNER, color);
                 break; 
             case DOOR_ID:
                 for (y = 0; y < objet->ySize; y++) {
@@ -191,90 +192,91 @@ void levelUpdateMatriceSprite(Level* level) {
                             int8_t numDoor = objet->objet.door.numdoor;
                             char numDoorChar[4];
                             sprintf(numDoorChar, "%02i", numDoor);
-                            if (x == 0) level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(numDoorChar[0], WHITE_COLOR);
-                            if (x == 1) level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(numDoorChar[1], WHITE_COLOR);
-                        } else level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(' ', GREEN_BLOCK);
+                            if (x == 0) level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(numDoorChar[0], WHITE_COLOR);
+                            if (x == 1) level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(numDoorChar[1], WHITE_COLOR);
+                        } else level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(' ', GREEN_BLOCK);
                     }
                 }
                 break;
             case EXIT_ID :
                 for (y = 0; y < objet->ySize; y++) {
                     for (x = 0; x < objet->xSize; x++) {
-                        level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(' ', YELLOW_BLOCK);
+                        level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(' ', YELLOW_BLOCK);
                     }
                 }
                 break;
             case START_ID :
                 for (y = 0; y < objet->ySize; y++) {
                     for (x = 0; x < objet->xSize; x++) {
-                        level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(' ', PURPLE_BLOCK);
+                        level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(' ', PURPLE_BLOCK);
                     }
                 }
                 break;
             case LADDER_ID :
-                level->matriceSprite[objet->y + (objet->x)*20] = creerSpriteDataS(ACS_LTEE, YELLOW_COLOR);
-                level->matriceSprite[objet->y + (objet->x+1)*20] = creerSpriteDataS(ACS_HLINE, YELLOW_COLOR);
-                level->matriceSprite[objet->y + (objet->x+2)*20] = creerSpriteDataS(ACS_RTEE, YELLOW_COLOR);
+                level->matriceSprite[objet->y + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LTEE, YELLOW_COLOR);
+                level->matriceSprite[objet->y + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, YELLOW_COLOR);
+                level->matriceSprite[objet->y + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_RTEE, YELLOW_COLOR);
                 break;
             case PROBE_ID :
-                level->matriceSprite[objet->y-1 + (objet->x)*20] = creerSpriteDataS(ACS_LTEE, WHITE_COLOR);
-                level->matriceSprite[objet->y-1 + (objet->x+1)*20] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
-                level->matriceSprite[objet->y-1 + (objet->x+2)*20] = creerSpriteDataS(ACS_RTEE, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LTEE, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_RTEE, WHITE_COLOR);
 
-                level->matriceSprite[objet->y + (objet->x)*20] = creerSpriteDataS(ACS_LLCORNER, WHITE_COLOR);
-                level->matriceSprite[objet->y + (objet->x+1)*20] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
-                level->matriceSprite[objet->y + (objet->x+2)*20] = creerSpriteDataS(ACS_LRCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LLCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LRCORNER, WHITE_COLOR);
                 break;
             case ROBOT_ID :
-                level->matriceSprite[objet->y-3 + (objet->x)*20] = creerSpriteDataS(ACS_ULCORNER, WHITE_COLOR);
-                level->matriceSprite[objet->y-3 + (objet->x+1)*20] = creerSpriteDataS(ACS_BTEE, WHITE_COLOR);
-                level->matriceSprite[objet->y-3 + (objet->x+2)*20] = creerSpriteDataS(ACS_URCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y-3 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_ULCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y-3 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_BTEE, WHITE_COLOR);
+                level->matriceSprite[objet->y-3 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_URCORNER, WHITE_COLOR);
 
-                level->matriceSprite[objet->y-2 + (objet->x)*20] = creerSpriteDataS(ACS_LLCORNER, WHITE_COLOR);
-                level->matriceSprite[objet->y-2 + (objet->x+1)*20] = creerSpriteDataS(ACS_TTEE, WHITE_COLOR);
-                level->matriceSprite[objet->y-2 + (objet->x+2)*20] = creerSpriteDataS(ACS_LRCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y-2 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LLCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y-2 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_TTEE, WHITE_COLOR);
+                level->matriceSprite[objet->y-2 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LRCORNER, WHITE_COLOR);
 
-                level->matriceSprite[objet->y-1 + (objet->x)*20] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
-                level->matriceSprite[objet->y-1 + (objet->x+1)*20] = creerSpriteDataS(ACS_PLUS, WHITE_COLOR);
-                level->matriceSprite[objet->y-1 + (objet->x+2)*20] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_PLUS, WHITE_COLOR);
+                level->matriceSprite[objet->y-1 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, WHITE_COLOR);
 
-                level->matriceSprite[objet->y + (objet->x)*20] = creerSpriteDataS(ACS_ULCORNER, WHITE_COLOR);
-                level->matriceSprite[objet->y + (objet->x+1)*20] = creerSpriteDataS(ACS_BTEE, WHITE_COLOR);
-                level->matriceSprite[objet->y + (objet->x+2)*20] = creerSpriteDataS(ACS_URCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_ULCORNER, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_BTEE, WHITE_COLOR);
+                level->matriceSprite[objet->y + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_URCORNER, WHITE_COLOR);
                 break;
             case PLAYER_ID :
                 color = objet->objet.player.color;
                 // head
                 if (objet->objet.player.orientation == LEFT_ORIENTATION) {
-                    level->matriceSprite[objet->y-3 + (objet->x+1)*20] = creerSpriteData(' ', RED_BLOCK);
-                    level->matriceSprite[objet->y-3 + (objet->x)*20] = creerSpriteData('-', RED_BLOCK);
+                    level->matriceSprite[objet->y-3 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteData(' ', RED_BLOCK);
+                    level->matriceSprite[objet->y-3 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteData('-', RED_BLOCK);
                 } else {
-                    level->matriceSprite[objet->y-3 + (objet->x+1)*20] = creerSpriteData(' ', RED_BLOCK);
-                    level->matriceSprite[objet->y-3 + (objet->x+2)*20] = creerSpriteData('-', RED_BLOCK);
+                    level->matriceSprite[objet->y-3 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteData(' ', RED_BLOCK);
+                    level->matriceSprite[objet->y-3 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteData('-', RED_BLOCK);
                 }
 
                 // body
-                level->matriceSprite[objet->y-2 + (objet->x)*20] = creerSpriteDataS(ACS_HLINE, color);
-                level->matriceSprite[objet->y-2 + (objet->x+1)*20] = creerSpriteDataS(ACS_PLUS, color);
-                level->matriceSprite[objet->y-2 + (objet->x+2)*20] = creerSpriteDataS(ACS_HLINE, color);
+                level->matriceSprite[objet->y-2 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, color);
+                level->matriceSprite[objet->y-2 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_PLUS, color);
+                level->matriceSprite[objet->y-2 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_HLINE, color);
 
-                level->matriceSprite[objet->y-1 + (objet->x)*20] = creerSpriteDataS(ACS_ULCORNER, color);
-                level->matriceSprite[objet->y-1 + (objet->x+1)*20] = creerSpriteDataS(ACS_BTEE, color);
-                level->matriceSprite[objet->y-1 + (objet->x+2)*20] = creerSpriteDataS(ACS_URCORNER, color);
+                level->matriceSprite[objet->y-1 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_ULCORNER, color);
+                level->matriceSprite[objet->y-1 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_BTEE, color);
+                level->matriceSprite[objet->y-1 + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_URCORNER, color);
 
-                level->matriceSprite[objet->y + (objet->x)*20] = creerSpriteDataS(ACS_VLINE, color);
-                level->matriceSprite[objet->y + (objet->x+2)*20] = creerSpriteDataS(ACS_VLINE, color);
+                level->matriceSprite[objet->y + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_VLINE, color);
+                level->matriceSprite[objet->y + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_VLINE, color);
                 break;
         }
         elt = elt->suivant;
     }
 
     // add the empty sprite
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            if (level->matriceSprite[y+x*20] == NULL) {
-                level->matriceSprite[y+x*20] = emptySprite();
+    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
+        for (x = 0; x < MATRICE_LEVEL_X; x++) {
+            if (level->matriceSprite[y+x*MATRICE_LEVEL_Y] == NULL) {
+                level->matriceSprite[y+x*MATRICE_LEVEL_Y] = emptySprite();
             }
         }
     }
 }
+

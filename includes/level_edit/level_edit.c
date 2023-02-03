@@ -21,7 +21,7 @@
 int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
 
 	// Check Border collisions
-	if (x + xSize > 60 || y - ySize > 20) {
+	if (x + xSize > MATRICE_LEVEL_X || y - ySize > MATRICE_LEVEL_Y) {
 		logs(L_DEBUG, "checkHitBox => x: %d, y: %d (collision avec le bord)", x, y);
 		return 0;
 	}
