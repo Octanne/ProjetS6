@@ -1,3 +1,4 @@
+
 #ifndef LEVEL_EDIT_H
 #define LEVEL_EDIT_H
 
@@ -27,3 +28,4 @@ int poserLadder(Level* level, short x, short y);
 int poserPlayer(Level* level, short x, short y);
 
 #endif
+
