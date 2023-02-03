@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "../utils/utils.h"
+
 ListeObjet* creerListeObjet() {
     ListeObjet* listeObjet = malloc(sizeof(ListeObjet));
     listeObjet->tete = (EltListe_o*) NULL;

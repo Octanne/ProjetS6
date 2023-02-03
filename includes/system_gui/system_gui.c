@@ -2,7 +2,10 @@
 
 #include <locale.h>
 
+GameInterface *gameInterface;
+
 void init_gui() {
+    logs(L_INFO, "Main | Ncurses windows init...");
     setlocale(LC_ALL, "");
     ncurses_init();
     ncurses_init_mouse();
@@ -10,9 +13,13 @@ void init_gui() {
     palette();
     getmaxyx(stdscr, LINES, COLS);
 
+    logs(L_INFO, "Main | Ncurses windows init success!");
     gameInterface = malloc(sizeof(GameInterface));
+    
     gen_game_editor_window();
+    logs(L_INFO, "Main | Game Window created!");
     gen_tools_menu();
+    logs(L_INFO, "Main | Tools menu created!");
 }
 
 void stop_gui() {
@@ -31,8 +38,7 @@ void stop_gui() {
 }
 
 void set_text_info(const char *text, int line, int color) {
-    mvwprintw(gameInterface->gui->winINFOS, line, 0, 
-    "                                                                           ");
+    mvwprintw(gameInterface->gui->winINFOS, line, 0, EMPTY_LINE);
     wmove(gameInterface->gui->winINFOS, line, 0);
     wattron(gameInterface->gui->winINFOS, COLOR_PAIR(color));
     mvwprintw(gameInterface->gui->winINFOS, line, 0, "%s", text);
@@ -42,7 +48,7 @@ void set_text_info(const char *text, int line, int color) {
 
 void refresh_level(Level *level) {
     wclear(gameInterface->gui->winLEVEL);
-    int y, x;
+    short y, x;
     for (y = 0; y < 20; y++) {
         for (x = 0; x < 60; x++) {
             SpriteData* spriteD = level->matriceSprite[y+x*20];
@@ -124,7 +130,7 @@ void refresh_tools_menu() {
 }
 
 void gen_game_editor_window() {
-
+    gameInterface->gui = malloc(sizeof(GUI));
     // Level window
     gameInterface->gui->cwinLEVEL = newwin(22, 62, 0, 0);
     box(gameInterface->gui->cwinLEVEL, 0, 0);

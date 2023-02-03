@@ -1,6 +1,8 @@
 #ifndef OBJET_H
 #define OBJET_H
 
+#include <stdint.h>
+
 typedef struct {
 } Block_obj;
 
@@ -11,15 +13,15 @@ typedef struct {
 } Trap_obj;
 
 typedef struct {
-    int numkey;
+    int8_t numkey;
 } Key_obj;
 
 typedef struct {
-    int numgate;
+    int8_t numgate;
 } Gate_obj;
 
 typedef struct {
-    int numdoor;
+    int8_t numdoor;
 } Door_obj;
 
 typedef struct {
@@ -41,9 +43,9 @@ typedef struct {
 } Bomb_obj;
 
 typedef struct {
-    int life;
-    int color;
-    int orientation;
+    int8_t life;
+    int8_t color;
+    int8_t orientation;
 } Player_obj;
 
 typedef union {
@@ -63,33 +65,33 @@ typedef union {
 } ObjetU;
 
 typedef struct {
-    int type;
+    int8_t type;
     ObjetU objet;
 
-    int xSize;
-    int ySize;
+    short xSize;
+    short ySize;
 
-    int x;
-    int y;
+    short x;
+    short y;
 
-    int isActive;
+    int8_t isActive;
 } Objet;
 
-Objet* initObjet(int x, int y, int xSize, int ySize, int type);
+Objet* initObjet(short x, short y, short xSize, short ySize, int8_t type);
 
-Objet* creerVie(int x, int y);
-Objet* creerRobot(int x, int y);
-Objet* creerProbe(int x, int y);
-Objet* creerBlock(int x, int y);
-Objet* creerLadder(int x, int y);
-Objet* creerTrap(int x, int y);
-Objet* creerKey(int x, int y, int numkey);
-Objet* creerGate(int x, int y, int numgate);
-Objet* creerDoor(int x, int y, int numdoor);
-Objet* creerExit(int x, int y);
-Objet* creerStart(int x, int y);
-Objet* creerBomb(int x, int y);
-Objet* creerPlayer(int x, int y);
+Objet* creerVie(short x, short y);
+Objet* creerRobot(short x, short y);
+Objet* creerProbe(short x, short y);
+Objet* creerBlock(short x, short y);
+Objet* creerLadder(short x, short y);
+Objet* creerTrap(short x, short y);
+Objet* creerKey(short x, short y, int8_t numkey);
+Objet* creerGate(short x, short y, int8_t numgate);
+Objet* creerDoor(short x, short y, int8_t numdoor);
+Objet* creerExit(short x, short y);
+Objet* creerStart(short x, short y);
+Objet* creerBomb(short x, short y);
+Objet* creerPlayer(short x, short y);
 
 void objet_free(Objet* objet);
 

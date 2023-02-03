@@ -1,10 +1,8 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include <stdlib.h>
-#include <ncurses.h>
-
 #include "../liste/liste.h"
+#include <ncurses.h>
 
 typedef struct {
     char sprite;
@@ -31,6 +29,6 @@ void level_free(Level* level);
 void levelAjouterObjet(Level* level, Objet* objet);
 void levelSupprimerObjet(Level* level, Objet* objet);
 void levelUpdateMatriceSprite(Level* level);
-ListeObjet* rechercherObjet(Level* level, int x, int y);
+ListeObjet* rechercherObjet(Level* level, short x, short y);
 
 #endif

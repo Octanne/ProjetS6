@@ -1,5 +1,7 @@
 #include "level.h"
 
+#include <stdlib.h>
+
 #include "../utils/utils.h"
 
 Level* levelEmpty() {
@@ -7,7 +9,7 @@ Level* levelEmpty() {
     level->listeObjet = creerListeObjet();
 
     // Set default sprite
-    int y, x;
+    short y, x;
     for (y = 0; y < 20; y++) {
         for (x = 0; x < 60; x++) {
             level->matriceSprite[y+x*20] = NULL;
@@ -42,7 +44,7 @@ Level* levelCreer() {
     level->listeObjet = creerListeObjet();
 
     // Ajouter les murs de la map
-    int y, x;
+    short y, x;
     for (y = 0; y < 20; y++) {
         for (x = 0; x < 60; x++) {
             if (y == 0 || y == 19 || x == 0 || x == 59) {
@@ -64,7 +66,7 @@ void level_free(Level* level) {
     level->listeObjet = NULL;
 
     // free all the SpriteData
-    int y, x;
+    short y, x;
     for (y = 0; y < 20; y++) {
         for (x = 0; x < 60; x++) {
             SpriteData* sprite = level->matriceSprite[y+x*20];
@@ -98,7 +100,7 @@ void levelSupprimerObjet(Level* level, Objet* objet) {
     // TODO update CollideMatrice
 }
 
-ListeObjet* rechercherObjet(Level* level, int x, int y) {
+ListeObjet* rechercherObjet(Level* level, short x, short y) {
     ListeObjet* liste = creerListeObjet();
     // parcourir les objets du level
     EltListe_o *elt = level->listeObjet->tete;
@@ -111,12 +113,13 @@ ListeObjet* rechercherObjet(Level* level, int x, int y) {
         }
         elt = elt->suivant;
     }
+
     return liste;
 }
 
 void levelUpdateMatriceSprite(Level* level) {
     // clear the matrice
-    int y, x;
+    short y, x;
     for (y = 0; y < 20; y++) {
         for (x = 0; x < 60; x++) {
             SpriteData* sprite = level->matriceSprite[y+x*20];
@@ -133,7 +136,7 @@ void levelUpdateMatriceSprite(Level* level) {
         char sprite;
         Objet* objet = elt->objet;
         int color, colorB;
-        int x, y;
+        short x, y;
         switch (objet->type) {
             case BLOCK_ID :
                 sprite = ' ';
@@ -185,7 +188,7 @@ void levelUpdateMatriceSprite(Level* level) {
                     for (x = 0; x < objet->xSize; x++) {
                         // Lead 0
                         if (y == 3 && x < 2) {
-                            int numDoor = objet->objet.door.numdoor;
+                            int8_t numDoor = objet->objet.door.numdoor;
                             char numDoorChar[4];
                             sprintf(numDoorChar, "%02i", numDoor);
                             if (x == 0) level->matriceSprite[(objet->y-y) + (objet->x+x)*20] = creerSpriteData(numDoorChar[0], WHITE_COLOR);

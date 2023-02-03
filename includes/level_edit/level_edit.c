@@ -6,17 +6,17 @@
 #include "../utils/utils.h"
 
 // TODO revoir hitbox semble pas fonctionner correctement
-int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
+int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
     if (x+xSize > 60 || y-ySize > 20) {
         logs(L_DEBUG, "checkHitBox => x: %d, y: %d (colision avec le bord)", x, y);
         return 0;
     }
     // calculate number of positions
-    int nbPos = xSize * ySize;
-    int nbIter = nbPos;
+    short nbPos = xSize * ySize;
+    short nbIter = nbPos;
 
     Position posL[nbPos];
-    int i, j;
+    short i, j;
     logs(L_DEBUG, "nbPos: %d", nbPos);
     // calculate all positions on the hitbox
     for (j = y; j > y-ySize; j--) {
@@ -52,7 +52,7 @@ int checkHitBox(Level* level, int x, int y, int xSize, int ySize) {
     return 1;
 }
 
-int supprimerObjet(Level* level, int x, int y) {
+int supprimerObjet(Level* level, short x, short y) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete != NULL) {
         levelSupprimerObjet(level, objs->tete->objet);
@@ -64,7 +64,7 @@ int supprimerObjet(Level* level, int x, int y) {
     }
 }
 
-int poserBlock(Level* level, int x, int y) {
+int poserBlock(Level* level, short x, short y) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete == NULL) {
         Objet* bloc = creerBlock(x,y);
@@ -76,7 +76,7 @@ int poserBlock(Level* level, int x, int y) {
         return 0;
     }
 }
-int poserVie(Level* level, int x, int y) {
+int poserVie(Level* level, short x, short y) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete == NULL) {
         Objet* vie = creerVie(x,y);
@@ -88,7 +88,7 @@ int poserVie(Level* level, int x, int y) {
         return 0;
     }
 }
-int poserBomb(Level* level, int x, int y) {
+int poserBomb(Level* level, short x, short y) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete == NULL) {
         Objet* bomb = creerBomb(x,y);
@@ -100,7 +100,7 @@ int poserBomb(Level* level, int x, int y) {
         return 0;
     }
 }
-int poserTrap(Level* level, int x, int y) {
+int poserTrap(Level* level, short x, short y) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete == NULL) {
         Objet* trap = creerTrap(x,y);
@@ -112,7 +112,7 @@ int poserTrap(Level* level, int x, int y) {
         return 0;
     }
 }
-int poserGate(Level* level, int x, int y, int gateColor) {
+int poserGate(Level* level, short x, short y, int8_t gateColor) {
     ListeObjet* objs = rechercherObjet(level, x, y);
     if (objs->tete == NULL) {
         Objet* gate = creerGate(x,y,gateColor);
@@ -125,7 +125,7 @@ int poserGate(Level* level, int x, int y, int gateColor) {
     }
 }
 
-int poserKey(Level* level, int x, int y, int keyColor  ) {
+int poserKey(Level* level, short x, short y, int8_t keyColor) {
     if (checkHitBox(level, x, y, 1, 2)) {
         Objet* obj = creerKey(x,y,keyColor);
         levelAjouterObjet(level,obj);
@@ -134,7 +134,7 @@ int poserKey(Level* level, int x, int y, int keyColor  ) {
 
     return 0;
 }
-int poserDoor(Level* level, int x, int y, int doorNumber) {
+int poserDoor(Level* level, short x, short y, int8_t doorNumber) {
         if (checkHitBox(level, x, y, 3, 4)) {
         Objet* obj = creerDoor(x,y,doorNumber);
         levelAjouterObjet(level,obj);
@@ -143,7 +143,7 @@ int poserDoor(Level* level, int x, int y, int doorNumber) {
 
     return 0;
 }
-int poserExit(Level* level, int x, int y) {
+int poserExit(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 3, 4)) {
         Objet* obj = creerExit(x,y);
         levelAjouterObjet(level,obj);
@@ -152,7 +152,7 @@ int poserExit(Level* level, int x, int y) {
 
     return 0;
 }
-int poserStart(Level* level, int x, int y) {
+int poserStart(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 3, 4)) {
         Objet* obj = creerStart(x,y);
         levelAjouterObjet(level,obj);
@@ -161,7 +161,7 @@ int poserStart(Level* level, int x, int y) {
 
     return 0;
 }
-int poserProbe(Level* level, int x, int y) {
+int poserProbe(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 3, 2)) {
         Objet* obj = creerProbe(x,y);
         levelAjouterObjet(level,obj);
@@ -170,7 +170,7 @@ int poserProbe(Level* level, int x, int y) {
 
     return 0;
 }
-int poserRobot(Level* level, int x, int y) {
+int poserRobot(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 4, 3)) {
         Objet* obj = creerRobot(x,y);
         levelAjouterObjet(level,obj);
@@ -179,7 +179,7 @@ int poserRobot(Level* level, int x, int y) {
 
     return 0;
 }
-int poserLadder(Level* level, int x, int y) {
+int poserLadder(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 3, 1)) {
         Objet* obj = creerLadder(x,y);
         levelAjouterObjet(level,obj);
@@ -188,7 +188,7 @@ int poserLadder(Level* level, int x, int y) {
 
     return 0;
 }
-int poserPlayer(Level* level, int x, int y) {
+int poserPlayer(Level* level, short x, short y) {
     if (checkHitBox(level, x, y, 3, 3)) {
         Objet* obj = creerPlayer(x,y);
         levelAjouterObjet(level,obj);

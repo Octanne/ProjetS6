@@ -12,11 +12,13 @@
 
 Level* level = NULL;
 
-void clear_level(Level* level) {
+void clear_level() {
     level_free(level);
     level = NULL;
     level = levelCreer();
     refresh_level(level);
+    logs(L_INFO, "Main | Level cleared");
+    logs(L_INFO, "Main | Level value : %X", *level);
 }
 
 void load_level(int newLevel, int oldLevel) {
@@ -54,11 +56,14 @@ void load_level_file() {
         // Pas de niveau dans le fichier
         clear_level(level);
         logs(L_INFO, "Main | First level not found, empty level generated.");
+        logs(L_INFO, "Main | Level value : %X", level);
     } else {
         logs(L_INFO, "Main | First level found and loaded.");
         logs(L_INFO, "Main | First level : %d items loaded", level->listeObjet->taille);
         refresh_level(level);
     }
+
+    logs(L_INFO, "Main | Level value : %X", level);
 
     // show table
     logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
@@ -82,7 +87,7 @@ void stop_game() {
     closeLogs();
 }
 
-void mouse_toolsWindow(int posX, int posY) {
+void mouse_toolsWindow(short posX, short posY) {
     if (posX >= 62 && posX < 77 && posY >= 0 && posY < 20) {
         // increase level number
         if (posY == 16 && posX == 71) {
@@ -115,7 +120,8 @@ void mouse_toolsWindow(int posX, int posY) {
     }
 }
 
-void mouse_levelWindow(int posX, int posY) {
+void mouse_levelWindow(short posX, short posY) {
+    logs(L_INFO, "Main | Level value : %X", level);
     if (posX >= 0 && posX < 60 && posY >= 0 && posY < 20) {
         // check de l'outils selectionnée
         int success = 0;
@@ -180,7 +186,7 @@ void mouse_levelWindow(int posX, int posY) {
     }
 }
 
-void mouse_event(int posX, int posY) {
+void mouse_event(short posX, short posY) {
     // convert to window level coordinates
     posX -= 1;
     posY -= 1;
@@ -255,7 +261,9 @@ void control_handler() {
             case KEY_MOUSE:
                 int posX, posY;
                 if (mouse_getpos(&posX,&posY) == OK) {
-                    mouse_event(posX, posY);
+                    short posXS = posX;
+                    short posYS = posY;
+                    mouse_event(posXS, posYS);
                 }
                 break;
         }

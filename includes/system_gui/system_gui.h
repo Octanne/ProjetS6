@@ -8,8 +8,8 @@
 
 typedef struct {
     int toolsSelected;
-    int gateColorSelected;
-    int doorNumberSelected;
+    int8_t gateColorSelected;
+    int8_t doorNumberSelected;
     int levelNumberSelected;
 
     int inEdit;
@@ -30,7 +30,7 @@ typedef struct {
     ToolsMenu* toolsMenu;
 } GameInterface;
 
-GameInterface *gameInterface;
+extern GameInterface* gameInterface;
 
 void init_gui();
 void stop_gui();

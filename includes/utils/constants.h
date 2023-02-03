@@ -10,6 +10,7 @@
 #define LOGS_MAX_LENGTH 3500
 
 #define FILENAME "level.dat"
+#define EMPTY_LINE "                                                                           "
 
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10

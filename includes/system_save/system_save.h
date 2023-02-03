@@ -20,7 +20,7 @@ typedef struct file {
 } file_t;
 
 typedef struct data_info {
-    char type;
+    int8_t type;
     size_t size;
 } data_info_t;
 
@@ -35,7 +35,7 @@ typedef struct table_entry {
     off_t addr_table;
     off_t addr_cell;
     long idx_table;
-    char type_data;
+    int8_t type_data;
 } table_entry_t;
 
 #define SIZE_TABLE sizeof(off_t)*TAILLE_TABLE
