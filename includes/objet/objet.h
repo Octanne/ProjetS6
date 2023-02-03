@@ -1,3 +1,4 @@
+
 #ifndef OBJET_H
 #define OBJET_H
 
@@ -85,14 +86,15 @@ Objet* creerProbe(short x, short y);
 Objet* creerBlock(short x, short y);
 Objet* creerLadder(short x, short y);
 Objet* creerTrap(short x, short y);
-Objet* creerKey(short x, short y, int8_t numkey);
-Objet* creerGate(short x, short y, int8_t numgate);
-Objet* creerDoor(short x, short y, int8_t numdoor);
 Objet* creerExit(short x, short y);
 Objet* creerStart(short x, short y);
 Objet* creerBomb(short x, short y);
+Objet* creerKey(short x, short y, int8_t numkey);
+Objet* creerGate(short x, short y, int8_t numgate);
+Objet* creerDoor(short x, short y, int8_t numdoor);
 Objet* creerPlayer(short x, short y);
 
 void objet_free(Objet* objet);
 
 #endif
+
