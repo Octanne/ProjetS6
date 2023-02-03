@@ -1,3 +1,4 @@
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -47,7 +48,10 @@
 #define ROBOT_ID 12
 #define PLAYER_ID 13
 
+#define TOTAL_TOOLS 12
+
 #define RIGHT_ORIENTATION 1
 #define LEFT_ORIENTATION 0
 
 #endif
+
