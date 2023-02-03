@@ -383,7 +383,7 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
     logs(L_DEBUG, "find_av_tableEntry | addrTable = %ld", addrTable);
     // get actual table
     off_t table[TAILLE_TABLE];
-    if(get_table(fd, addrTable, table) == -1) return -1;
+    if (get_table(fd, addrTable, table) == -1) return -1;
 
     // check table if there an unused cell
     int i;
@@ -530,7 +530,7 @@ int get_empty(int fd, size_t sizeNeeded, off_t addrTable, empty_data_t* empty_da
             logs(L_DEBUG, "get_empty | Empty found at index = %d pointing to addr = %ld", i, table[i]);
             // get data_info
             data_info_t dataInfo;
-            if(get_data_info(fd, table[i], &dataInfo) == -1) return -1;
+            if (get_data_info(fd, table[i], &dataInfo) == -1) return -1;
 
             // check if it's really an empty
             if (dataInfo.type == TABLE_TYPE_EMPTY) {
@@ -595,7 +595,7 @@ int update_empty(int fd, empty_data_t* emptyData, size_t sizeNeeded) {
     }
 
     // update table
-    if(write_table(fd, emptyData->addr_table, table) == -1) return -1;
+    if (write_table(fd, emptyData->addr_table, table) == -1) return -1;
 
     logs(L_DEBUG, "update_empty | retour : success!");
     return 1;
@@ -799,7 +799,7 @@ int remove_level(file_t file, int numLevel) {
     int res = transform_to_empty(fd, numLevel, ADDR_FIRST_TABLE, 0);
     if (res == -2)
 		logs(L_DEBUG, "The level was already inexistant");
-    else if(res == -1)
+    else if (res == -1)
 		logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
 
     // Close file

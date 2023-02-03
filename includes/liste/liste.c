@@ -44,7 +44,7 @@ void listeSupprimerObjet(ListeObjet* listeObjet, Objet* objet, int freeObjet) {
 void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
     EltListe_o* eltListe = listeObjet->tete;
     while (eltListe != NULL) {
-        if(freeObjet) objet_free(eltListe->objet);
+        if (freeObjet) objet_free(eltListe->objet);
         EltListe_o* tmp = eltListe;
         if (eltListe->suivant != NULL) eltListe = eltListe->suivant;
         else eltListe = NULL;

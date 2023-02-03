@@ -1,3 +1,4 @@
+
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
@@ -177,7 +178,7 @@ void mouse_levelWindow(short posX, short posY) {
 
         // Apply the selected tool on the level
         int success = 0;
-        switch(gameInterface->toolsMenu->toolsSelected) {
+        switch (gameInterface->toolsMenu->toolsSelected) {
             case 0:
                 // Delete
                 success = supprimerObjet(level, posX, posY);
@@ -272,7 +273,7 @@ void mouse_event(short posX, short posY) {
 void control_handler() {
     int ch;
     while((ch = getch()) != KEY_QUIT_GAME) {
-        switch(ch) {
+        switch (ch) {
 
             case KEY_UP:
 				// Write down the action
