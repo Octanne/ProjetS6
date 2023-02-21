@@ -27,11 +27,11 @@ typedef struct {
 } GUI;
 
 typedef struct {
-    GUI* gui;
-    ToolsMenu* toolsMenu;
+    GUI gui;
+    ToolsMenu toolsMenu;
 } GameInterface;
 
-extern GameInterface* gameInterface;
+extern GameInterface gameInterface;
 
 void init_gui();
 void stop_gui();
