@@ -956,7 +956,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 		perror("Error while allocating memory in transform_to_empty\n");
 		exit(EXIT_FAILURE);
 	}
-    memset(buffer, 0, dataInfo.size + SIZE_DATA_INFO);
+    memset(buffer, '\0', dataInfo.size + SIZE_DATA_INFO);
     memcpy(buffer, &dataInfo, SIZE_DATA_INFO);
 
     // Write the buffer on the file
