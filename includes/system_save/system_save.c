@@ -20,81 +20,125 @@ void optimize() {
     // Faire la defragmentation des données (déplacement des données vers le début du fichier)
 }
 
-void init_table(off_t* table) {
-    logs(L_DEBUG, "init_table | Initialisation à ADDR_UNUSED des entrées de la table.");
-    for (int i = 0; i < TAILLE_TABLE; i++) {
-        table[i] = ADDR_UNUSED;
-    }
-}
-
+/**
+ * @brief Get data_info_t from a table entry
+ * 
+ * @param fd File descriptor
+ * @param addrFromTable Address of the table entry
+ * @param dataInfo Pointer to a data_info_t to fill it
+ * 
+ * @return -1 if error, 1 if success
+*/
 int get_data_info(int fd, off_t addrFromTable, data_info_t* dataInfo) {
+
+	// Logs
     logs(L_DEBUG, "get_data_info | addr = %ld", addrFromTable);
+
+	// Seek to the address
     if (lseek(fd, addrFromTable, SEEK_SET) != addrFromTable) {
         logs(L_DEBUG, "get_data_info | Déplacement impossible à l'adresse %ld", addrFromTable);
         return -1;
     }
+
+	// Read data_info
     if (read(fd, dataInfo, SIZE_DATA_INFO) == -1) {
         logs(L_DEBUG, "get_data_info | Read error : %s", strerror(errno));
         return -1;
     }
+
+	// Logs and return
     logs(1, "get_data_info | retour : type = %d, size = %d", dataInfo->type, dataInfo->size);
     return 1;
 }
+
+/**
+ * @brief Get a table from a table entry
+ * 
+ * @param fd File descriptor
+ * @param addrTable Address of the table entry
+ * @param tableToFill Pointer to a table to fill it
+ * 
+ * @return -1 if error, 1 if success
+*/
 int get_table(int fd, off_t addrTable, off_t* tableToFill) {
+
+	// Logs
     logs(L_DEBUG, "get_table | addrTable = %ld", addrTable);
+
+	// Seek to the address
     if (lseek(fd, addrTable, SEEK_SET) != addrTable) {
         logs(L_DEBUG, "get_table | Déplacement impossible à l'adresse %ld", addrTable);
         return -1;
     }
     
-    // check if it's the first table
+    // Check if it's the first table
     if (addrTable != ADDR_FIRST_TABLE) {
-        // get data_info
+
+        // Get data_info
         data_info_t dataInfo;
         if (get_data_info(fd, addrTable, &dataInfo) == -1) return -1;
 
-        // check if it's a table
+        // Check if it's a table
         if (dataInfo.type != TABLE_TYPE_TABLE) {
             logs(L_DEBUG, "get_table | L'adresse %ld ne pointe pas vers une table.", addrTable);
             return -1;
         }
     }
 
-    // get table
+    // Read table
     if (read(fd, tableToFill, SIZE_TABLE) == -1) {
         logs(L_DEBUG, "get_table | Read error: %s", strerror(errno));
         return -1;
     }
 
-    logs(L_DEBUG, "get_table | retour : firstAddress = %ld, nextTable = %ld", 
-        (off_t)tableToFill[0], (off_t)tableToFill[TAILLE_TABLE - 1]);
+	// Logs and return
+    logs(L_DEBUG, "get_table | retour : firstAddress = %ld, nextTable = %ld", tableToFill[0], tableToFill[TAILLE_TABLE - 1]);
     return 1;
 }
+
+/**
+ * @brief Get data from a table entry
+ * 
+ * @param fd File descriptor
+ * @param addrFromTable Address of the table entry
+ * @param dataInfo Pointer to a data_info_t to fill it
+ * @param data Pointer to a char* to fill the data in it
+*/
 int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
-    // set cursor
+
+    // Seek to the address
     if (lseek(fd, addrFromTable, SEEK_SET) != addrFromTable) {
         logs(L_DEBUG, "Get_data | ERROR Impossible to set cursor at addr = %ld", addrFromTable);
         return -1;
     }
+
+	// Logs
     logs(L_DEBUG, "Get_data | Set cursor at addr = %ld", lseek(fd, 0, SEEK_CUR));
 
-    // read data info
-    if (get_data_info(fd,addrFromTable,dataInfo) == -1) {
+    // Read data info
+    if (get_data_info(fd, addrFromTable, dataInfo) == -1) {
         logs(L_DEBUG, "Get_data | ERROR read data info");
         return -1;
     }
 
+	// Logs
     logs(L_DEBUG, "Get_data | dataInfo : type = %d, size = %ld", dataInfo->type, dataInfo->size);
 
-    // allocate data
+    // Memory allocation for data
     char *dataS = malloc(dataInfo->size);
-    // read data
+	if (dataS == NULL) {
+		logs(L_DEBUG, "Get_data | ERROR malloc data");
+		return -1;
+	}
+
+    // Read data
     if (read(fd, dataS, dataInfo->size) == -1) {
         logs(L_DEBUG, "Get_data | ERROR read data : %s", strerror(errno));
         return -1;
     }
-    *data = dataS;
 
+	// Assign data, logs and return
+    *data = dataS;
     logs(L_DEBUG, "Get_data | Success! data : %X", *data);
     return 1;
 }
@@ -232,7 +276,7 @@ file_t create_file(char* filename) {
 
 	// Create table
     off_t table[TAILLE_TABLE];
-    init_table(table);
+	memset(table, ADDR_UNUSED, SIZE_TABLE);
 
     // Write tag
     if (write(fd, TAG_FILE, SIZE_TAG) == -1) {
@@ -427,8 +471,8 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
         }
 
         // declare new table
-        off_t new_table[TAILLE_TABLE]; 
-        init_table(new_table);
+        off_t new_table[TAILLE_TABLE];
+		memset(new_table, ADDR_UNUSED, SIZE_TABLE);
 
         // write the dataInfo of the new table
         data_info_t dataInfo;
