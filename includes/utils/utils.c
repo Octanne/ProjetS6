@@ -105,6 +105,7 @@ int file_logs_desc = -1;
  * @brief Initialize the logs file
  */
 void initLogs() {
+
 	// Create the logs folder if it doesn't exist
 	if (mkdir(LOGS_FOLDER, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
 		// show erno
@@ -115,12 +116,15 @@ void initLogs() {
 	}
 
 	// Open the file with open
-	file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+	file_logs_desc = open(LOGS_FILE, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
 	// check if the file is open
 	if (file_logs_desc == -1) {
 		fprintf(stderr, "Error: can't open the logs file.\n");
 		exit(EXIT_FAILURE);
 	}
+
+	// Write the logs file header
+	write(file_logs_desc, "\n", 1);
 }
 
 /**
@@ -172,7 +176,7 @@ void closeLogs() {
 		logs(L_INFO, "No logs has been written during this session.");
 	}
 	
-	logs(L_INFO, "End of the session of the game.");
+	logs(L_INFO, "End of the session of the game.\n");
 
 	// Create the logs folder archives if it doesn't exist
 	if (mkdir(LOGS_FOLDER_ARCHIVES, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
@@ -195,23 +199,32 @@ void closeLogs() {
 	strcat(file_name, time_string);
 	strcat(file_name, ".log");
 
-	// Copy the file
-
 	// Open the destination file for writing
 	int dest_fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 
 	// Allocate a buffer for reading the file
 	char buffer[4096];
 
+	// Lseek to the beginning of the file
+	if (lseek(file_logs_desc, 0, SEEK_SET) == -1) {
+		perror("Error while lseek to the beginning of the file.\n");
+		exit(EXIT_FAILURE);
+	}
+
 	// Read from the logs file and write to the archived dests file
 	int bytes_read;
-	while ((bytes_read = read(file_logs_desc, buffer, sizeof(buffer))) > 0)
-		if (write(dest_fd, buffer, bytes_read) == -1)
-			fprintf(stderr, "Error while writing in the archived logs file.\n");
+	while ((bytes_read = read(file_logs_desc, buffer, sizeof(buffer))) > 0) {
+		if (write(dest_fd, buffer, bytes_read) == -1) {
+			perror("Error while writing in the archived logs file.\n");
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	// Close the source and destination files
-	if (close(file_logs_desc) == -1 || close(dest_fd) == -1)
-		fprintf(stderr, "Error while closing the logs file.\n");
+	if (close(file_logs_desc) == -1 || close(dest_fd) == -1) {
+		perror("Error while closing the logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// Reset the file_logs_desc
 	file_logs_desc = -1;
