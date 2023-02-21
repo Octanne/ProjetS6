@@ -983,7 +983,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 	}
 
 	// Logs
-    logs(L_DEBUG, "transform_to_empty | Rewrite DataInfo and Erase data from %d to %d",
+    logs(L_DEBUG, "transform_to_empty | Rewrite DataInfo and Erase data from %d to %d", 
          table[localIndex], lseek(fd, 0, SEEK_CUR));
 
     // 
@@ -1215,7 +1215,7 @@ int get_level(file_t file, int numLevel, Level* level) {
     }
 
 	// Logs
-    logs(L_DEBUG, "Get_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
+    logs(L_DEBUG, "Get_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d", 
          entry.type_data, entry.addr_cell, entry.addr_table, entry.idx_table);
 
 	// Check if the level exists
@@ -1315,7 +1315,7 @@ int save_level(file_t file, int numLevel, Level level) {
     }
     
 	// Logs
-    logs(L_DEBUG, "Save_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d",
+    logs(L_DEBUG, "Save_level | Table entry found : type = %d, addrCell = %ld, addrTable = %ld, idx = %d", 
          result.type_data, result.addr_cell, result.addr_table, result.idx_table);
 
 	// Convert level to bytes

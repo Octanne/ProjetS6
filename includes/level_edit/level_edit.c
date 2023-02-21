@@ -187,7 +187,7 @@ int poserGate(Level* level, short x, short y, int8_t gateColor) {
 
 	// If the list is empty, create objet
 	if (objs.tete == NULL) {
-		levelAjouterObjet(level, creerGate(x,y,gateColor));
+		levelAjouterObjet(level, creerGate(x, y, gateColor));
 		listeObjet_free(&objs, 0);
 		return 1;
 	}
