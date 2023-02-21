@@ -449,10 +449,10 @@ file_t load_file(char* filename) {
 char* convert_level_to_bytes(Level level, size_t* size) {
 
 	// Logs
-    logs(L_INFO, "Level Converter | Convert level to bytes: %d items.", level.listeObjet->taille);
+    logs(L_INFO, "Level Converter | Convert level to bytes: %d items.", level.listeObjet.taille);
 
 	// Calculate size
-    *size = level.listeObjet->taille * sizeof(Objet);
+    *size = level.listeObjet.taille * sizeof(Objet);
 
 	// Memory allocation
     char* buffer = malloc(*size);
@@ -464,7 +464,7 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     
     // Parcourir la liste des objets
     int i = 0;
-    EltListe_o* obj = level.listeObjet->tete;
+    EltListe_o* obj = level.listeObjet.tete;
     while (obj != NULL) {
 
 		// Copy object bytes to buffer at the right position & go to next object
@@ -510,7 +510,7 @@ Level convert_bytes_to_level(char* bytes, size_t size) {
     }
 
 	// Logs and return
-    logs(L_INFO, "Level Converter | Convert bytes to level: Success! %d items.", level.listeObjet->taille);
+    logs(L_INFO, "Level Converter | Convert bytes to level: Success! %d items.", level.listeObjet.taille);
     return level;
 }
 
@@ -1230,7 +1230,7 @@ int get_level(file_t file, int numLevel, Level* level) {
 
         // Close file
         close(fd);
-        logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, level->listeObjet->taille);
+        logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, level->listeObjet.taille);
 
         return 1;
     }
@@ -1252,7 +1252,7 @@ int get_level(file_t file, int numLevel, Level* level) {
  * 
  * @return 1 if success, -1 if error
  */
-int save_level(file_t file, int numLevel, Level* level) {
+int save_level(file_t file, int numLevel, Level level) {
 
 	// Logs
     logs(L_DEBUG, "Save_level | level : %d", numLevel);
@@ -1277,7 +1277,7 @@ int save_level(file_t file, int numLevel, Level* level) {
 
 	// Convert level to bytes
     size_t size;
-    char* bytes = convert_level_to_bytes(*level, &size);
+    char* bytes = convert_level_to_bytes(level, &size);
 
 	// Logs
     logs(L_DEBUG, "Save_level | Success level converted to bytes: %X, size = %d bytes", bytes, size);

@@ -18,7 +18,7 @@ typedef struct {
 } SpriteData;
 
 typedef struct {
-    ListeObjet* listeObjet;
+    ListeObjet listeObjet;
     SpriteData* matriceSprite[MATRICE_LEVEL_SIZE];
     Objet* matriceCollide[MATRICE_LEVEL_SIZE];
 } Level;
@@ -28,12 +28,12 @@ SpriteData* emptySprite();
 
 Level levelEmpty();
 
-Level* levelCreer();
+Level levelCreer();
 void level_free(Level* level);
 void levelAjouterObjet(Level* level, Objet* objet);
 void levelSupprimerObjet(Level* level, Objet* objet);
 void levelUpdateMatriceSprite(Level* level);
-ListeObjet* rechercherObjet(Level* level, short x, short y);
+ListeObjet rechercherObjet(Level* level, short x, short y);
 
 #endif
 

@@ -15,7 +15,7 @@ typedef struct {
     int taille;
 } ListeObjet;
 
-ListeObjet* creerListeObjet();
+ListeObjet creerListeObjet();
 void listeAjouterObjet(ListeObjet* listeObjet, Objet* objet);
 void listeSupprimerObjet(ListeObjet* listeObjet, Objet* objet, int freeObjet);
 void listeObjet_free(ListeObjet* listeObjet, int freeObjet);
@@ -35,7 +35,7 @@ typedef struct {
     int taille;
 } ListeEntier;
 
-ListeEntier* creerListeEntier();
+ListeEntier creerListeEntier();
 void listeAjouterEntier(ListeEntier* listeEntier, int entier);
 void listeSupprimerEntier(ListeEntier* listeEntier, int entier);
 void listeEntier_free(ListeEntier* listeEntier);

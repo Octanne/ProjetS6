@@ -8,7 +8,7 @@
 /**
  * @brief Create an empty level.
  * 
- * @return Level : The level.
+ * @return an empty level.
  */
 Level levelEmpty() {
     Level level;
@@ -22,7 +22,17 @@ Level levelEmpty() {
     return level;
 }
 
+/**
+ * @brief Create a new sprite data
+ * 
+ * @param sprite : The character of the sprite
+ * @param color : The color of the sprite
+ * 
+ * @return SpriteData* : The sprite data
+*/
 SpriteData* creerSpriteData(char sprite, int color) {
+
+	// Allocate memory for the sprite data.
     SpriteData* spriteD = malloc(sizeof(SpriteData));
 	if (spriteD == NULL) {
 		logs(L_DEBUG, "creerSpriteData | ERROR malloc spriteD");
@@ -30,130 +40,174 @@ SpriteData* creerSpriteData(char sprite, int color) {
 		exit(EXIT_FAILURE);
 	}
 
+	// Set the sprite data and return it.
     spriteD->color = color;
     spriteD->specialChar = 0;
     spriteD->sprite = sprite;
-
     return spriteD;
 }
 
+/**
+ * @brief Create a new sprite data with a special character
+ * 
+ * @param sprite : The character of the sprite
+ * @param color : The color of the sprite
+ * 
+ * @return SpriteData* : The sprite data
+*/
 SpriteData* creerSpriteDataS(chtype sprite, int color) {
+
+	// Allocate memory for the sprite data.
     SpriteData* spriteD = malloc(sizeof(SpriteData));
 	if (spriteD == NULL) {
 		logs(L_DEBUG, "creerSpriteDataS | ERROR malloc spriteD");
 		perror("Error while allocating memory in creerSpriteDataS\n");
 		exit(EXIT_FAILURE);
 	}
+
+	// Set the sprite data and return it.
     spriteD->color = color;
     spriteD->specialChar = 1;
     spriteD->spSprite = sprite;
-
     return spriteD;
 }
 
-Level* levelCreer() {
-    Level* level = malloc(sizeof(Level));
-	if (level == NULL) {
-		logs(L_DEBUG, "levelCreer | ERROR malloc level");
-		perror("Error while allocating memory in levelCreer\n");
-		exit(EXIT_FAILURE);
-	}
-    level->listeObjet = creerListeObjet();
+/**
+ * @brief Create a new level.
+ * 
+ * @return Level : The new level.
+*/
+Level levelCreer() {
+    Level level;
+    level.listeObjet = creerListeObjet();
+
+	// Memset the matriceSprite to NULL.
+	memset(level.matriceSprite, 0, MATRICE_LEVEL_SIZE * sizeof(SpriteData*));
 
     // Ajouter les murs de la map
     short y, x;
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {
             if (y == 0 || y == MATRICE_LEVEL_Y - 1 || x == 0 || x == MATRICE_LEVEL_X - 1) {
-                Objet* bloc = creerBlock(x,y);
-                listeAjouterObjet(level->listeObjet, bloc);
+                listeAjouterObjet(&level.listeObjet, creerBlock(x, y));
             }
-            level->matriceSprite[y + x * MATRICE_LEVEL_Y] = NULL;
         }
     }
 
-    levelUpdateMatriceSprite(level);
+	// Update the matriceSprite and return the level.
+    levelUpdateMatriceSprite(&level);
     return level;
 }
 
+/**
+ * @brief Free the memory of a level.
+ * 
+ * @param level : The level to free.
+*/
 void level_free(Level* level) {
     if (level == NULL) return;
 
-    listeObjet_free(level->listeObjet, true);
-    level->listeObjet = NULL;
+	// Free the listeObjet
+    listeObjet_free(&level->listeObjet, true);
 
-    // free all the SpriteData
-    short y, x;
-    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
-        for (x = 0; x < MATRICE_LEVEL_X; x++) {
-            SpriteData* sprite = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
-            if (sprite != NULL) {
-                free(sprite);
-                level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
-            }
-        }
-    }
+    // Free all the SpriteData
+	int i;
+	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
+		if (level->matriceSprite[i] != NULL) {
+			free(level->matriceSprite[i]);
+			level->matriceSprite[i] = NULL;
+		}
+	}
 
+	// Free the level
     free(level);
 }
 
+/**
+ * @brief Create an empty sprite data.
+ * 
+ * @return SpriteData* : The empty sprite data.
+*/
 SpriteData* emptySprite() {
     return creerSpriteData(' ', WHITE_COLOR);
 }
 
+/**
+ * @brief Add an objet to the level.
+ * 
+ * @param level : The level.
+ * @param objet : The objet to add.
+*/
 void levelAjouterObjet(Level* level, Objet* objet) {
-    listeAjouterObjet(level->listeObjet, objet);
-
-    // update the matriceSprite
+    listeAjouterObjet(&level->listeObjet, objet);
     levelUpdateMatriceSprite(level);
     // TODO update CollideMatrice
 }
 
+/**
+ * @brief Remove an objet from the level.
+ * 
+ * @param level : The level.
+ * @param objet : The objet to remove.
+*/
 void levelSupprimerObjet(Level* level, Objet* objet) {
-    listeSupprimerObjet(level->listeObjet, objet, true);
-
-    // update the matriceSprite
+    listeSupprimerObjet(&level->listeObjet, objet, true);
     levelUpdateMatriceSprite(level);
     // TODO update CollideMatrice
 }
 
-ListeObjet* rechercherObjet(Level* level, short x, short y) {
-    ListeObjet* liste = creerListeObjet();
-    // parcourir les objets du level
-    EltListe_o *elt = level->listeObjet->tete;
+/**
+ * @brief Search an objet in the level.
+ * 
+ * @param level : The level.
+ * @param x : The x position of the objet.
+ * @param y : The y position of the objet.
+ * 
+ * @return ListeObjet* : The list of objet found (can be empty)
+*/
+ListeObjet rechercherObjet(Level* level, short x, short y) {
+    ListeObjet liste = creerListeObjet();
+    
+	// Search in the list of objet of the level
+    EltListe_o *elt = level->listeObjet.tete;
     while (elt != NULL) {
+
+		// Check if x and y are in the zone delimited by the coordinates of the objet and its size.
         Objet* objet = elt->objet;
-        // verifier si x et y se trouve dans la zone delimité par les coordonnées de l'objet et sa taille
         if ( (x >= objet->x && x < objet->x + objet->xSize) && 
              (y <= objet->y && y > objet->y - objet->ySize)) {
-            listeAjouterObjet(liste, objet);
+            listeAjouterObjet(&liste, objet);
         }
         elt = elt->suivant;
     }
 
+	// Return the list of objet found.
     return liste;
 }
 
+/**
+ * @brief Update the matriceSprite of the level.
+*/
 void levelUpdateMatriceSprite(Level* level) {
-    // clear the matrice
-    short y, x;
-    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
-        for (x = 0; x < MATRICE_LEVEL_X; x++) {
-            SpriteData* sprite = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
-            if (sprite != NULL) {
-                free(sprite);
-            }
-            level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
-        }
-    }
 
-    // parcourir les objets du level
-    EltListe_o *elt = level->listeObjet->tete;
+    // Free all the SpriteData
+    int i;
+	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
+		if (level->matriceSprite[i] != NULL) {
+			free(level->matriceSprite[i]);
+			level->matriceSprite[i] = NULL;
+		}
+	}
+
+    // Parcourir les objets du level
+    EltListe_o *elt = level->listeObjet.tete;
     while (elt != NULL) {
         char sprite;
         Objet* objet = elt->objet;
         int color, colorB;
         short x, y;
+
+		// Switch sur le type de l'objet
         switch (objet->type) {
             case BLOCK_ID :
                 sprite = ' ';
@@ -286,13 +340,11 @@ void levelUpdateMatriceSprite(Level* level) {
         elt = elt->suivant;
     }
 
-    // add the empty sprite
-    for (y = 0; y < MATRICE_LEVEL_Y; y++) {
-        for (x = 0; x < MATRICE_LEVEL_X; x++) {
-            if (level->matriceSprite[y+x*MATRICE_LEVEL_Y] == NULL) {
-                level->matriceSprite[y+x*MATRICE_LEVEL_Y] = emptySprite();
-            }
-        }
-    }
+	// Add empty sprites
+	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
+		if (level->matriceSprite[i] == NULL) {
+			level->matriceSprite[i] = emptySprite();
+		}
+	}
 }
 

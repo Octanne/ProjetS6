@@ -70,7 +70,7 @@ void set_text_info(const char *text, int line, int color) {
 /**
  * @brief Refresh the level window from scratch.
  */
-void refresh_level(Level *level) {
+void refresh_level(Level level) {
 	// Clear window
     wclear(gameInterface->gui->winLEVEL);
 
@@ -79,7 +79,7 @@ void refresh_level(Level *level) {
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {
 			// Get sprite data
-            SpriteData* spriteD = level->matriceSprite[y+x*MATRICE_LEVEL_Y];
+            SpriteData* spriteD = level.matriceSprite[y + x * MATRICE_LEVEL_Y];
 
 			// Move cursor to sprite position
             wmove(gameInterface->gui->winLEVEL, y, x);

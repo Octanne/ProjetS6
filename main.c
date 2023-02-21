@@ -11,7 +11,7 @@
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-Level* level = NULL;
+Level level;
 
 /**
  * @brief Function to clear the level and generate a new one
@@ -19,12 +19,12 @@ Level* level = NULL;
 void clear_level() {
 
 	// Free level and generate a new one
-    level_free(level);
+    level_free(&level);
     level = levelCreer();
 
 	// Logs and refresh level
     logs(L_INFO, "Main | Level cleared");
-    logs(L_INFO, "Main | Level value : %X", *level);
+    logs(L_INFO, "Main | Level value : %X", level);
     refresh_level(level);
 }
 
@@ -55,7 +55,7 @@ void load_level(int newLevel, int oldLevel) {
 
 	// Logs and refresh level
     logs(L_INFO, "Main | New level load : %d, Old level save : %d", newLevel, oldLevel);
-    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level->listeObjet->taille);
+    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level.listeObjet.taille);
     set_text_info("Level loaded", 1, GREEN_COLOR);
     refresh_level(level);
 }
@@ -80,7 +80,7 @@ void load_level_file() {
 	// Else, load the first level
 	else {
         logs(L_INFO, "Main | First level found and loaded.");
-        logs(L_INFO, "Main | First level : %d items loaded", level->listeObjet->taille);
+        logs(L_INFO, "Main | First level : %d items loaded", level.listeObjet.taille);
         refresh_level(level);
     }
 
@@ -111,7 +111,7 @@ void stop_game() {
     logs(L_INFO, "\n===================== Affichage Tables =====================\n\n%s===================== Affichage Tables =====================", show_table(file));
 
 	// Free the level
-    level_free(level);
+    level_free(&level);
 
 	// Close logs
     closeLogs();
@@ -181,55 +181,55 @@ void mouse_levelWindow(short posX, short posY) {
         switch (gameInterface->toolsMenu->toolsSelected) {
             case 0:
                 // Delete
-                success = supprimerObjet(level, posX, posY);
+                success = supprimerObjet(&level, posX, posY);
                 break;
             case 1:
                 // Block
-                success = poserBlock(level, posX, posY);
+                success = poserBlock(&level, posX, posY);
                 break;
             case 2:
                 // Ladder
-                success = poserLadder(level, posX, posY);
+                success = poserLadder(&level, posX, posY);
                 break;
             case 3:
                 // Trap
-                success = poserTrap(level, posX, posY);
+                success = poserTrap(&level, posX, posY);
                 break;
             case 4:
                 // Gate
-                success = poserGate(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
+                success = poserGate(&level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
                 break;
             case 5:
                 // Key
-                success = poserKey(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
+                success = poserKey(&level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
                 break;
             case 6:
                 // Door
-                success = poserDoor(level, posX, posY, gameInterface->toolsMenu->doorNumberSelected);
+                success = poserDoor(&level, posX, posY, gameInterface->toolsMenu->doorNumberSelected);
                 break;
             case 7:
                 // Exit
-                success = poserExit(level, posX, posY);
+                success = poserExit(&level, posX, posY);
                 break;
             case 8:
                 // Start
-                success = poserStart(level, posX, posY);
+                success = poserStart(&level, posX, posY);
                 break;
             case 9:
                 // Robot
-                success = poserRobot(level, posX, posY);
+                success = poserRobot(&level, posX, posY);
                 break;
             case 10:
                 // Probe
-                success = poserProbe(level, posX, posY);
+                success = poserProbe(&level, posX, posY);
                 break;
             case 11:
                 // Life
-                success = poserVie(level, posX, posY);
+                success = poserVie(&level, posX, posY);
                 break;
             case 12:
                 // Bomb
-                success = poserBomb(level, posX, posY);
+                success = poserBomb(&level, posX, posY);
                 break;
         }
 

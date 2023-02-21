@@ -8,17 +8,12 @@
 /**
  * @brief Create a new list of objects.
  * 
- * @return ListeObjet* : The list of objects.
+ * @return ListeObjet : The list of objects.
  */
-ListeObjet* creerListeObjet() {
-	ListeObjet* listeObjet = malloc(sizeof(ListeObjet));
-	if (listeObjet == NULL) {
-		logs(L_DEBUG, "creerListeObjet | ERROR malloc listeObjet");
-		perror("Error while allocating memory in creerListeObjet\n");
-		exit(EXIT_FAILURE);
-	}
-	listeObjet->tete = NULL;
-	listeObjet->taille = 0;
+ListeObjet creerListeObjet() {
+	ListeObjet listeObjet;
+	listeObjet.tete = NULL;
+	listeObjet.taille = 0;
 	return listeObjet;
 }
 
@@ -87,6 +82,7 @@ void listeSupprimerObjet(ListeObjet* listeObjet, Objet* objet, int freeObjet) {
 void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
 	EltListe_o* eltListe = listeObjet->tete;
 
+	// Free the objects and the elements. If freeObjet is false, only the elements are freed.
 	if (freeObjet) {
 		while (eltListe != NULL) {
 			objet_free(eltListe->objet);
@@ -108,17 +104,12 @@ void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
 /**
  * @brief Create a new list of integers.
  * 
- * @return ListeEntier* : The list of integers.
+ * @return ListeEntier : The list of integers.
  */
-ListeEntier* creerListeEntier() {
-	ListeEntier* listeEntier = malloc(sizeof(ListeEntier));
-	if (listeEntier == NULL) {
-		logs(L_DEBUG, "creerListeEntier | ERROR malloc listeEntier");
-		perror("Error while allocating memory in creerListeEntier\n");
-		exit(EXIT_FAILURE);
-	}
-	listeEntier->tete = NULL;
-	listeEntier->taille = 0;
+ListeEntier creerListeEntier() {
+	ListeEntier listeEntier;
+	listeEntier.tete = NULL;
+	listeEntier.taille = 0;
 	return listeEntier;
 }
 
