@@ -98,7 +98,6 @@ void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
 			free(tmp);
 		}
 	}
-	free(listeObjet);
 }
 
 /**
@@ -177,6 +176,5 @@ void listeEntier_free(ListeEntier* listeEntier) {
 		eltListe = eltListe->suivant;
 		free(tmp);
 	}
-	free(listeEntier);
 }
 

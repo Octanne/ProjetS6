@@ -84,6 +84,9 @@ int supprimerObjet(Level* level, short x, short y) {
  * @return 1 if a block was created, 0 otherwise.
  */
 int poserBlock(Level* level, short x, short y) {
+
+	// Logs & get objects at the position
+	logs(L_DEBUG, "poserBlock(%d, %d)", x, y);
 	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet

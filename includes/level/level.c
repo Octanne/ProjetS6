@@ -118,9 +118,6 @@ void level_free(Level* level) {
 			level->matriceSprite[i] = NULL;
 		}
 	}
-
-	// Free the level
-    free(level);
 }
 
 /**

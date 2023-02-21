@@ -950,7 +950,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
     logs(L_DEBUG, "transform_to_empty | Update the data_info");
 
     // Generate a buffer with a copy of datainfo and '0' size times
-	char buffer = malloc(dataInfo.size + SIZE_DATA_INFO);
+	char* buffer = malloc(dataInfo.size + SIZE_DATA_INFO);
 	if (buffer == NULL) {
 		logs(L_DEBUG, "transform_to_empty | ERROR malloc buffer");
 		perror("Error while allocating memory in transform_to_empty\n");
@@ -1311,8 +1311,8 @@ int save_level(file_t file, int numLevel, Level level) {
 
         // Remove old level data
         if (remove_level(file, numLevel) == -1) {
-            free(bytes);
             logs(L_DEBUG, "Save_level | Error while remove level %d", numLevel);
+            free(bytes);
             close(fd);
             return -1;
         }

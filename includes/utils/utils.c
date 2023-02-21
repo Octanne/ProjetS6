@@ -123,22 +123,6 @@ void initLogs() {
 	}
 }
 
-void get_log_tag(int log_level, char ** log_tag) {
-	switch (log_level) {
-		case 2: 
-			*log_tag = "DEBUG";
-		break;
-
-		case 1:
-			*log_tag = "INFO";
-		break;
-
-		default:
-			*log_tag = "UNKNOWN";
-		break;
-	}
-}
-
 /**
  * @brief Write a log in the logs file
  * 
@@ -149,10 +133,6 @@ void get_log_tag(int log_level, char ** log_tag) {
 void logs(int log_level, char *text_to_log, ...) {
 	// Check log level
 	if (log_level > LOGS_ACTIVE) return;
-
-	// Get the log tag
-	char lvl_log[10];
-	get_log_tag(log_level, &lvl_log);
 
 	// Initialize the logs file if it's not already done
 	if (file_logs_desc == -1)
@@ -175,7 +155,7 @@ void logs(int log_level, char *text_to_log, ...) {
 
 	// Format the final text
 	char final_text[LOGS_MAX_LENGTH + 26];
-	sprintf(final_text, "[%s][%s] %s\n", time_string, lvl_log, text_form);
+	sprintf(final_text, "[%s][%s] %s\n", time_string, lvl_log(log_level), text_form);
 
 	// Open the file in append mode check the success
 	if (write(file_logs_desc, final_text, strlen(final_text)) == -1)
@@ -204,11 +184,11 @@ void closeLogs() {
 	}
 
 	// Move the file to the logs folder
-	// Format time in char * with the format: HH-MM-SS_DD-MM-YYYY
+	// Format time in char * with the format: [YYYY-MM-DD_HH-MM-SS]
 	time_t now = time(NULL);
 	struct tm *t = localtime(&now);
 	char time_string[30];
-	strftime(time_string, sizeof(time_string), "%d-%m-%Y_%H-%M-%S", t);
+	strftime(time_string, sizeof(time_string), "%Y-%m-%d_%H-%M-%S", t);
 
 	// Format the file name
 	char file_name[30] = LOGS_FOLDER_ARCHIVES;
