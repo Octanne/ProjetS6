@@ -18,6 +18,11 @@ void init_gui() {
 
     logs(L_INFO, "Main | Ncurses windows init success!");
     gameInterface = malloc(sizeof(GameInterface));
+	if (gameInterface == NULL) {
+		logs(L_DEBUG, "init_gui | ERROR malloc gameInterface");
+		perror("Error while allocating memory in init_gui\n");
+		exit(EXIT_FAILURE);
+	}
     
     gen_game_editor_window();
     logs(L_INFO, "Main | Game Window created!");
@@ -177,6 +182,11 @@ void gen_game_editor_window() {
 
 	// Malloc the game interface
     gameInterface->gui = malloc(sizeof(GUI));
+	if (gameInterface->gui == NULL) {
+		logs(L_DEBUG, "gen_game_editor_window | ERROR malloc gameInterface->gui");
+		perror("Error while allocating memory in gen_game_editor_window\n");
+		exit(EXIT_FAILURE);
+	}
 
     // Level window
     gameInterface->gui->cwinLEVEL = newwin(22, 62, 0, 0);
@@ -220,6 +230,11 @@ void gen_game_editor_window() {
  */
 void gen_tools_menu() {
     gameInterface->toolsMenu = malloc(sizeof(ToolsMenu));
+	if (gameInterface->toolsMenu == NULL) {
+		logs(L_DEBUG, "gen_tools_menu | ERROR malloc gameInterface->toolsMenu");
+		perror("Error while allocating memory in gen_tools_menu\n");
+		exit(EXIT_FAILURE);
+	}
     gameInterface->toolsMenu->toolsSelected = 0;
     gameInterface->toolsMenu->gateColorSelected = 0;
     gameInterface->toolsMenu->doorNumberSelected = 1;

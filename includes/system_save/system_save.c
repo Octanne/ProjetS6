@@ -128,7 +128,8 @@ int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
     char *dataS = malloc(dataInfo->size);
 	if (dataS == NULL) {
 		logs(L_DEBUG, "Get_data | ERROR malloc data");
-		return -1;
+		perror("Error while allocating memory in get_data\n");
+		exit(EXIT_FAILURE);
 	}
 
     // Read data
@@ -318,7 +319,7 @@ file_t create_file(char* filename) {
     int fd = open(filename, O_CREAT | O_EXCL | O_RDWR, S_IRUSR | S_IWUSR);
     if (fd == -1) {
 		logs(L_DEBUG, "create_file | Error while opening file: %s", strerror(errno));
-		perror("Error while creating file");
+		perror("Error while creating file\n");
 		exit(EXIT_FAILURE);
     }
 
@@ -335,7 +336,7 @@ file_t create_file(char* filename) {
     if (write(fd, TAG_FILE, SIZE_TAG) == -1) {
         close(fd);
 		logs(L_DEBUG, "create_file | Error while writing tag in file: %s", strerror(errno));
-		perror("Error while writing tag in file");
+		perror("Error while writing tag in file\n");
 		exit(EXIT_FAILURE);
     }
 
@@ -351,7 +352,7 @@ file_t create_file(char* filename) {
     if (write(fd, table, dataInfo.size) == -1) {
         close(fd);
 		logs(L_DEBUG, "create_file | Error while writing table in file: %s", strerror(errno));
-		perror("Error while writing table in file");
+		perror("Error while writing table in file\n");
 		exit(EXIT_FAILURE);
     }
 
@@ -359,7 +360,7 @@ file_t create_file(char* filename) {
     if (write(fd, &dataInfo, SIZE_DATA_INFO) == -1) {
         close(fd);
 		logs(L_DEBUG, "create_file | Error while writing data info in file: %s", strerror(errno));
-		perror("Error while writing data info in file");
+		perror("Error while writing data info in file\n");
 		exit(EXIT_FAILURE);
     }
 
@@ -370,14 +371,14 @@ file_t create_file(char* filename) {
     if (write(fd, table, dataInfo.size) == -1) {
         close(fd);
 		logs(L_DEBUG, "create_file | Error while writing table of empty in file: %s", strerror(errno));
-		perror("Error while writing table of empty in file");
+		perror("Error while writing table of empty in file\n");
 		exit(EXIT_FAILURE);
     }
 
     // Close file
 	if (close(fd) == -1) {
 		logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
-		perror("Error while closing file");
+		perror("Error while closing file\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -407,7 +408,7 @@ file_t load_file(char* filename) {
 		// Other errors
 		else {
             logs(L_DEBUG, "load_file: error opening file %s, %s", filename, strerror(errno));
-			perror("Error while opening file");
+			perror("Error while opening file\n");
 			exit(EXIT_FAILURE);
         }
     }
@@ -422,7 +423,7 @@ file_t load_file(char* filename) {
     if (read(fd, tag, SIZE_TAG) == -1 || strcmp(tag, TAG_FILE) != 0) {
         close(fd);
 		logs(L_DEBUG, "Tag unreconized! Tag: %s", tag);
-		perror("Error while reading tag");
+		perror("Error while reading tag\n");
 		exit(EXIT_FAILURE);
     }
 
@@ -430,7 +431,7 @@ file_t load_file(char* filename) {
     logs(L_DEBUG, "File loaded: %s, %d", filename, fd);
 	if (close(fd) == -1) {
 		logs(L_DEBUG, "load_file | Error while closing file: %s", strerror(errno));
-		perror("Error while closing file");
+		perror("Error while closing file\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -457,6 +458,7 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     char* buffer = malloc(*size);
 	if (buffer == NULL) {
 		logs(L_DEBUG, "Level Converter | Convert level to bytes: Error while allocating memory.");
+		perror("Error while allocating memory in convert_level_to_bytes\n");
 		exit(EXIT_FAILURE);
 	}
     
@@ -496,6 +498,11 @@ Level convert_bytes_to_level(char* bytes, size_t size) {
 
 		// Copy bytes to object
         Objet* obj = malloc(sizeof(Objet));
+		if (obj == NULL) {
+			logs(L_DEBUG, "Level Converter | ERROR malloc obj");
+			perror("Error while allocating memory in convert_bytes_to_level\n");
+			exit(EXIT_FAILURE);
+		}
         memcpy(obj, bytes + (i * sizeof(Objet)), sizeof(Objet));
 
 		// Add object to the level
@@ -944,6 +951,11 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 
     // Generate a buffer with a copy of datainfo and '0' size times
 	char buffer = malloc(dataInfo.size + SIZE_DATA_INFO);
+	if (buffer == NULL) {
+		logs(L_DEBUG, "transform_to_empty | ERROR malloc buffer");
+		perror("Error while allocating memory in transform_to_empty\n");
+		exit(EXIT_FAILURE);
+	}
     memset(buffer, 0, dataInfo.size + SIZE_DATA_INFO);
     memcpy(buffer, &dataInfo, SIZE_DATA_INFO);
 
@@ -1334,7 +1346,7 @@ int save_level(file_t file, int numLevel, Level* level) {
  * 
  * @return the table as a string
  */
-char* show_table(file_t file){
+char* show_table(file_t file) {
 
 	// Logs
     logs(L_DEBUG, "Show_table | reading file : %s", file.filename);
@@ -1348,15 +1360,24 @@ char* show_table(file_t file){
 
 	// Copy the table in a string
     char * result = malloc(8192);
+	if (result == NULL) {
+		logs(L_DEBUG, "Show_table | ERROR malloc result");
+		perror("Error while allocating memory in show_table\n");
+		exit(EXIT_FAILURE);
+	}
+
+	// Concatenate the table
     strcat(result, "Tables :\n");
     if (show_table_c(fd, ADDR_FIRST_TABLE, 0, result) == -1)
-		strcat(result,"ERROR\n");
+		strcat(result, "ERROR\n");
 
+	// Logs
     logs(L_DEBUG, "Show_table | Table vides");
-    strcat(result, "Table de vides :\n");
 
+	// Concatenate the empty table
+    strcat(result, "Table de vides :\n");
     if (show_table_c(fd, ADDR_EMPTY_TABLE, 0, result) == -1)
-		strcat(result,"ERROR\n");
+		strcat(result, "ERROR\n");
 
 	// Logs, close, return
     logs(L_DEBUG, "Show_table | Success");

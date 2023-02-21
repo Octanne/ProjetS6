@@ -24,6 +24,12 @@ Level levelEmpty() {
 
 SpriteData* creerSpriteData(char sprite, int color) {
     SpriteData* spriteD = malloc(sizeof(SpriteData));
+	if (spriteD == NULL) {
+		logs(L_DEBUG, "creerSpriteData | ERROR malloc spriteD");
+		perror("Error while allocating memory in creerSpriteData\n");
+		exit(EXIT_FAILURE);
+	}
+
     spriteD->color = color;
     spriteD->specialChar = 0;
     spriteD->sprite = sprite;
@@ -33,6 +39,11 @@ SpriteData* creerSpriteData(char sprite, int color) {
 
 SpriteData* creerSpriteDataS(chtype sprite, int color) {
     SpriteData* spriteD = malloc(sizeof(SpriteData));
+	if (spriteD == NULL) {
+		logs(L_DEBUG, "creerSpriteDataS | ERROR malloc spriteD");
+		perror("Error while allocating memory in creerSpriteDataS\n");
+		exit(EXIT_FAILURE);
+	}
     spriteD->color = color;
     spriteD->specialChar = 1;
     spriteD->spSprite = sprite;
@@ -42,6 +53,11 @@ SpriteData* creerSpriteDataS(chtype sprite, int color) {
 
 Level* levelCreer() {
     Level* level = malloc(sizeof(Level));
+	if (level == NULL) {
+		logs(L_DEBUG, "levelCreer | ERROR malloc level");
+		perror("Error while allocating memory in levelCreer\n");
+		exit(EXIT_FAILURE);
+	}
     level->listeObjet = creerListeObjet();
 
     // Ajouter les murs de la map
@@ -52,7 +68,7 @@ Level* levelCreer() {
                 Objet* bloc = creerBlock(x,y);
                 listeAjouterObjet(level->listeObjet, bloc);
             }
-            level->matriceSprite[y+x*MATRICE_LEVEL_Y] = NULL;
+            level->matriceSprite[y + x * MATRICE_LEVEL_Y] = NULL;
         }
     }
 

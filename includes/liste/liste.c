@@ -12,6 +12,11 @@
  */
 ListeObjet* creerListeObjet() {
 	ListeObjet* listeObjet = malloc(sizeof(ListeObjet));
+	if (listeObjet == NULL) {
+		logs(L_DEBUG, "creerListeObjet | ERROR malloc listeObjet");
+		perror("Error while allocating memory in creerListeObjet\n");
+		exit(EXIT_FAILURE);
+	}
 	listeObjet->tete = NULL;
 	listeObjet->taille = 0;
 	return listeObjet;
@@ -25,6 +30,11 @@ ListeObjet* creerListeObjet() {
  */
 void listeAjouterObjet(ListeObjet* listeObjet, Objet* objet) {
 	EltListe_o* eltListe = malloc(sizeof(EltListe_o));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "listeAjouterObjet | ERROR malloc eltListe");
+		perror("Error while allocating memory in listeAjouterObjet\n");
+		exit(EXIT_FAILURE);
+	}
 	eltListe->objet = objet;
 	eltListe->suivant = listeObjet->tete;
 
@@ -102,6 +112,11 @@ void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
  */
 ListeEntier* creerListeEntier() {
 	ListeEntier* listeEntier = malloc(sizeof(ListeEntier));
+	if (listeEntier == NULL) {
+		logs(L_DEBUG, "creerListeEntier | ERROR malloc listeEntier");
+		perror("Error while allocating memory in creerListeEntier\n");
+		exit(EXIT_FAILURE);
+	}
 	listeEntier->tete = NULL;
 	listeEntier->taille = 0;
 	return listeEntier;
@@ -115,6 +130,11 @@ ListeEntier* creerListeEntier() {
  */
 void listeAjouterEntier(ListeEntier* listeEntier, int entier) {
 	EltListe_i* eltListe = malloc(sizeof(EltListe_i));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "listeAjouterEntier | ERROR malloc eltListe");
+		perror("Error while allocating memory in listeAjouterEntier\n");
+		exit(EXIT_FAILURE);
+	}
 	eltListe->entier = entier;
 	eltListe->suivant = listeEntier->tete;
 
