@@ -13,12 +13,7 @@
 Level levelEmpty() {
     Level level;
     level.listeObjet = creerListeObjet();
-
-	int i;
-	for (i = 0; i < MATRICE_LEVEL_SIZE; i++)
-		level.matriceSprite[i] = NULL;
     levelUpdateMatriceSprite(&level);
-
     return level;
 }
 
@@ -28,22 +23,13 @@ Level levelEmpty() {
  * @param sprite : The character of the sprite
  * @param color : The color of the sprite
  * 
- * @return SpriteData* : The sprite data
+ * @return SpriteData : The sprite data
 */
-SpriteData* creerSpriteData(char sprite, int color) {
-
-	// Allocate memory for the sprite data.
-    SpriteData* spriteD = malloc(sizeof(SpriteData));
-	if (spriteD == NULL) {
-		logs(L_DEBUG, "creerSpriteData | ERROR malloc spriteD");
-		perror("Error while allocating memory in creerSpriteData\n");
-		exit(EXIT_FAILURE);
-	}
-
-	// Set the sprite data and return it.
-    spriteD->color = color;
-    spriteD->specialChar = 0;
-    spriteD->sprite = sprite;
+SpriteData creerSpriteData(char sprite, int color) {
+    SpriteData spriteD;
+    spriteD.color = color;
+    spriteD.specialChar = 0;
+    spriteD.sprite = sprite;
     return spriteD;
 }
 
@@ -53,22 +39,13 @@ SpriteData* creerSpriteData(char sprite, int color) {
  * @param sprite : The character of the sprite
  * @param color : The color of the sprite
  * 
- * @return SpriteData* : The sprite data
+ * @return SpriteData : The sprite data
 */
-SpriteData* creerSpriteDataS(chtype sprite, int color) {
-
-	// Allocate memory for the sprite data.
-    SpriteData* spriteD = malloc(sizeof(SpriteData));
-	if (spriteD == NULL) {
-		logs(L_DEBUG, "creerSpriteDataS | ERROR malloc spriteD");
-		perror("Error while allocating memory in creerSpriteDataS\n");
-		exit(EXIT_FAILURE);
-	}
-
-	// Set the sprite data and return it.
-    spriteD->color = color;
-    spriteD->specialChar = 1;
-    spriteD->spSprite = sprite;
+SpriteData creerSpriteDataS(chtype sprite, int color) {
+    SpriteData spriteD;
+    spriteD.color = color;
+    spriteD.specialChar = 1;
+    spriteD.spSprite = sprite;
     return spriteD;
 }
 
@@ -80,9 +57,6 @@ SpriteData* creerSpriteDataS(chtype sprite, int color) {
 Level levelCreer() {
     Level level;
     level.listeObjet = creerListeObjet();
-
-	// Memset the matriceSprite to NULL.
-	memset(level.matriceSprite, 0, MATRICE_LEVEL_SIZE * sizeof(SpriteData*));
 
     // Ajouter les murs de la map
     short y, x;
@@ -109,23 +83,14 @@ void level_free(Level* level) {
 
 	// Free the listeObjet
     listeObjet_free(&level->listeObjet, true);
-
-    // Free all the SpriteData
-	int i;
-	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
-		if (level->matriceSprite[i] != NULL) {
-			free(level->matriceSprite[i]);
-			level->matriceSprite[i] = NULL;
-		}
-	}
 }
 
 /**
  * @brief Create an empty sprite data.
  * 
- * @return SpriteData* : The empty sprite data.
+ * @return SpriteData : The empty sprite data.
 */
-SpriteData* emptySprite() {
+SpriteData emptySprite() {
     return creerSpriteData(' ', WHITE_COLOR);
 }
 
@@ -187,13 +152,11 @@ ListeObjet rechercherObjet(Level* level, short x, short y) {
 */
 void levelUpdateMatriceSprite(Level* level) {
 
-    // Free all the SpriteData
-    int i;
+    // Empty all the matriceSprite
+	SpriteData empty = emptySprite();
+	int i;
 	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
-		if (level->matriceSprite[i] != NULL) {
-			free(level->matriceSprite[i]);
-			level->matriceSprite[i] = NULL;
-		}
+		level->matriceSprite[i] = empty;
 	}
 
     // Parcourir les objets du level
@@ -336,12 +299,5 @@ void levelUpdateMatriceSprite(Level* level) {
         }
         elt = elt->suivant;
     }
-
-	// Add empty sprites
-	for (i = 0; i < MATRICE_LEVEL_SIZE; i++) {
-		if (level->matriceSprite[i] == NULL) {
-			level->matriceSprite[i] = emptySprite();
-		}
-	}
 }
 

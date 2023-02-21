@@ -70,18 +70,18 @@ void refresh_level(Level level) {
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {
 			// Get sprite data
-            SpriteData* spriteD = level.matriceSprite[y + x * MATRICE_LEVEL_Y];
+            SpriteData spriteD = level.matriceSprite[y + x * MATRICE_LEVEL_Y];
 
 			// Move cursor to sprite position
             wmove(gameInterface.gui.winLEVEL, y, x);
 
 			// Set color and draw sprite
-            wattron(gameInterface.gui.winLEVEL, COLOR_PAIR(spriteD->color));
-            if (spriteD->specialChar)
-				waddch(gameInterface.gui.winLEVEL, spriteD->spSprite);
+            wattron(gameInterface.gui.winLEVEL, COLOR_PAIR(spriteD.color));
+            if (spriteD.specialChar)
+				waddch(gameInterface.gui.winLEVEL, spriteD.spSprite);
             else
-				waddch(gameInterface.gui.winLEVEL, spriteD->sprite);
-            wattroff(gameInterface.gui.winLEVEL, COLOR_PAIR(spriteD->color));
+				waddch(gameInterface.gui.winLEVEL, spriteD.sprite);
+            wattroff(gameInterface.gui.winLEVEL, COLOR_PAIR(spriteD.color));
         }
     }
 

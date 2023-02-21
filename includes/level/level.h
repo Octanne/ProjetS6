@@ -19,12 +19,12 @@ typedef struct {
 
 typedef struct {
     ListeObjet listeObjet;
-    SpriteData* matriceSprite[MATRICE_LEVEL_SIZE];
+    SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
     Objet* matriceCollide[MATRICE_LEVEL_SIZE];
 } Level;
 
-SpriteData* creerSpriteData(char sprite, int color);
-SpriteData* emptySprite();
+SpriteData creerSpriteData(char sprite, int color);
+SpriteData emptySprite();
 
 Level levelEmpty();
 
