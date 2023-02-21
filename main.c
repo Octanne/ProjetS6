@@ -284,9 +284,8 @@ void control_handler() {
 
 				// Move the cursor up in the tools menu if we are in edit mode
                 if (gameInterface.toolsMenu.inEdit) {
-					gameInterface.toolsMenu.toolsSelected--;
-                    if (gameInterface.toolsMenu.toolsSelected == 0)
-                        gameInterface.toolsMenu.toolsSelected = TOTAL_TOOLS - 1;
+                    if (gameInterface.toolsMenu.toolsSelected-- == 0)
+                        gameInterface.toolsMenu.toolsSelected = TOTAL_TOOLS;
                     refresh_tools_menu();
                 }
             break;
@@ -297,9 +296,8 @@ void control_handler() {
 
 				// Move the cursor down in the tools menu if we are in edit mode
                 if (gameInterface.toolsMenu.inEdit) {
-					gameInterface.toolsMenu.toolsSelected++;
-                    if (gameInterface.toolsMenu.toolsSelected == TOTAL_TOOLS)
-						gameInterface.toolsMenu.toolsSelected = 1;
+                    if (gameInterface.toolsMenu.toolsSelected++ == TOTAL_TOOLS)
+						gameInterface.toolsMenu.toolsSelected = 0;
                     refresh_tools_menu();
                 }
             break;
