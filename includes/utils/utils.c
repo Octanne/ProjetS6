@@ -124,7 +124,10 @@ void initLogs() {
 	}
 
 	// Write the logs file header
-	write(file_logs_desc, "\n", 1);
+	if (write(file_logs_desc, "\n", 1) == -1) {
+		perror("Error while writing file header in the logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
@@ -203,6 +206,10 @@ void closeLogs() {
 
 	// Open the destination file for writing
 	int dest_fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	if (dest_fd == -1) {
+		perror("Error while opening the archived logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// Allocate a buffer for reading the file
 	char buffer[4096];

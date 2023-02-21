@@ -103,6 +103,8 @@ int get_table(int fd, off_t addrTable, off_t* tableToFill) {
  * @param addrFromTable Address of the table entry
  * @param dataInfo Pointer to a data_info_t to fill it
  * @param data Pointer to a char* to fill the data in it
+ * 
+ * @return -1 if error, 1 if success
  */
 int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
 
@@ -129,7 +131,7 @@ int get_data(int fd, off_t addrFromTable, data_info_t* dataInfo, char** data) {
 	if (dataS == NULL) {
 		logs(L_DEBUG, "Get_data | ERROR malloc data");
 		perror("Error while allocating memory in get_data\n");
-		exit(EXIT_FAILURE);
+		return -1;
 	}
 
     // Read data
@@ -334,9 +336,12 @@ file_t create_file(char* filename) {
 
     // Write tag
     if (write(fd, TAG_FILE, SIZE_TAG) == -1) {
-        close(fd);
 		logs(L_DEBUG, "create_file | Error while writing tag in file: %s", strerror(errno));
 		perror("Error while writing tag in file\n");
+		if (close(fd) == -1) {
+			logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
+			perror("Error while closing file\n");
+		}
 		exit(EXIT_FAILURE);
     }
 
@@ -350,17 +355,23 @@ file_t create_file(char* filename) {
 
     // Write table
     if (write(fd, table, dataInfo.size) == -1) {
-        close(fd);
 		logs(L_DEBUG, "create_file | Error while writing table in file: %s", strerror(errno));
 		perror("Error while writing table in file\n");
+		if (close(fd) == -1) {
+			logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
+			perror("Error while closing file\n");
+		}
 		exit(EXIT_FAILURE);
     }
 
 	// Write data info
     if (write(fd, &dataInfo, SIZE_DATA_INFO) == -1) {
-        close(fd);
 		logs(L_DEBUG, "create_file | Error while writing data info in file: %s", strerror(errno));
 		perror("Error while writing data info in file\n");
+		if (close(fd) == -1) {
+			logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
+			perror("Error while closing file\n");
+		}
 		exit(EXIT_FAILURE);
     }
 
@@ -369,9 +380,12 @@ file_t create_file(char* filename) {
 
     // Write tableOfEmpty
     if (write(fd, table, dataInfo.size) == -1) {
-        close(fd);
 		logs(L_DEBUG, "create_file | Error while writing table of empty in file: %s", strerror(errno));
 		perror("Error while writing table of empty in file\n");
+		if (close(fd) == -1) {
+			logs(L_DEBUG, "create_file | Error while closing file: %s", strerror(errno));
+			perror("Error while closing file\n");
+		}
 		exit(EXIT_FAILURE);
     }
 
@@ -421,9 +435,12 @@ file_t load_file(char* filename) {
     // Check if it's a supported file
     char tag[SIZE_TAG];
     if (read(fd, tag, SIZE_TAG) == -1 || strcmp(tag, TAG_FILE) != 0) {
-        close(fd);
 		logs(L_DEBUG, "Tag unreconized! Tag: %s", tag);
 		perror("Error while reading tag\n");
+		if (close(fd) == -1) {
+			logs(L_DEBUG, "load_file | Error while closing file: %s", strerror(errno));
+			perror("Error while closing file\n");
+		}
 		exit(EXIT_FAILURE);
     }
 
@@ -954,7 +971,7 @@ int transform_to_empty(int fd, int globalIndexEntry, off_t addrTable, int numTab
 	if (buffer == NULL) {
 		logs(L_DEBUG, "transform_to_empty | ERROR malloc buffer");
 		perror("Error while allocating memory in transform_to_empty\n");
-		exit(EXIT_FAILURE);
+		return -1;
 	}
     memset(buffer, '\0', dataInfo.size + SIZE_DATA_INFO);
     memcpy(buffer, &dataInfo, SIZE_DATA_INFO);
@@ -1141,7 +1158,8 @@ int remove_level(file_t file, int numLevel) {
     int fd;
     if ((fd = open(file.filename, O_RDWR)) == -1) {
         logs(L_DEBUG, "Remove_level | ERROR open file, %s", file.filename);
-        return -1;
+		perror("Error while opening file in remove_level\n");
+		return -1;
     }
 
 	// Remove the level
@@ -1152,7 +1170,11 @@ int remove_level(file_t file, int numLevel) {
 		logs(L_DEBUG, "ERROR The remove of level %d has gone wrong!", numLevel);
 
     // Close file
-    close(fd);
+    if (close(fd) == -1) {
+		logs(L_DEBUG, "Remove_level | ERROR while closing file, %s", file.filename);
+		perror("Error while closing file in remove_level\n");
+		return -1;
+	}
 
 	// Logs
     logs(L_DEBUG, "Remove_level | level : %d, success : %d", numLevel, res);
@@ -1178,7 +1200,8 @@ int get_level(file_t file, int numLevel, Level* level) {
     int fd;
     if ((fd = open(file.filename, O_RDONLY)) == -1) {
         logs(L_DEBUG, "Get_level | Error open file: %s", file.filename);
-        return -1;
+		perror("Error while opening file in get_level\n");
+		return -1;
     }
 
 	// Logs
@@ -1198,7 +1221,11 @@ int get_level(file_t file, int numLevel, Level* level) {
 	// Check if the level exists
     if (entry.type_data == TABLE_TYPE_NONE && entry.idx_table == -1) {
         logs(L_DEBUG, "Get_level | Level not found");
-        close(fd);
+        if (close(fd) == -1) {
+			logs(L_DEBUG, "Get_level | ERROR while closing file, %s", file.filename);
+			perror("Error while closing file in get_level\n");
+			return -1;
+		}
         return -1;
     }
 
@@ -1209,7 +1236,11 @@ int get_level(file_t file, int numLevel, Level* level) {
         data_info_t dataInfo;
         char* data;
         if (get_data(fd, entry.addr_cell, &dataInfo, &data) == -1) {
-            close(fd);
+			if (close(fd) == -1) {
+				logs(L_DEBUG, "Get_level | ERROR while closing file, %s", file.filename);
+				perror("Error while closing file in get_level\n");
+				return -1;
+			}
             return -1;
         }
 
@@ -1221,22 +1252,33 @@ int get_level(file_t file, int numLevel, Level* level) {
         *level = convert_bytes_to_level(data, dataInfo.size);
         if (level == NULL) {
             logs(L_DEBUG, "Get_level | ERROR while converting bytes to level");
-            close(fd);
+            if (close(fd) == -1) {
+				logs(L_DEBUG, "Get_level | ERROR while closing file, %s", file.filename);
+				perror("Error while closing file in get_level\n");
+				return -1;
+			}
             return -1;
         }
 
 		// Free data
         free(data);
 
-        // Close file
-        close(fd);
+        // Close file and return
+        if (close(fd) == -1) {
+			logs(L_DEBUG, "Get_level | ERROR while closing file, %s", file.filename);
+			perror("Error while closing file in get_level\n");
+			return -1;
+		}
         logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, level->listeObjet.taille);
-
         return 1;
     }
 
     // Close file
-    close(fd);
+    if (close(fd) == -1) {
+		logs(L_DEBUG, "Get_level | ERROR while closing file, %s", file.filename);
+		perror("Error while closing file in get_level\n");
+		return -1;
+	}
 
 	// Logs and return
     logs(L_DEBUG, "Get_level | ERROR level : %d, not found, unexpected type : %d", numLevel, entry.type_data);
@@ -1261,7 +1303,8 @@ int save_level(file_t file, int numLevel, Level level) {
     int fd;
     if ((fd = open(file.filename, O_RDWR)) == -1) {
         logs(L_DEBUG, "Save_level | Error open file: %s", file.filename);
-        return -1;
+		perror("Error while opening file in save_level\n");
+		return -1;
     }
 
 	// Search for the table entry
@@ -1292,14 +1335,22 @@ int save_level(file_t file, int numLevel, Level level) {
         if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
             logs(L_DEBUG, "Save_level | Error write data");
             free(bytes);
-            close(fd);
+            if (close(fd) == -1) {
+				logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+				perror("Error while closing file in save_level\n");
+				return -1;
+			}
             return -1;
         }
 
 		// Logs, free, close
         logs(L_DEBUG, "Save_level | Success level %d save created", numLevel);
         free(bytes);
-        close(fd);
+        if (close(fd) == -1) {
+			logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+			perror("Error while closing file in save_level\n");
+			return -1;
+		}
         return 1;
     }
 
@@ -1313,7 +1364,11 @@ int save_level(file_t file, int numLevel, Level level) {
         if (remove_level(file, numLevel) == -1) {
             logs(L_DEBUG, "Save_level | Error while remove level %d", numLevel);
             free(bytes);
-            close(fd);
+            if (close(fd) == -1) {
+				logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+				perror("Error while closing file in save_level\n");
+				return -1;
+			}
             return -1;
         }
 
@@ -1321,21 +1376,33 @@ int save_level(file_t file, int numLevel, Level level) {
         if (write_data(fd, bytes, size, TABLE_TYPE_LEVEL) == -1) {
             logs(L_DEBUG, "Save_level | Error write data");
             free(bytes);
-            close(fd);
+            if (close(fd) == -1) {
+				logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+				perror("Error while closing file in save_level\n");
+				return -1;
+			}
             return -1;
         }
 
 		// Logs, free, close
         logs(L_DEBUG, "Save_level | Success level %d updated", numLevel);
         free(bytes);
-        close(fd);
+        if (close(fd) == -1) {
+			logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+			perror("Error while closing file in save_level\n");
+			return -1;
+		}
         return 1;
     }
 
 	// Logs, free, close
     logs(L_DEBUG, "Save_level | Error, unexpected type: %d", result.type_data);
     free(bytes);
-    close(fd);
+    if (close(fd) == -1) {
+		logs(L_DEBUG, "Save_level | ERROR while closing file, %s", file.filename);
+		perror("Error while closing file in save_level\n");
+		return -1;
+	}
     return -1;
 }
 
@@ -1381,7 +1448,11 @@ char* show_table(file_t file) {
 
 	// Logs, close, return
     logs(L_DEBUG, "Show_table | Success");
-    close(fd);
+    if (close(fd) == -1) {
+		logs(L_DEBUG, "Show_table | ERROR while closing file, %s", file.filename);
+		perror("Error while closing file in show_table\n");
+		exit(EXIT_FAILURE);
+	}
     return result;
 }
 

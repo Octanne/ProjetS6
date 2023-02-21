@@ -104,7 +104,9 @@ void stop_game() {
 	// Save level
     file_t file = load_file(FILENAME);
     logs(L_INFO, "Main | Saving level %d...", actualLevel);
-    save_level(file, actualLevel, level);
+	if (save_level(file, actualLevel, level) == -1) {
+		logs(L_INFO, "Main | Error while saving level %d", actualLevel);
+	}
     logs(L_INFO, "Main | Level %d saved", actualLevel);
 
     // Show tables
