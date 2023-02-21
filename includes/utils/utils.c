@@ -37,9 +37,9 @@ void ncurses_stop() {
 void ncurses_colors() {
 	// Check color support
 	if (has_colors() == FALSE) {
-	ncurses_stop();
-	fprintf(stderr, "The terminal doesn't support colors.\n");
-	exit(EXIT_FAILURE);
+		ncurses_stop();
+		perror("The terminal doesn't support colors.\n");
+		exit(EXIT_FAILURE);
 	}
 
 	// Activate colors
@@ -52,7 +52,7 @@ void ncurses_colors() {
 void ncurses_init_mouse() {
 	if (!mousemask(BUTTON1_PRESSED, NULL)) {
 		ncurses_stop();
-		fprintf(stderr, "Mouse isn't supported.\n");
+		perror("Mouse isn't supported.\n");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -110,7 +110,7 @@ void initLogs() {
 	if (mkdir(LOGS_FOLDER, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
 		// show erno
 		if (errno != EEXIST) {
-			fprintf(stderr, "Error: can't create the logs folder.\n");
+			perror("Error: can't create the logs folder.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -119,7 +119,7 @@ void initLogs() {
 	file_logs_desc = open(LOGS_FILE, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
 	// check if the file is open
 	if (file_logs_desc == -1) {
-		fprintf(stderr, "Error: can't open the logs file.\n");
+		perror("Error: can't open the logs file.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -162,8 +162,10 @@ void logs(int log_level, char *text_to_log, ...) {
 	sprintf(final_text, "[%s][%s] %s\n", time_string, lvl_log(log_level), text_form);
 
 	// Open the file in append mode check the success
-	if (write(file_logs_desc, final_text, strlen(final_text)) == -1)
-		fprintf(stderr, "Error while writing in the logs file.\n");
+	if (write(file_logs_desc, final_text, strlen(final_text)) == -1) {
+		perror("Error while writing in the logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
@@ -182,7 +184,7 @@ void closeLogs() {
 	if (mkdir(LOGS_FOLDER_ARCHIVES, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
 		// show erno
 		if (errno != EEXIST) {
-			fprintf(stderr, "Error: can't create the logs folder.\n");
+			perror("Error: can't create the logs folder.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
