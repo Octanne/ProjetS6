@@ -26,7 +26,7 @@ typedef struct {
 SpriteData* creerSpriteData(char sprite, int color);
 SpriteData* emptySprite();
 
-Level* levelEmpty();
+Level levelEmpty();
 
 Level* levelCreer();
 void level_free(Level* level);

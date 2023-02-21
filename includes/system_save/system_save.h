@@ -51,7 +51,7 @@ file_t load_file(char* filename);
 
 int save_level(file_t file, int numLevel, Level* level);	// Retourne -1 cas d'erreur. 0 sinon.
 int remove_level(file_t file, int numLevel);				// Retourne -1 si level n'est pas dans les tables. 0 sinon.
-int get_level(file_t file, int numLevel, Level** level);	// Retourne -1 si le level n'est pas dans les tables. 0 sinon.
+int get_level(file_t file, int numLevel, Level* level);		// Retourne -1 si le level n'est pas dans les tables. 0 sinon.
 
 char* show_table(file_t file);
 

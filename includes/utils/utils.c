@@ -184,7 +184,7 @@ void logs(int log_level, char *text_to_log, ...) {
 
 /**
  * @brief Close the logs file
-*/
+ */
 void closeLogs() {
 	// Write the end of the log file
 	if (file_logs_desc == -1) {

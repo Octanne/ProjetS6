@@ -8,16 +8,16 @@
 /**
  * @brief Create an empty level.
  * 
- * @return Level* : The level.
+ * @return Level : The level.
  */
-Level* levelEmpty() {
-    Level* level = malloc(sizeof(Level));
-    level->listeObjet = creerListeObjet();
+Level levelEmpty() {
+    Level level;
+    level.listeObjet = creerListeObjet();
 
 	int i;
 	for (i = 0; i < MATRICE_LEVEL_SIZE; i++)
-		level->matriceSprite[i] = NULL;
-    levelUpdateMatriceSprite(level);
+		level.matriceSprite[i] = NULL;
+    levelUpdateMatriceSprite(&level);
 
     return level;
 }
