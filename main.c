@@ -11,7 +11,7 @@
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-Level* level = NULL;
+Level level;
 
 /**
  * @brief Function to clear the level and generate a new one
@@ -19,12 +19,12 @@ Level* level = NULL;
 void clear_level() {
 
 	// Free level and generate a new one
-    level_free(level);
+    level_free(&level);
     level = levelCreer();
 
 	// Logs and refresh level
     logs(L_INFO, "Main | Level cleared");
-    logs(L_INFO, "Main | Level value : %X", *level);
+    logs(L_INFO, "Main | Level value : %X", level);
     refresh_level(level);
 }
 
@@ -55,7 +55,7 @@ void load_level(int newLevel, int oldLevel) {
 
 	// Logs and refresh level
     logs(L_INFO, "Main | New level load : %d, Old level save : %d", newLevel, oldLevel);
-    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level->listeObjet->taille);
+    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level.listeObjet.taille);
     set_text_info("Level loaded", 1, GREEN_COLOR);
     refresh_level(level);
 }
@@ -80,7 +80,7 @@ void load_level_file() {
 	// Else, load the first level
 	else {
         logs(L_INFO, "Main | First level found and loaded.");
-        logs(L_INFO, "Main | First level : %d items loaded", level->listeObjet->taille);
+        logs(L_INFO, "Main | First level : %d items loaded", level.listeObjet.taille);
         refresh_level(level);
     }
 
@@ -98,20 +98,22 @@ void stop_game() {
 	logs(L_INFO, "Main | Stopping game...");
 
 	// Free the game interface
-    int actualLevel = gameInterface->toolsMenu->levelNumberSelected;
+    int actualLevel = gameInterface.toolsMenu.levelNumberSelected;
     stop_gui();
 
 	// Save level
     file_t file = load_file(FILENAME);
     logs(L_INFO, "Main | Saving level %d...", actualLevel);
-    save_level(file, actualLevel, level);
+	if (save_level(file, actualLevel, level) == -1) {
+		logs(L_INFO, "Main | Error while saving level %d", actualLevel);
+	}
     logs(L_INFO, "Main | Level %d saved", actualLevel);
 
     // Show tables
     logs(L_INFO, "\n===================== Affichage Tables =====================\n\n%s===================== Affichage Tables =====================", show_table(file));
 
 	// Free the level
-    level_free(level);
+    level_free(&level);
 
 	// Close logs
     closeLogs();
@@ -132,24 +134,24 @@ void mouse_toolsWindow(short posX, short posY) {
 		if (posY == 16 && (posX == 65 || posX == 71)) {
 
 			// Variables
-			int oldLevel = gameInterface->toolsMenu->levelNumberSelected;
+			int oldLevel = gameInterface.toolsMenu.levelNumberSelected;
 			char text[100];
 
 			// Increase/Decrease level number
 			if (posX == 71 && oldLevel < 999)
-				gameInterface->toolsMenu->levelNumberSelected++;
+				gameInterface.toolsMenu.levelNumberSelected++;
 			else if (posX == 65 && oldLevel > 1)
-				gameInterface->toolsMenu->levelNumberSelected--;
+				gameInterface.toolsMenu.levelNumberSelected--;
 			
 			// Do nothing if the level number is the same
-			if (oldLevel == gameInterface->toolsMenu->levelNumberSelected)
+			if (oldLevel == gameInterface.toolsMenu.levelNumberSelected)
 				return;
 
 			// Load new level
-			load_level(gameInterface->toolsMenu->levelNumberSelected, oldLevel);
+			load_level(gameInterface.toolsMenu.levelNumberSelected, oldLevel);
 
 			// Visual updates
-			sprintf(text, "Chargement du niveau '%03i'.", gameInterface->toolsMenu->levelNumberSelected);
+			sprintf(text, "Chargement du niveau '%03i'.", gameInterface.toolsMenu.levelNumberSelected);
 			set_text_info(text, 1, WHITE_COLOR);
 			refresh_tools_menu();
 		}
@@ -158,7 +160,7 @@ void mouse_toolsWindow(short posX, short posY) {
 		else if (posY == 18 && posX >= 65 && posX <= 70) {
 			clear_level(level);
 			set_text_info("Le niveau a été supprimé.", 1, WHITE_COLOR);
-			logs(L_INFO, "Main | Remise à zéro du niveau %d", gameInterface->toolsMenu->levelNumberSelected);
+			logs(L_INFO, "Main | Remise à zéro du niveau %d", gameInterface.toolsMenu.levelNumberSelected);
 		} 
     }
 }
@@ -178,58 +180,58 @@ void mouse_levelWindow(short posX, short posY) {
 
         // Apply the selected tool on the level
         int success = 0;
-        switch (gameInterface->toolsMenu->toolsSelected) {
+        switch (gameInterface.toolsMenu.toolsSelected) {
             case 0:
                 // Delete
-                success = supprimerObjet(level, posX, posY);
+                success = supprimerObjet(&level, posX, posY);
                 break;
             case 1:
                 // Block
-                success = poserBlock(level, posX, posY);
+                success = poserBlock(&level, posX, posY);
                 break;
             case 2:
                 // Ladder
-                success = poserLadder(level, posX, posY);
+                success = poserLadder(&level, posX, posY);
                 break;
             case 3:
                 // Trap
-                success = poserTrap(level, posX, posY);
+                success = poserTrap(&level, posX, posY);
                 break;
             case 4:
                 // Gate
-                success = poserGate(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
+                success = poserGate(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
             case 5:
                 // Key
-                success = poserKey(level, posX, posY, gameInterface->toolsMenu->gateColorSelected);
+                success = poserKey(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
             case 6:
                 // Door
-                success = poserDoor(level, posX, posY, gameInterface->toolsMenu->doorNumberSelected);
+                success = poserDoor(&level, posX, posY, gameInterface.toolsMenu.doorNumberSelected);
                 break;
             case 7:
                 // Exit
-                success = poserExit(level, posX, posY);
+                success = poserExit(&level, posX, posY);
                 break;
             case 8:
                 // Start
-                success = poserStart(level, posX, posY);
+                success = poserStart(&level, posX, posY);
                 break;
             case 9:
                 // Robot
-                success = poserRobot(level, posX, posY);
+                success = poserRobot(&level, posX, posY);
                 break;
             case 10:
                 // Probe
-                success = poserProbe(level, posX, posY);
+                success = poserProbe(&level, posX, posY);
                 break;
             case 11:
                 // Life
-                success = poserVie(level, posX, posY);
+                success = poserVie(&level, posX, posY);
                 break;
             case 12:
                 // Bomb
-                success = poserBomb(level, posX, posY);
+                success = poserBomb(&level, posX, posY);
                 break;
         }
 
@@ -262,7 +264,7 @@ void mouse_event(short posX, short posY) {
 
     // Write down mouse position
     char text[100];
-    sprintf(text, "Position : (Y,X) -> (%i,%i)", posY, posX);
+    sprintf(text, "Position : (Y, X) -> (%i, %i)", posY, posX);
     set_text_info(text, 2, LBLUE_COLOR);
 }
 
@@ -272,6 +274,7 @@ void mouse_event(short posX, short posY) {
  */
 void control_handler() {
     int ch;
+	int posX, posY;
     while((ch = getch()) != KEY_QUIT_GAME) {
         switch (ch) {
 
@@ -280,10 +283,9 @@ void control_handler() {
                 set_text_info("Action: UP", 1, GREEN_COLOR);
 
 				// Move the cursor up in the tools menu if we are in edit mode
-                if (gameInterface->toolsMenu->inEdit) {
-					gameInterface->toolsMenu->toolsSelected--;
-                    if (gameInterface->toolsMenu->toolsSelected == 0)
-                        gameInterface->toolsMenu->toolsSelected = TOTAL_TOOLS - 1;
+                if (gameInterface.toolsMenu.inEdit) {
+                    if (gameInterface.toolsMenu.toolsSelected-- == 0)
+                        gameInterface.toolsMenu.toolsSelected = TOTAL_TOOLS;
                     refresh_tools_menu();
                 }
             break;
@@ -293,10 +295,9 @@ void control_handler() {
                 set_text_info("Action: DOWN", 1, GREEN_COLOR);
 
 				// Move the cursor down in the tools menu if we are in edit mode
-                if (gameInterface->toolsMenu->inEdit) {
-					gameInterface->toolsMenu->toolsSelected++;
-                    if (gameInterface->toolsMenu->toolsSelected == TOTAL_TOOLS)
-						gameInterface->toolsMenu->toolsSelected = 1;
+                if (gameInterface.toolsMenu.inEdit) {
+                    if (gameInterface.toolsMenu.toolsSelected++ == TOTAL_TOOLS)
+						gameInterface.toolsMenu.toolsSelected = 0;
                     refresh_tools_menu();
                 }
             break;
@@ -306,17 +307,17 @@ void control_handler() {
                 set_text_info("Action: LEFT", 1, GREEN_COLOR);
 
 				// If we are in edit mode
-                if (gameInterface->toolsMenu->inEdit) {
+                if (gameInterface.toolsMenu.inEdit) {
 
 					// If the tools selected is the gate, we can change the selected color
-                    if (gameInterface->toolsMenu->toolsSelected == 4)
-                        if (gameInterface->toolsMenu->gateColorSelected > 0)
-                            gameInterface->toolsMenu->gateColorSelected--;
+                    if (gameInterface.toolsMenu.toolsSelected == 4)
+                        if (gameInterface.toolsMenu.gateColorSelected > 0)
+                            gameInterface.toolsMenu.gateColorSelected--;
 
 					// If the tools selected is the door, we can change the selected door number
-                    if (gameInterface->toolsMenu->toolsSelected == 6)
-                        if (gameInterface->toolsMenu->doorNumberSelected > 1)
-                            gameInterface->toolsMenu->doorNumberSelected--;
+                    if (gameInterface.toolsMenu.toolsSelected == 6)
+                        if (gameInterface.toolsMenu.doorNumberSelected > 1)
+                            gameInterface.toolsMenu.doorNumberSelected--;
 
                     refresh_tools_menu();
                 }
@@ -327,17 +328,17 @@ void control_handler() {
                 set_text_info("Action: RIGHT", 1, GREEN_COLOR);
 
 				// If we are in edit mode
-                if (gameInterface->toolsMenu->inEdit) {
+                if (gameInterface.toolsMenu.inEdit) {
 
 					// If the tools selected is the gate, we can change the selected color
-                    if (gameInterface->toolsMenu->toolsSelected == 4)
-                        if (gameInterface->toolsMenu->gateColorSelected < 3)
-                            gameInterface->toolsMenu->gateColorSelected++;
+                    if (gameInterface.toolsMenu.toolsSelected == 4)
+                        if (gameInterface.toolsMenu.gateColorSelected < 3)
+                            gameInterface.toolsMenu.gateColorSelected++;
 					
 					// If the tools selected is the door, we can change the selected door number
-                    if (gameInterface->toolsMenu->toolsSelected == 6)
-                        if (gameInterface->toolsMenu->doorNumberSelected < 99)
-                            gameInterface->toolsMenu->doorNumberSelected++;
+                    if (gameInterface.toolsMenu.toolsSelected == 6)
+                        if (gameInterface.toolsMenu.doorNumberSelected < 99)
+                            gameInterface.toolsMenu.doorNumberSelected++;
 
                     refresh_tools_menu();
                 }
@@ -350,7 +351,6 @@ void control_handler() {
 
             case KEY_MOUSE:
 				// Mouse event handler
-                int posX, posY;
                 if (mouse_getpos(&posX, &posY) == OK)
                     mouse_event((short)posX, (short)posY);
             break;

@@ -27,11 +27,11 @@ typedef struct {
 } GUI;
 
 typedef struct {
-    GUI* gui;
-    ToolsMenu* toolsMenu;
+    GUI gui;
+    ToolsMenu toolsMenu;
 } GameInterface;
 
-extern GameInterface* gameInterface;
+extern GameInterface gameInterface;
 
 void init_gui();
 void stop_gui();
@@ -39,7 +39,7 @@ void stop_gui();
 void gen_game_editor_window();
 void gen_tools_menu();
 
-void refresh_level(Level *level);
+void refresh_level(Level level);
 void refresh_tools_menu();
 
 void set_text_info(const char *text, int line, int color);

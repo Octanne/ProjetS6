@@ -8,12 +8,12 @@
 /**
  * @brief Create a new list of objects.
  * 
- * @return ListeObjet* : The list of objects.
+ * @return ListeObjet : The list of objects.
  */
-ListeObjet* creerListeObjet() {
-	ListeObjet* listeObjet = malloc(sizeof(ListeObjet));
-	listeObjet->tete = NULL;
-	listeObjet->taille = 0;
+ListeObjet creerListeObjet() {
+	ListeObjet listeObjet;
+	listeObjet.tete = NULL;
+	listeObjet.taille = 0;
 	return listeObjet;
 }
 
@@ -25,6 +25,11 @@ ListeObjet* creerListeObjet() {
  */
 void listeAjouterObjet(ListeObjet* listeObjet, Objet* objet) {
 	EltListe_o* eltListe = malloc(sizeof(EltListe_o));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "listeAjouterObjet | ERROR malloc eltListe");
+		perror("Error while allocating memory in listeAjouterObjet\n");
+		exit(EXIT_FAILURE);
+	}
 	eltListe->objet = objet;
 	eltListe->suivant = listeObjet->tete;
 
@@ -77,6 +82,7 @@ void listeSupprimerObjet(ListeObjet* listeObjet, Objet* objet, int freeObjet) {
 void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
 	EltListe_o* eltListe = listeObjet->tete;
 
+	// Free the objects and the elements. If freeObjet is false, only the elements are freed.
 	if (freeObjet) {
 		while (eltListe != NULL) {
 			objet_free(eltListe->objet);
@@ -92,18 +98,17 @@ void listeObjet_free(ListeObjet* listeObjet, int freeObjet) {
 			free(tmp);
 		}
 	}
-	free(listeObjet);
 }
 
 /**
  * @brief Create a new list of integers.
  * 
- * @return ListeEntier* : The list of integers.
+ * @return ListeEntier : The list of integers.
  */
-ListeEntier* creerListeEntier() {
-	ListeEntier* listeEntier = malloc(sizeof(ListeEntier));
-	listeEntier->tete = NULL;
-	listeEntier->taille = 0;
+ListeEntier creerListeEntier() {
+	ListeEntier listeEntier;
+	listeEntier.tete = NULL;
+	listeEntier.taille = 0;
 	return listeEntier;
 }
 
@@ -115,6 +120,11 @@ ListeEntier* creerListeEntier() {
  */
 void listeAjouterEntier(ListeEntier* listeEntier, int entier) {
 	EltListe_i* eltListe = malloc(sizeof(EltListe_i));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "listeAjouterEntier | ERROR malloc eltListe");
+		perror("Error while allocating memory in listeAjouterEntier\n");
+		exit(EXIT_FAILURE);
+	}
 	eltListe->entier = entier;
 	eltListe->suivant = listeEntier->tete;
 
@@ -166,6 +176,5 @@ void listeEntier_free(ListeEntier* listeEntier) {
 		eltListe = eltListe->suivant;
 		free(tmp);
 	}
-	free(listeEntier);
 }
 

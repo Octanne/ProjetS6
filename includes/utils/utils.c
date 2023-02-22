@@ -37,9 +37,9 @@ void ncurses_stop() {
 void ncurses_colors() {
 	// Check color support
 	if (has_colors() == FALSE) {
-	ncurses_stop();
-	fprintf(stderr, "The terminal doesn't support colors.\n");
-	exit(EXIT_FAILURE);
+		ncurses_stop();
+		perror("The terminal doesn't support colors.\n");
+		exit(EXIT_FAILURE);
 	}
 
 	// Activate colors
@@ -52,7 +52,7 @@ void ncurses_colors() {
 void ncurses_init_mouse() {
 	if (!mousemask(BUTTON1_PRESSED, NULL)) {
 		ncurses_stop();
-		fprintf(stderr, "Mouse isn't supported.\n");
+		perror("Mouse isn't supported.\n");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -105,37 +105,28 @@ int file_logs_desc = -1;
  * @brief Initialize the logs file
  */
 void initLogs() {
+
 	// Create the logs folder if it doesn't exist
 	if (mkdir(LOGS_FOLDER, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
 		// show erno
 		if (errno != EEXIST) {
-			fprintf(stderr, "Error: can't create the logs folder.\n");
+			perror("Error: can't create the logs folder.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	// Open the file with open
-	file_logs_desc = open(LOGS_FILE, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+	file_logs_desc = open(LOGS_FILE, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
 	// check if the file is open
 	if (file_logs_desc == -1) {
-		fprintf(stderr, "Error: can't open the logs file.\n");
+		perror("Error: can't open the logs file.\n");
 		exit(EXIT_FAILURE);
 	}
-}
 
-void get_log_tag(int log_level, char ** log_tag) {
-	switch (log_level) {
-		case 2: 
-			*log_tag = "DEBUG";
-		break;
-
-		case 1:
-			*log_tag = "INFO";
-		break;
-
-		default:
-			*log_tag = "UNKNOWN";
-		break;
+	// Write the logs file header
+	if (write(file_logs_desc, "\n", 1) == -1) {
+		perror("Error while writing file header in the logs file.\n");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -149,10 +140,6 @@ void get_log_tag(int log_level, char ** log_tag) {
 void logs(int log_level, char *text_to_log, ...) {
 	// Check log level
 	if (log_level > LOGS_ACTIVE) return;
-
-	// Get the log tag
-	char lvl_log[10];
-	get_log_tag(log_level, &lvl_log);
 
 	// Initialize the logs file if it's not already done
 	if (file_logs_desc == -1)
@@ -175,16 +162,18 @@ void logs(int log_level, char *text_to_log, ...) {
 
 	// Format the final text
 	char final_text[LOGS_MAX_LENGTH + 26];
-	sprintf(final_text, "[%s][%s] %s\n", time_string, lvl_log, text_form);
+	sprintf(final_text, "[%s][%s] %s\n", time_string, lvl_log(log_level), text_form);
 
 	// Open the file in append mode check the success
-	if (write(file_logs_desc, final_text, strlen(final_text)) == -1)
-		fprintf(stderr, "Error while writing in the logs file.\n");
+	if (write(file_logs_desc, final_text, strlen(final_text)) == -1) {
+		perror("Error while writing in the logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
  * @brief Close the logs file
-*/
+ */
 void closeLogs() {
 	// Write the end of the log file
 	if (file_logs_desc == -1) {
@@ -192,46 +181,59 @@ void closeLogs() {
 		logs(L_INFO, "No logs has been written during this session.");
 	}
 	
-	logs(L_INFO, "End of the session of the game.");
+	logs(L_INFO, "End of the session of the game.\n");
 
 	// Create the logs folder archives if it doesn't exist
 	if (mkdir(LOGS_FOLDER_ARCHIVES, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
 		// show erno
 		if (errno != EEXIST) {
-			fprintf(stderr, "Error: can't create the logs folder.\n");
+			perror("Error: can't create the logs folder.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	// Move the file to the logs folder
-	// Format time in char * with the format: HH-MM-SS_DD-MM-YYYY
+	// Format time in char * with the format: [YYYY-MM-DD_HH-MM-SS]
 	time_t now = time(NULL);
 	struct tm *t = localtime(&now);
 	char time_string[30];
-	strftime(time_string, sizeof(time_string), "%d-%m-%Y_%H-%M-%S", t);
+	strftime(time_string, sizeof(time_string), "%Y-%m-%d_%H-%M-%S", t);
 
 	// Format the file name
 	char file_name[30] = LOGS_FOLDER_ARCHIVES;
 	strcat(file_name, time_string);
 	strcat(file_name, ".log");
 
-	// Copy the file
-
 	// Open the destination file for writing
 	int dest_fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	if (dest_fd == -1) {
+		perror("Error while opening the archived logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// Allocate a buffer for reading the file
 	char buffer[4096];
 
+	// Lseek to the beginning of the file
+	if (lseek(file_logs_desc, 0, SEEK_SET) == -1) {
+		perror("Error while lseek to the beginning of the file.\n");
+		exit(EXIT_FAILURE);
+	}
+
 	// Read from the logs file and write to the archived dests file
 	int bytes_read;
-	while ((bytes_read = read(file_logs_desc, buffer, sizeof(buffer))) > 0)
-		if (write(dest_fd, buffer, bytes_read) == -1)
-			fprintf(stderr, "Error while writing in the archived logs file.\n");
+	while ((bytes_read = read(file_logs_desc, buffer, sizeof(buffer))) > 0) {
+		if (write(dest_fd, buffer, bytes_read) == -1) {
+			perror("Error while writing in the archived logs file.\n");
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	// Close the source and destination files
-	if (close(file_logs_desc) == -1 || close(dest_fd) == -1)
-		fprintf(stderr, "Error while closing the logs file.\n");
+	if (close(file_logs_desc) == -1 || close(dest_fd) == -1) {
+		perror("Error while closing the logs file.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// Reset the file_logs_desc
 	file_logs_desc = -1;

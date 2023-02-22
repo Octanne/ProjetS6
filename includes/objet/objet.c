@@ -18,6 +18,11 @@
  */
 Objet* initObjet(short x, short y, short xSize, short ySize, int8_t type) {
     Objet* objet = malloc(sizeof(Objet));
+	if (objet == NULL) {
+		logs(L_DEBUG, "initObjet | ERROR malloc objet");
+		perror("Error while allocating memory in initObjet\n");
+		exit(EXIT_FAILURE);
+	}
     objet->type = type;
     objet->isActive = 1;
 

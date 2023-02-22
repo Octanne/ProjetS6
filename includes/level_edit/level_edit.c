@@ -32,17 +32,19 @@ int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
 	for (j = y; j > y-ySize; j--) {
 		for (i = x; i < x+xSize; i++) {
 			// Create a list of objects at the position and check if it is empty
-			ListeObjet* objs = rechercherObjet(level, i, j);
-			collision = (objs->tete != NULL);
-			listeObjet_free(objs, 0);
-
+			ListeObjet objs = rechercherObjet(level, i, j);
+			collision = (objs.tete != NULL);
+			
 			// If the list is not empty, there is a collision
 			if (collision) {
-				logs(L_DEBUG, "read => x: %d, y: %d (collision avec %d)", i, j, objs->tete->objet->type);
+				logs(L_DEBUG, "read => x: %d, y: %d (collision avec %d)", i, j, objs.tete->objet->type);
 				return 0;
 			}
 			else
 				logs(L_DEBUG, "read => x: %d, y: %d (pas de collision)", i, j);
+			
+			// Free the list
+			listeObjet_free(&objs, 0);
 		}
 	}
 	return 1;
@@ -58,15 +60,17 @@ int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
  * @return 1 if an object was deleted, 0 otherwise.
  */
 int supprimerObjet(Level* level, short x, short y) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is not empty, delete the object
-	if (objs->tete != NULL) {
-		levelSupprimerObjet(level, objs->tete->objet);
-		listeObjet_free(objs, 0);
+	if (objs.tete != NULL) {
+		levelSupprimerObjet(level, objs.tete->objet);
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was deleted
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -80,16 +84,20 @@ int supprimerObjet(Level* level, short x, short y) {
  * @return 1 if a block was created, 0 otherwise.
  */
 int poserBlock(Level* level, short x, short y) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+
+	// Logs & get objects at the position
+	logs(L_DEBUG, "poserBlock(%d, %d)", x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet
-	if (objs->tete == NULL) {
-		Objet* bloc = creerBlock(x,y);
-		levelAjouterObjet(level,bloc);
-		listeObjet_free(objs, 0);
+	if (objs.tete == NULL) {
+		levelAjouterObjet(level, creerBlock(x, y));
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was created
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -103,16 +111,17 @@ int poserBlock(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserVie(Level* level, short x, short y) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet
-	if (objs->tete == NULL) {
-		Objet* vie = creerVie(x,y);
-		levelAjouterObjet(level,vie);
-		listeObjet_free(objs, 0);
+	if (objs.tete == NULL) {
+		levelAjouterObjet(level, creerVie(x, y));
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was created
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -126,16 +135,17 @@ int poserVie(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserBomb(Level* level, short x, short y) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet
-	if (objs->tete == NULL) {
-		Objet* bomb = creerBomb(x,y);
-		levelAjouterObjet(level,bomb);
-		listeObjet_free(objs, 0);
+	if (objs.tete == NULL) {
+		levelAjouterObjet(level, creerBomb(x, y));
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was created
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -149,16 +159,17 @@ int poserBomb(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserTrap(Level* level, short x, short y) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet
-	if (objs->tete == NULL) {
-		Objet* trap = creerTrap(x,y);
-		levelAjouterObjet(level,trap);
-		listeObjet_free(objs, 0);
+	if (objs.tete == NULL) {
+		levelAjouterObjet(level, creerTrap(x, y));
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was created
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -172,16 +183,17 @@ int poserTrap(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserGate(Level* level, short x, short y, int8_t gateColor) {
-	ListeObjet* objs = rechercherObjet(level, x, y);
+	ListeObjet objs = rechercherObjet(level, x, y);
 
 	// If the list is empty, create objet
-	if (objs->tete == NULL) {
-		Objet* gate = creerGate(x,y,gateColor);
-		levelAjouterObjet(level,gate);
-		listeObjet_free(objs, 0);
+	if (objs.tete == NULL) {
+		levelAjouterObjet(level, creerGate(x, y, gateColor));
+		listeObjet_free(&objs, 0);
 		return 1;
 	}
-	listeObjet_free(objs, 0);
+
+	// Free the list and return 0 to indicate that no object was created
+	listeObjet_free(&objs, 0);
 	return 0;
 }
 
@@ -195,10 +207,10 @@ int poserGate(Level* level, short x, short y, int8_t gateColor) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserKey(Level* level, short x, short y, int8_t keyColor) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 1, 2)) {
-		Objet* obj = creerKey(x,y,keyColor);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerKey(x, y, keyColor));
 		return 1;
 	}
 	return 0;
@@ -214,10 +226,10 @@ int poserKey(Level* level, short x, short y, int8_t keyColor) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserDoor(Level* level, short x, short y, int8_t doorNumber) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 4)) {
-		Objet* obj = creerDoor(x,y,doorNumber);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerDoor(x, y, doorNumber));
 		return 1;
 	}
 	return 0;
@@ -233,10 +245,10 @@ int poserDoor(Level* level, short x, short y, int8_t doorNumber) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserExit(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 4)) {
-		Objet* obj = creerExit(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerExit(x, y));
 		return 1;
 	}
 	return 0;
@@ -252,10 +264,10 @@ int poserExit(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserStart(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 4)) {
-		Objet* obj = creerStart(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerStart(x, y));
 		return 1;
 	}
 	return 0;
@@ -271,10 +283,10 @@ int poserStart(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserProbe(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 2)) {
-		Objet* obj = creerProbe(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerProbe(x, y));
 		return 1;
 	}
 	return 0;
@@ -290,10 +302,10 @@ int poserProbe(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserRobot(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 4, 3)) {
-		Objet* obj = creerRobot(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerRobot(x, y));
 		return 1;
 	}
 	return 0;
@@ -309,10 +321,10 @@ int poserRobot(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserLadder(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 1)) {
-		Objet* obj = creerLadder(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerLadder(x, y));
 		return 1;
 	}
 	return 0;
@@ -328,10 +340,10 @@ int poserLadder(Level* level, short x, short y) {
  * @return 1 if a wall was created, 0 otherwise.
  */
 int poserPlayer(Level* level, short x, short y) {
+
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 3)) {
-		Objet* obj = creerPlayer(x,y);
-		levelAjouterObjet(level,obj);
+		levelAjouterObjet(level, creerPlayer(x, y));
 		return 1;
 	}
 	return 0;

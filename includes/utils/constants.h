@@ -4,6 +4,7 @@
 
 #define L_INFO 1
 #define L_DEBUG 2
+#define lvl_log(log_level) (log_level == L_INFO ? "INFO" : (log_level == L_DEBUG ? "DEBUG" : "UNKNOWN"))
 #define LOGS_FILE "logs/latest.log"
 #define LOGS_FOLDER "logs/"
 #define LOGS_FOLDER_ARCHIVES "logs/archives/"
