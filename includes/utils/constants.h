@@ -1,8 +1,10 @@
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
 #define L_INFO 1
 #define L_DEBUG 2
+#define lvl_log(log_level) (log_level == L_INFO ? "INFO" : (log_level == L_DEBUG ? "DEBUG" : "UNKNOWN"))
 #define LOGS_FILE "logs/latest.log"
 #define LOGS_FOLDER "logs/"
 #define LOGS_FOLDER_ARCHIVES "logs/archives/"
@@ -10,6 +12,7 @@
 #define LOGS_MAX_LENGTH 3500
 
 #define FILENAME "level.dat"
+#define EMPTY_LINE "                                                                           "
 
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10
@@ -46,7 +49,10 @@
 #define ROBOT_ID 12
 #define PLAYER_ID 13
 
+#define TOTAL_TOOLS 12
+
 #define RIGHT_ORIENTATION 1
 #define LEFT_ORIENTATION 0
 
 #endif
+

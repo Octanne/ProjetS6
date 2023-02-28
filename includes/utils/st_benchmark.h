@@ -1,3 +1,4 @@
+
 #ifndef __ST_BENCHMARK_H__
 #define __ST_BENCHMARK_H__
 
@@ -52,3 +53,4 @@
 	}
 
 #endif
+

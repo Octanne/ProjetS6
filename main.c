@@ -1,4 +1,4 @@
-#include <locale.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
@@ -6,449 +6,382 @@
 #include "includes/level/level.h"
 #include "includes/utils/utils.h"
 #include "includes/level_edit/level_edit.h"
-#include "includes/table_addr/table_addr.h"
+#include "includes/system_save/system_save.h"
+#include "includes/system_gui/system_gui.h"
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-typedef struct {
-    int toolsSelected;
-    int gateColorSelected;
-    int doorNumberSelected;
-    int levelNumberSelected;
+Level level;
 
-    int inEdit;
-} ToolsMenu;
+/**
+ * @brief Function to clear the level and generate a new one
+ */
+void clear_level() {
 
-WINDOW* winLEVEL;
-WINDOW* winTOOLS;
-WINDOW* winINFOS;
-
-WINDOW* cwinLEVEL;
-WINDOW* cwinTOOLS;
-WINDOW* cwinINFOS;
-
-ToolsMenu* toolsMenu;
-Level* level = NULL;
-
-void set_text_info(const char *text, int line, int color) {
-    mvwprintw(winINFOS, line, 0, 
-    "                                                                           ");
-    wmove(winINFOS, line, 0);
-    wattron(winINFOS, COLOR_PAIR(color));
-    mvwprintw(winINFOS, line, 0, "%s", text);
-    wattroff(winINFOS, COLOR_PAIR(color));
-    wrefresh(winINFOS);
-}
-
-void gen_game_editor_window() {
-
-    // Level window
-    cwinLEVEL = newwin(22, 62, 0, 0);
-    box(cwinLEVEL, 0, 0);
-    wmove(cwinLEVEL, 0, 0);
-    wprintw(cwinLEVEL, "Level");
-    wrefresh(cwinLEVEL);
-
-    winLEVEL = derwin(cwinLEVEL, 20, 60, 1, 1);
-    wrefresh(winLEVEL);
-
-    // Tools window
-    cwinTOOLS = newwin(22, 15, 0, 62);
-    box(cwinTOOLS, 0, 0);
-    wmove(cwinTOOLS, 0, 0);
-    wprintw(cwinTOOLS, "Tools");
-    wrefresh(cwinTOOLS);
-
-    winTOOLS = derwin(cwinTOOLS, 20, 13, 1, 1);
-    wrefresh(winTOOLS);
-
-    // Informations window
-    cwinINFOS = newwin(5, 77, 22, 0);
-    box(cwinINFOS, 0, 0);
-    wmove(cwinINFOS, 0, 0);
-    wprintw(cwinINFOS, "Informations");
-    wrefresh(cwinINFOS);
-
-    winINFOS = derwin(cwinINFOS, 3, 75, 1, 1);
-    set_text_info("Press 'Q' to quit...", 0, RED_COLOR);
-    wrefresh(winINFOS);
-}
-
-void refresh_level() {
-    wclear(winLEVEL);
-    int y, x;
-    for (y = 0; y < 20; y++) {
-        for (x = 0; x < 60; x++) {
-            SpriteData* spriteD = level->matriceSprite[y+x*20];
-            wattron(winLEVEL, COLOR_PAIR(spriteD->color));
-            wmove(winLEVEL, y, x);
-            if (spriteD->specialChar) waddch(winLEVEL, spriteD->spSprite);
-            else waddch(winLEVEL, spriteD->sprite);
-            wattroff(winLEVEL, COLOR_PAIR(spriteD->color));
-        }
-    }
-    wrefresh(winLEVEL);
-}
-
-void gen_level_empty() {
-    level_free(level);
-    level = NULL;
+	// Free level and generate a new one
+    level_free(&level);
     level = levelCreer();
-    refresh_level();
+
+	// Logs and refresh level
+    logs(L_INFO, "Main | Level cleared");
+    logs(L_INFO, "Main | Level value : %X", level);
+    refresh_level(level);
 }
 
+/**
+ * @brief Function to load a level and save the old one
+ */
 void load_level(int newLevel, int oldLevel) {
-    file_t* file = load_file(FILENAME);
 
-    // decalage des niveaux
+	// Loading file
+    file_t file = load_file(FILENAME);
+
+    // Levels offset
     oldLevel--;
     newLevel--;
 
-    if (save_level(file, oldLevel, level) == -1) logs(L_INFO, "Main | Error while saving level %d", oldLevel);
+	// Save old level
+    if (save_level(file, oldLevel, level) == -1)
+		logs(L_INFO, "Main | Error while saving level %d", oldLevel);
+	
+	// Load new level and generate empty level if no level found
     if (get_level(file, newLevel, &level) == -1) {
-        // Pas de niveau dans le fichier
-        gen_level_empty();
+        clear_level(level);
         logs(L_INFO, "Main | Level %d not found, empty level generated", newLevel);
     }
 
-    // show table
-    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
+    // Show tables
+    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================", show_table(file));
 
-    free_file(file);
-
+	// Logs and refresh level
     logs(L_INFO, "Main | New level load : %d, Old level save : %d", newLevel, oldLevel);
-    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level->listeObjet->taille);
-    refresh_level();
-
+    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, level.listeObjet.taille);
     set_text_info("Level loaded", 1, GREEN_COLOR);
+    refresh_level(level);
 }
 
+/**
+ * @brief Function to load the first level from the file.
+ * Runned once at the start of the program
+ */
 void load_level_file() {
+
+	// Loading file
     logs(L_INFO, "Main | Loading first level from file...");
-    file_t* file = load_file(FILENAME);
+    file_t file = load_file(FILENAME);
     logs(L_INFO, "Main | File loaded");
 
+	// Generate empty level if no level found
     if (get_level(file, 0, &level) == -1) {
-        // Pas de niveau dans le fichier
-        gen_level_empty();
+        clear_level(level);
         logs(L_INFO, "Main | First level not found, empty level generated.");
-    } else {
+        logs(L_INFO, "Main | Level value : %X", level);
+    }
+	// Else, load the first level
+	else {
         logs(L_INFO, "Main | First level found and loaded.");
-        logs(L_INFO, "Main | First level : %d items loaded", level->listeObjet->taille);
-        refresh_level();
+        logs(L_INFO, "Main | First level : %d items loaded", level.listeObjet.taille);
+        refresh_level(level);
     }
 
-    // show table
-    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
-
-    free_file(file);
+    // Show tables
+    logs(L_INFO, "Main | Level value : %X", level);
+    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================", show_table(file));
 }
 
+/**
+ * @brief Function runned when the game is stopped
+ */
 void stop_game() {
-    delwin(winLEVEL);
-    delwin(winTOOLS);
-    delwin(winINFOS);
-    delwin(cwinLEVEL);
-    delwin(cwinTOOLS);
-    delwin(cwinINFOS);
-    ncurses_stop();
-    logs(L_INFO, "Main | Ncurses windows deleted, now loading file...");
 
-    file_t* file = load_file(FILENAME);
-    logs(L_INFO, "Main | Saving level %d...", toolsMenu->levelNumberSelected);
-    save_level(file, toolsMenu->levelNumberSelected, level);
-    logs(L_INFO, "Main | Level %d saved", toolsMenu->levelNumberSelected);
-    // show table
-    logs(L_INFO, "\n======================Affichage Tables======================\n\n%s======================Affichage Tables======================",show_table(file));
-    free_file(file);
+	// Logs
+	logs(L_INFO, "Main | Stopping game...");
 
-    free(toolsMenu);
-    level_free(level);
+	// Free the game interface
+    int actualLevel = gameInterface.toolsMenu.levelNumberSelected;
+    stop_gui();
+
+	// Save level
+    file_t file = load_file(FILENAME);
+    logs(L_INFO, "Main | Saving level %d...", actualLevel);
+	if (save_level(file, actualLevel, level) == -1) {
+		logs(L_INFO, "Main | Error while saving level %d", actualLevel);
+	}
+    logs(L_INFO, "Main | Level %d saved", actualLevel);
+
+    // Show tables
+    logs(L_INFO, "\n===================== Affichage Tables =====================\n\n%s===================== Affichage Tables =====================", show_table(file));
+
+	// Free the level
+    level_free(&level);
+
+	// Close logs
     closeLogs();
 }
 
-void refresh_tools_menu() {
-    wclear(winTOOLS);
+/**
+ * @brief Function managing the mouse event on the tools window
+ * 
+ * @param posX : mouse position on X axis
+ * @param posY : mouse position on Y axis
+ */
+void mouse_toolsWindow(short posX, short posY) {
 
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 0 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 0, 2, "Delete");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 1 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 1, 2, "Block");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 2 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 2, 2, "Ladder");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 3 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 3, 2, "Trap");
-    
-    // Gate
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 4 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 4, 2, "Gate");
-    wattron(winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
-    mvwprintw(winTOOLS, 4, 8, " ");
-    wattron(winTOOLS, COLOR_PAIR(GREEN_BLOCK));
-    mvwprintw(winTOOLS, 4, 9, " ");
-    wattron(winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-    mvwprintw(winTOOLS, 4, 10, " ");
-    wattron(winTOOLS, COLOR_PAIR(DBLUE_BLOCK));
-    mvwprintw(winTOOLS, 4, 11, " ");
-    wattron(winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(winTOOLS, 5, toolsMenu->gateColorSelected+8, "^");
-
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 5 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 5, 2, "Key");
-
-    // Door
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 6 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 6, 2, "Door");
-    wattron(winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(winTOOLS, 6, 8, "<%02i>", toolsMenu->doorNumberSelected);
-
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 7 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 7, 2, "Exit");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 8 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 8, 2, "Start");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 9 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 9, 2, "Robot");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 10 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 10, 2, "Probe");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 11 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 11, 2, "Life");
-    wattron(winTOOLS, COLOR_PAIR(toolsMenu->toolsSelected == 12 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(winTOOLS, 12, 2, "Bomb");
-
-    wattron(winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(winTOOLS, 14, 0, "Current level");
-    wattron(winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(winTOOLS, 16, 5, "%03i", toolsMenu->levelNumberSelected);
-    wattron(winTOOLS, COLOR_PAIR(ARROW_BUTTON));
-    mvwprintw(winTOOLS, 16, 3, "<");
-    mvwprintw(winTOOLS, 16, 9, ">");
-
-    // Sel cursor
-    wattron(winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(winTOOLS, toolsMenu->toolsSelected, 0, ">");
-
-    wattron(winTOOLS, COLOR_PAIR(RED_BUTTON));
-    mvwprintw(winTOOLS, 18, 3, "DELETE");
-
-    wattroff(winTOOLS, COLOR_PAIR(RED_COLOR));
-    wrefresh(winTOOLS);
-}
-
-void gen_tools_menu() {
-    toolsMenu = malloc(sizeof(ToolsMenu));
-    toolsMenu->toolsSelected = 0;
-    toolsMenu->gateColorSelected = 0;
-    toolsMenu->doorNumberSelected = 1;
-    toolsMenu->levelNumberSelected = 1;
-
-    // Focus fleche on tools menu
-    toolsMenu->inEdit = 1;
-    refresh_tools_menu();
-}
-
-void mouse_toolsWindow(int posX, int posY) {
+	// Check if the mouse is inside the tools window
     if (posX >= 62 && posX < 77 && posY >= 0 && posY < 20) {
-        // increase level number
-        if (posY == 16 && posX == 71) {
-            if (toolsMenu->levelNumberSelected < 999) {
-                toolsMenu->levelNumberSelected++;
-                char text[100];
-                sprintf(text, "Chargement du niveau '%03i'.", toolsMenu->levelNumberSelected);
-                load_level(toolsMenu->levelNumberSelected, toolsMenu->levelNumberSelected - 1);
-                set_text_info(text, 1, WHITE_COLOR);
-                refresh_tools_menu();
-            }
-        }
-        // decrease level number
-        else if (posY == 16 && posX == 65) {
-            if (toolsMenu->levelNumberSelected > 1) {
-                toolsMenu->levelNumberSelected--;
-                char text[100];
-                sprintf(text, "Chargement du niveau '%03i'.", toolsMenu->levelNumberSelected);
-                set_text_info(text, 1, WHITE_COLOR);
-                load_level(toolsMenu->levelNumberSelected, toolsMenu->levelNumberSelected + 1);
-                refresh_tools_menu();
-            }
-        }
-        // delete level
-        else if (posY == 18 && posX >= 65 && posX <= 70) {
-            logs(L_INFO, "Main | Remise à zéro du niveau %d", toolsMenu->levelNumberSelected);
-            gen_level_empty();
-            set_text_info("Le niveau est remis a zero.", 1, WHITE_COLOR);
-        }
+
+        // Increase/Decrease level number and load level
+		if (posY == 16 && (posX == 65 || posX == 71)) {
+
+			// Variables
+			int oldLevel = gameInterface.toolsMenu.levelNumberSelected;
+			char text[100];
+
+			// Increase/Decrease level number
+			if (posX == 71 && oldLevel < 999)
+				gameInterface.toolsMenu.levelNumberSelected++;
+			else if (posX == 65 && oldLevel > 1)
+				gameInterface.toolsMenu.levelNumberSelected--;
+			
+			// Do nothing if the level number is the same
+			if (oldLevel == gameInterface.toolsMenu.levelNumberSelected)
+				return;
+
+			// Load new level
+			load_level(gameInterface.toolsMenu.levelNumberSelected, oldLevel);
+
+			// Visual updates
+			sprintf(text, "Chargement du niveau '%03i'.", gameInterface.toolsMenu.levelNumberSelected);
+			set_text_info(text, 1, WHITE_COLOR);
+			refresh_tools_menu();
+		}
+
+		// Delete level
+		else if (posY == 18 && posX >= 65 && posX <= 70) {
+			clear_level(level);
+			set_text_info("Le niveau a été supprimé.", 1, WHITE_COLOR);
+			logs(L_INFO, "Main | Remise à zéro du niveau %d", gameInterface.toolsMenu.levelNumberSelected);
+		} 
     }
 }
 
-void mouse_levelWindow(int posX, int posY) {
-    if (posX >= 0 && posX < 60 && posY >= 0 && posY < 20) {
-        // check de l'outils selectionnée
+/**
+ * @brief Function managing the mouse event on the level window
+ * 
+ * @param posX : mouse position on X axis
+ * @param posY : mouse position on Y axis
+ */
+void mouse_levelWindow(short posX, short posY) {
+	// Logs
+    logs(L_INFO, "Main | Level value : %X", level);
+
+	// Check if the mouse is inside the level window
+    if (posX >= 0 && posX < MATRICE_LEVEL_X && posY >= 0 && posY < MATRICE_LEVEL_Y) {
+
+        // Apply the selected tool on the level
         int success = 0;
-        switch(toolsMenu->toolsSelected) {
+        switch (gameInterface.toolsMenu.toolsSelected) {
             case 0:
                 // Delete
-                success = supprimerObjet(level, posX, posY);
+                success = supprimerObjet(&level, posX, posY);
                 break;
             case 1:
                 // Block
-                success = poserBlock(level, posX, posY);
+                success = poserBlock(&level, posX, posY);
                 break;
             case 2:
                 // Ladder
-                success = poserLadder(level, posX, posY);
+                success = poserLadder(&level, posX, posY);
                 break;
             case 3:
                 // Trap
-                success = poserTrap(level, posX, posY);
+                success = poserTrap(&level, posX, posY);
                 break;
             case 4:
                 // Gate
-                success = poserGate(level, posX, posY, toolsMenu->gateColorSelected);
+                success = poserGate(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
             case 5:
                 // Key
-                success = poserKey(level, posX, posY, toolsMenu->gateColorSelected);
+                success = poserKey(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
             case 6:
                 // Door
-                success = poserDoor(level, posX, posY, toolsMenu->doorNumberSelected);
+                success = poserDoor(&level, posX, posY, gameInterface.toolsMenu.doorNumberSelected);
                 break;
             case 7:
                 // Exit
-                success = poserExit(level, posX, posY);
+                success = poserExit(&level, posX, posY);
                 break;
             case 8:
                 // Start
-                success = poserStart(level, posX, posY);
+                success = poserStart(&level, posX, posY);
                 break;
             case 9:
                 // Robot
-                success = poserRobot(level, posX, posY);
+                success = poserRobot(&level, posX, posY);
                 break;
             case 10:
                 // Probe
-                success = poserProbe(level, posX, posY);
+                success = poserProbe(&level, posX, posY);
                 break;
             case 11:
                 // Life
-                success = poserVie(level, posX, posY);
+                success = poserVie(&level, posX, posY);
                 break;
             case 12:
                 // Bomb
-                success = poserBomb(level, posX, posY);
+                success = poserBomb(&level, posX, posY);
                 break;
         }
-        refresh_level();
+
+		// Display the result of the action and refresh the level window
         if (success == 1) {
-            set_text_info("Action d'edition effectuee avec succes.", 1, GREEN_COLOR);
-        } else set_text_info("Vous ne pouvez pas effectuer cette action ici.", 1, YELLOW_COLOR);
+			refresh_level(level);
+            set_text_info("Action d'édition effectuée avec succès.", 1, GREEN_COLOR);
+        }
+		else
+			set_text_info("Vous ne pouvez pas effectuer cette action ici.", 1, YELLOW_COLOR);
     }
 }
 
-void mouse_event(int posX, int posY) {
+/**
+ * @brief Function managing the mouse events
+ * 
+ * @param posX : mouse position on X axis
+ * @param posY : mouse position on Y axis
+ */
+void mouse_event(short posX, short posY) {
     // convert to window level coordinates
     posX -= 1;
     posY -= 1;
-    // check if mouse is in window level
+
+    // Apply the mouse event on the level window
     mouse_levelWindow(posX, posY);
-    // check if mouse is in window tools
+
+    // Apply the mouse event on the tools window
     mouse_toolsWindow(posX, posY);
 
     // Write down mouse position
     char text[100];
-    sprintf(text, "Position : (Y,X) -> (%i,%i)", posY,posX);
+    sprintf(text, "Position : (Y, X) -> (%i, %i)", posY, posX);
     set_text_info(text, 2, LBLUE_COLOR);
 }
 
+/**
+ * @brief Function managing the keyboard events.
+ * Running indefinitely until the user press the key to quit the game
+ */
 void control_handler() {
     int ch;
+	int posX, posY;
     while((ch = getch()) != KEY_QUIT_GAME) {
-        switch(ch) {
+        switch (ch) {
+
             case KEY_UP:
+				// Write down the action
                 set_text_info("Action: UP", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected > 0) {
-                        toolsMenu->toolsSelected--;
-                    }
+
+				// Move the cursor up in the tools menu if we are in edit mode
+                if (gameInterface.toolsMenu.inEdit) {
+                    if (gameInterface.toolsMenu.toolsSelected-- == 0)
+                        gameInterface.toolsMenu.toolsSelected = TOTAL_TOOLS;
                     refresh_tools_menu();
                 }
-                break;
+            break;
+			
             case KEY_DOWN:
+				// Write down the action
                 set_text_info("Action: DOWN", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected < 12) {
-                        toolsMenu->toolsSelected++;
-                    }
+
+				// Move the cursor down in the tools menu if we are in edit mode
+                if (gameInterface.toolsMenu.inEdit) {
+                    if (gameInterface.toolsMenu.toolsSelected++ == TOTAL_TOOLS)
+						gameInterface.toolsMenu.toolsSelected = 0;
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_LEFT:
+				// Write down the action
                 set_text_info("Action: LEFT", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected == 4) {
-                        if (toolsMenu->gateColorSelected > 0) {
-                            toolsMenu->gateColorSelected--;
-                        }
-                    }
-                    if (toolsMenu->toolsSelected == 6) {
-                        if (toolsMenu->doorNumberSelected > 1) {
-                            toolsMenu->doorNumberSelected--;
-                        }
-                    }
+
+				// If we are in edit mode
+                if (gameInterface.toolsMenu.inEdit) {
+
+					// If the tools selected is the gate, we can change the selected color
+                    if (gameInterface.toolsMenu.toolsSelected == 4)
+                        if (gameInterface.toolsMenu.gateColorSelected > 0)
+                            gameInterface.toolsMenu.gateColorSelected--;
+
+					// If the tools selected is the door, we can change the selected door number
+                    if (gameInterface.toolsMenu.toolsSelected == 6)
+                        if (gameInterface.toolsMenu.doorNumberSelected > 1)
+                            gameInterface.toolsMenu.doorNumberSelected--;
+
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_RIGHT:
+				// Write down the action
                 set_text_info("Action: RIGHT", 1, GREEN_COLOR);
-                if (toolsMenu->inEdit) {
-                    if (toolsMenu->toolsSelected == 4) {
-                        if (toolsMenu->gateColorSelected < 3) {
-                            toolsMenu->gateColorSelected++;
-                        }
-                    }
-                    if (toolsMenu->toolsSelected == 6) {
-                        if (toolsMenu->doorNumberSelected < 99) {
-                            toolsMenu->doorNumberSelected++;
-                        }
-                    }
+
+				// If we are in edit mode
+                if (gameInterface.toolsMenu.inEdit) {
+
+					// If the tools selected is the gate, we can change the selected color
+                    if (gameInterface.toolsMenu.toolsSelected == 4)
+                        if (gameInterface.toolsMenu.gateColorSelected < 3)
+                            gameInterface.toolsMenu.gateColorSelected++;
+					
+					// If the tools selected is the door, we can change the selected door number
+                    if (gameInterface.toolsMenu.toolsSelected == 6)
+                        if (gameInterface.toolsMenu.doorNumberSelected < 99)
+                            gameInterface.toolsMenu.doorNumberSelected++;
+
                     refresh_tools_menu();
                 }
-                break;
+            break;
+
             case KEY_VALIDATE:
+				// Write down the action
                 set_text_info("Action: VALIDATE", 1, GREEN_COLOR);
-                break;
+            break;
+
             case KEY_MOUSE:
-                int posX, posY;
-                if (mouse_getpos(&posX,&posY) == OK) {
-                    mouse_event(posX, posY);
-                }
-                break;
+				// Mouse event handler
+                if (mouse_getpos(&posX, &posY) == OK)
+                    mouse_event((short)posX, (short)posY);
+            break;
         }
     }
 }
 
+/**
+ * @brief Exit function called at the exit of the program
+ */
 void main_exit() {
     stop_game();
 }
 
-int main(void)
-{
+/**
+ * @brief Main function
+ * @return EXIT_SUCCESS if the program exit correctly
+ */
+int main(void) {
     // Register exit function
     atexit(main_exit);
 
-    // Init ncurses
-    setlocale(LC_ALL, "");
-    ncurses_init();
-    ncurses_init_mouse();
-    ncurses_colors();
-    palette();
-    getmaxyx(stdscr, LINES, COLS);
+    // Init gui
+    init_gui();
 
-    // Init game windows
-    gen_game_editor_window();
-    gen_tools_menu();
+    // Load level
     load_level_file();
 
+    // Launch control handler
     control_handler();
 
-    return 0;
+	return EXIT_SUCCESS;
 }
+
