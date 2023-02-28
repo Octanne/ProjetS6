@@ -28,15 +28,13 @@ int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
 
 	// Check Object collisions by checking all positions of the hitbox
 	short i, j;
-	int8_t collision;
 	for (j = y; j > y-ySize; j--) {
 		for (i = x; i < x+xSize; i++) {
-			// Create a list of objects at the position and check if it is empty
+			// Create a list of objects at the position
 			ListeObjet objs = rechercherObjet(level, i, j);
-			collision = (objs.tete != NULL);
 			
 			// If the list is not empty, there is a collision
-			if (collision) {
+			if (objs.tete != NULL) {
 				logs(L_DEBUG, "read => x: %d, y: %d (collision avec %d)", i, j, objs.tete->objet->type);
 				return 0;
 			}
