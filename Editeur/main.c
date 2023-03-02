@@ -181,55 +181,55 @@ void mouse_levelWindow(short posX, short posY) {
         // Apply the selected tool on the level
         int success = 0;
         switch (gameInterface.toolsMenu.toolsSelected) {
-            case 0:
+            case DELETE_ID:
                 // Delete
                 success = supprimerObjet(&level, posX, posY);
                 break;
-            case 1:
+            case BLOCK_ID:
                 // Block
                 success = poserBlock(&level, posX, posY);
                 break;
-            case 2:
+            case LADDER_ID:
                 // Ladder
                 success = poserLadder(&level, posX, posY);
                 break;
-            case 3:
+            case TRAP_ID:
                 // Trap
                 success = poserTrap(&level, posX, posY);
                 break;
-            case 4:
+            case GATE_ID:
                 // Gate
                 success = poserGate(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
-            case 5:
+            case KEY_ID:
                 // Key
                 success = poserKey(&level, posX, posY, gameInterface.toolsMenu.gateColorSelected);
                 break;
-            case 6:
+            case DOOR_ID:
                 // Door
                 success = poserDoor(&level, posX, posY, gameInterface.toolsMenu.doorNumberSelected);
                 break;
-            case 7:
+            case EXIT_ID:
                 // Exit
                 success = poserExit(&level, posX, posY);
                 break;
-            case 8:
+            case START_ID:
                 // Start
                 success = poserStart(&level, posX, posY);
                 break;
-            case 9:
+            case ROBOT_ID:
                 // Robot
                 success = poserRobot(&level, posX, posY);
                 break;
-            case 10:
+            case PROBE_ID:
                 // Probe
                 success = poserProbe(&level, posX, posY);
                 break;
-            case 11:
+            case HEART_ID:
                 // Life
                 success = poserVie(&level, posX, posY);
                 break;
-            case 12:
+            case BOMB_ID:
                 // Bomb
                 success = poserBomb(&level, posX, posY);
                 break;

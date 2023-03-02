@@ -35,18 +35,20 @@
 #define RED_BUTTON 14
 #define ARROW_BUTTON 15
 
+#define DELETE_ID 0
 #define BLOCK_ID 1
-#define HEART_ID 2
-#define BOMB_ID 3
-#define TRAP_ID 4
-#define GATE_ID 5
-#define KEY_ID 6
-#define DOOR_ID 7
-#define EXIT_ID 8
-#define START_ID 9
-#define LADDER_ID 10
-#define PROBE_ID 11
-#define ROBOT_ID 12
+#define LADDER_ID 2
+#define TRAP_ID 3
+#define GATE_ID 4
+#define KEY_ID 5
+#define DOOR_ID 6
+#define EXIT_ID 7
+#define START_ID 8
+#define ROBOT_ID 9
+#define PROBE_ID 10
+#define HEART_ID 11
+#define BOMB_ID 12
+
 #define PLAYER_ID 13
 
 #define TOTAL_TOOLS 12
