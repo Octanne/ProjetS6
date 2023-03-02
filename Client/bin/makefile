@@ -1,14 +1,11 @@
 CC = gcc -Wall
-OBJETS = main.o utils.o objet.o liste.o level.o level_edit.o system_save.o system_gui.o
+OBJETS = main.o utils.o objet.o liste.o level.o level_edit.o system_gui.o
 INCL = ../includes
 main : $(OBJETS)
 	$(CC) -o main $(OBJETS) -lm -lncurses
 
-main.o : ../main.c $(INCL)/level/level.h $(INCL)/level_edit/level_edit.h $(INCL)/utils/utils.h $(INCL)/system_save/system_save.h $(INCL)/system_gui/system_gui.h
+main.o : ../main.c $(INCL)/level/level.h $(INCL)/level_edit/level_edit.h $(INCL)/utils/utils.h $(INCL)/system_gui/system_gui.h
 	$(CC) -c ../main.c
-
-system_save.o : $(INCL)/system_save/system_save.c $(INCL)/system_save/system_save.h $(INCL)/level/level.h $(INCL)/utils/utils.h
-	$(CC) -c $(INCL)/system_save/system_save.c
 
 system_gui.o : $(INCL)/system_gui/system_gui.c $(INCL)/system_gui/system_gui.h $(INCL)/level/level.h $(INCL)/utils/utils.h
 	$(CC) -c $(INCL)/system_gui/system_gui.c -lm -lncurses

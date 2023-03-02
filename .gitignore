@@ -1,2 +1,4 @@
-bin/*.o
+Client/bin/*.o
+Serveur/bin/*.o
+Editeur/bin/*.o
 .vscode/

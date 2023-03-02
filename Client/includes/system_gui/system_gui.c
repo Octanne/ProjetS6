@@ -18,9 +18,9 @@ void init_gui() {
 
     logs(L_INFO, "Main | Ncurses windows init success!");
     
-    gen_game_editor_window();
+    gen_game_window();
     logs(L_INFO, "Main | Game Window created!");
-    gen_tools_menu();
+    gen_player_menu();
     logs(L_INFO, "Main | Tools menu created!");
 }
 
@@ -92,74 +92,63 @@ void refresh_level(Level level) {
 /**
  * @brief Refresh the tools menu from scratch.
  */
-void refresh_tools_menu() {
+void refresh_player_menu() {
 	// Clear window
     wclear(gameInterface.gui.winTOOLS);
 
-	// Draw tools menu
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 0 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 0, 2, "Delete");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 1 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 1, 2, "Block");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 2 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 2, 2, "Ladder");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 3 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 3, 2, "Trap");
-    
-    // Gate
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 4 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 4, 2, "Gate");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
-    mvwprintw(gameInterface.gui.winTOOLS, 4, 8, " ");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
-    mvwprintw(gameInterface.gui.winTOOLS, 4, 9, " ");
+	// Draw player infos
+
+    // Draw Keys
+    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameInterface.gui.winTOOLS, 2, 2, "Keys");
+    if (gameInterface.playerMenu.key1 == 1) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
+        mvwaddch(gameInterface.gui.winTOOLS, 4, 2, ' ');
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(PURPLE_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 5, 2, ACS_LLCORNER);
+    }
+    if (gameInterface.playerMenu.key2 == 1) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
+        mvwaddch(gameInterface.gui.winTOOLS, 4, 4, ' ');
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(GREEN_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 5, 4, ACS_LLCORNER);
+    }
+    if (gameInterface.playerMenu.key3 == 1) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
+        mvwaddch(gameInterface.gui.winTOOLS, 4, 6, ' ');
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 5, 6, ACS_LLCORNER);
+    }
+    if (gameInterface.playerMenu.key4 == 1) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
+        mvwaddch(gameInterface.gui.winTOOLS, 4, 8, ' ');
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(LBLUE_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 5, 8, ACS_LLCORNER);
+    }
+
+
+    // Draw Lives
+    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameInterface.gui.winTOOLS, 7, 2, "Lives");
+    int i;
+    for (i = 0; i < gameInterface.playerMenu.nbLives; i++) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 9, 2 + 2*i, 'V');
+    }
+
+    // Draw Bombs
+    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameInterface.gui.winTOOLS, 11, 2, "Bombs");
+    for (i = 0; i < gameInterface.playerMenu.nbBombs; i++) {
+        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+        mvwaddch(gameInterface.gui.winTOOLS, 13, 2 + 2*i, 'O');
+    }
+
+    // Draw Level
+    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameInterface.gui.winTOOLS, 15, 2, "Level");
     wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-    mvwprintw(gameInterface.gui.winTOOLS, 4, 10, " ");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(DBLUE_BLOCK));
-    mvwprintw(gameInterface.gui.winTOOLS, 4, 11, " ");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 5, gameInterface.toolsMenu.gateColorSelected+8, "^");
-
-	// Key
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 5 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 5, 2, "Key");
-
-    // Door
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 6 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 6, 2, "Door");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 6, 8, "<%02i>", gameInterface.toolsMenu.doorNumberSelected);
-
-	// Others
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 7 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 7, 2, "Exit");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 8 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 8, 2, "Start");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 9 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 9, 2, "Robot");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 10 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 10, 2, "Probe");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 11 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 11, 2, "Life");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(gameInterface.toolsMenu.toolsSelected == 12 ? WHITE_COLOR : RED_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 12, 2, "Bomb");
-
-	// Level
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 14, 0, "Current level");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 16, 5, "%03i", gameInterface.toolsMenu.levelNumberSelected);
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(ARROW_BUTTON));
-    mvwprintw(gameInterface.gui.winTOOLS, 16, 3, "<");
-    mvwprintw(gameInterface.gui.winTOOLS, 16, 9, ">");
-
-    // Select cursor
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, gameInterface.toolsMenu.toolsSelected, 0, ">");
-
-	// Delete
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_BUTTON));
-    mvwprintw(gameInterface.gui.winTOOLS, 18, 3, "DELETE");
+    mvwprintw(gameInterface.gui.winTOOLS, 17, 2, " %03i ", gameInterface.playerMenu.currentLevel);
 
 	// Refresh window
     wattroff(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
@@ -169,7 +158,7 @@ void refresh_tools_menu() {
 /**
  * @brief Generate the game editor window
  */
-void gen_game_editor_window() {
+void gen_game_window() {
 
     // Level window
     gameInterface.gui.cwinLEVEL = newwin(22, 62, 0, 0);
@@ -186,7 +175,7 @@ void gen_game_editor_window() {
     gameInterface.gui.cwinTOOLS = newwin(22, 15, 0, 62);
     box(gameInterface.gui.cwinTOOLS, 0, 0);
     wmove(gameInterface.gui.cwinTOOLS, 0, 0);
-    wprintw(gameInterface.gui.cwinTOOLS, " Tools ");
+    //wprintw(gameInterface.gui.cwinTOOLS, " Tools ");
     wrefresh(gameInterface.gui.cwinTOOLS);
 
 	// Create a subwindow using derwin
@@ -209,16 +198,19 @@ void gen_game_editor_window() {
 }
 
 /**
- * @brief Generate the tools menu
+ * @brief Generate the players menu
  */
-void gen_tools_menu() {
-    gameInterface.toolsMenu.toolsSelected = 0;
-    gameInterface.toolsMenu.gateColorSelected = 0;
-    gameInterface.toolsMenu.doorNumberSelected = 1;
-    gameInterface.toolsMenu.levelNumberSelected = 1;
+void gen_player_menu() {
+    gameInterface.playerMenu.nbLives = 5;
+    gameInterface.playerMenu.nbBombs = 5;
 
-    // Focus fleche on tools menu
-    gameInterface.toolsMenu.inEdit = 1;
-    refresh_tools_menu();
+    gameInterface.playerMenu.key1 = 1;
+    gameInterface.playerMenu.key2 = 1;
+    gameInterface.playerMenu.key3 = 1;
+    gameInterface.playerMenu.key4 = 1;
+
+    gameInterface.playerMenu.currentLevel = 1;
+
+    refresh_player_menu();
 }
 
