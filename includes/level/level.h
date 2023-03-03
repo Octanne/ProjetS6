@@ -2,8 +2,9 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "../liste/liste.h"
 #include <ncurses.h>
+
+#include "liste.h"
 
 #define MATRICE_LEVEL_X 60
 #define MATRICE_LEVEL_Y 20

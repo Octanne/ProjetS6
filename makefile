@@ -2,7 +2,9 @@
 # MAIN CONFIGURATION
 #
 
-EXEC = Client/client Editeur/editeur
+EXEC = client editeur
+MAIN = Client/client.c Editeur/editeur.c
+INCLUDES = includes/ Client/includes/ Editeur/includes/ Serveur/includes/
 OBJECTS_CLI = level_update.o client_gui.o
 OBJECTS_EDIT = level_edit.o editor_gui.o system_save.o
 OBJECTS = level.o liste.o objet.o utils.o $(OBJECTS_CLI) $(OBJECTS_EDIT)
@@ -19,7 +21,7 @@ PROJECT_NAME = game_projets6
 #
 
 EXEC_O = $(EXEC:=.o)
-OBJECTS_O = $(OBJETS) $(EXEC_O)
+OBJECTS_O = $(OBJECTS) $(EXEC_O)
 
 #
 # ARGUMENTS AND COMPILER
@@ -28,7 +30,11 @@ OBJECTS_O = $(OBJETS) $(EXEC_O)
 CC = gcc
 CCFLAGS_STD = -Wall -Werror
 CCFLAGS_DEBUG = -D _DEBUG_
-CCFLAGS = $(CCFLAGS_STD)
+
+include_dirs = $(wildcard $(addsuffix */, $(INCLUDES)))
+INCLUDE_STD = $(addprefix -iquote ,$(INCLUDES) $(include_dirs))
+
+CCFLAGS = $(CCFLAGS_STD) $(INCLUDE_STD)
 CCLIBS = -lncursesw
 
 #
@@ -37,7 +43,7 @@ CCLIBS = -lncursesw
 
 all: msg $(OBJECTS) $(EXEC_O)
 	@echo "Create executables..."
-	@for i in $(EXEC); do \
+	@for i in $(MAIN); do \
 	$(CC) -o $$i $$i.o $(OBJECTS) $(CCLIBS); \
 	done
 	@echo "Done."
@@ -53,6 +59,7 @@ debug: all
 #
 
 %.o : %.c
+	@echo "Create object $@..."
 	@cd $(dir $<) && ${CC} ${CCFLAGS} -c $(notdir $<) -o $(notdir $@)
 
 #
@@ -71,7 +78,9 @@ depend:
 	@echo "Create dependancies..."
 	@sed -e "/^# DEPENDANCIES/,$$ d" makefile > dependancies
 	@echo "# DEPENDANCIES" >> dependancies
+	@echo "OBJ : $(OBJECTS_O)"
 	@for i in $(OBJECTS_O); do \
+	echo "Create dependancies for $$i..."; \
 	$(CC) -MM -MT $$i $(CCFLAGS) `echo $$i | sed "s/\(.*\)\\.o$$/\1.c/"` >> dependancies; \
 	done
 	@cat dependancies > makefile
@@ -90,5 +99,14 @@ archive: clean
 	@echo "Done."
 
 # DEPENDANCIES
-covid.o: covid.c include.h
-TComB.o: TComB.c functions.h window.h colors.h include.h display.h
+Client/client.o: Client/client.c includes/level/level.h \
+ includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
+ includes/utils/constants.h includes/utils/st_benchmark.h \
+ Client/includes/level_update/level_update.h \
+ Client/includes/client_gui/client_gui.h
+Editeur/editeur.o: Editeur/editeur.c includes/level/level.h \
+ includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
+ includes/utils/constants.h includes/utils/st_benchmark.h \
+ Editeur/includes/level_edit/level_edit.h \
+ Editeur/includes/system_save/system_save.h \
+ Editeur/includes/editor_gui/editor_gui.h

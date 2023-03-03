@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "../utils/utils.h"
+#include "utils.h"
 
 /**
  * @brief Create a new list of objects.

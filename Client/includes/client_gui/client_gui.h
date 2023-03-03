@@ -4,8 +4,8 @@
 
 #include <ncurses.h>
 
-#include "../../includes/level/level.h"
-#include "../../includes/utils/utils.h"
+#include "level.h"
+#include "utils.h"
 
 typedef struct {
     int8_t nbBombs;

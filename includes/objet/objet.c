@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "../utils/utils.h"
+#include "utils.h"
 
 /**
  * @brief Init an object with the given parameters.

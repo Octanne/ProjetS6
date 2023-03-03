@@ -2,7 +2,7 @@
 #ifndef LISTE_H
 #define LISTE_H
 
-#include "../objet/objet.h"
+#include "objet.h"
 
 typedef struct EltListe_o_t EltListe_o;
 struct EltListe_o_t {

@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <string.h>
 
-#include "../../includes/level/level.h"
+#include "level.h"
 
 #define TAG_FILE "GAMEOFTABLES"
 #define TAILLE_TABLE 10
