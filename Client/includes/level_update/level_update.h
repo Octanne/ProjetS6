@@ -2,7 +2,7 @@
 #ifndef LEVEL_EDIT_H
 #define LEVEL_EDIT_H
 
-#include "../level/level.h"
+#include "../../includes/level/level.h"
 
 typedef struct Position_s {
     short x;

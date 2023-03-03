@@ -1,4 +1,4 @@
-#include "system_gui.h"
+#include "editor_gui.h"
 
 #include <locale.h>
 

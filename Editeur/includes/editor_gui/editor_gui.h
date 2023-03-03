@@ -1,11 +1,11 @@
 
-#ifndef SYSTEM_GUI_H
-#define SYSTEM_GUI_H
+#ifndef EDITOR_GUI_H
+#define EDITOR_GUI_H
 
 #include <ncurses.h>
 
-#include "../level/level.h"
-#include "../utils/utils.h"
+#include "../../includes/level/level.h"
+#include "../../includes/utils/utils.h"
 
 typedef struct {
     int toolsSelected;

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../utils/utils.h"
+#include "../../includes/utils/utils.h"
 
 /**
  * @brief Check if a position is free.

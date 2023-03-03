@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
-#include "includes/level/level.h"
-#include "includes/utils/utils.h"
-#include "includes/level_edit/level_edit.h"
-#include "includes/system_gui/system_gui.h"
+#include "../includes/level/level.h"
+#include "../includes/utils/utils.h"
+#include "includes/level_update/level_update.h"
+#include "includes/client_gui/client_gui.h"
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 

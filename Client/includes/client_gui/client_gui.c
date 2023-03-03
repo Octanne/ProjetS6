@@ -1,4 +1,4 @@
-#include "system_gui.h"
+#include "client_gui.h"
 
 #include <locale.h>
 
