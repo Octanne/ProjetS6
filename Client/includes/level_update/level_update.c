@@ -1,9 +1,10 @@
+
 #include "level_update.h"
+#include "utils.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "utils.h"
 
 /**
  * @brief Check if a position is free.
