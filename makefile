@@ -102,7 +102,7 @@ depend:
 	@echo "EXEC : $(MAIN)"
 	@for i in $(MAIN); do \
 	echo "Create dependancies for $$i..."; \
-	$(CC) -MM -MT $$i $(CCFLAGS) $$i >> dependancies; \
+	$(CC) -MM -MT $$i $(CCFLAGS) includes/`echo $$i | sed "s/\(.*\)\\.o$$/\1/"`/`echo $$i | sed "s/\(.*\)\\.o$$/\1.c/"` >> dependancies; \
 	done
 
 	@cat dependancies > makefile
