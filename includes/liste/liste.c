@@ -1,9 +1,9 @@
 
 #include "liste.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
-#include "utils.h"
 
 /**
  * @brief Create a new list of objects.

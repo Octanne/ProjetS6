@@ -4,51 +4,26 @@
 
 #include <stdint.h>
 
-typedef struct {
-} Block_obj;
-
-typedef struct {
-} Ladder_obj;
-
-typedef struct {
-} Trap_obj;
-
-typedef struct {
-    int8_t numkey;
-} Key_obj;
-
-typedef struct {
-    int8_t numgate;
-} Gate_obj;
-
-typedef struct {
-    int8_t numdoor;
-} Door_obj;
-
-typedef struct {
-} Exit_obj;
-
-typedef struct {
-} Start_obj;
-
-typedef struct {
-} Robot_obj;
-
-typedef struct {
-} Probe_obj;
-
-typedef struct {
-} Heart_obj;
-
-typedef struct {
-} Bomb_obj;
-
+// Type d'objet
+typedef struct {} Block_obj;
+typedef struct {} Ladder_obj;
+typedef struct {} Trap_obj;
+typedef struct { int8_t numkey; } Key_obj;
+typedef struct { int8_t numgate; } Gate_obj;
+typedef struct { int8_t numdoor; } Door_obj;
+typedef struct {} Exit_obj;
+typedef struct {} Start_obj;
+typedef struct {} Robot_obj;
+typedef struct {} Probe_obj;
+typedef struct {} Heart_obj;
+typedef struct {} Bomb_obj;
 typedef struct {
     int8_t life;
     int8_t color;
     int8_t orientation;
 } Player_obj;
 
+// Union des objets
 typedef union {
     Block_obj block;
     Heart_obj heart;
@@ -65,6 +40,7 @@ typedef union {
     Player_obj player;
 } ObjetU;
 
+// Objet générique (utilisé pour les listes)
 typedef struct {
     int8_t type;
     ObjetU objet;

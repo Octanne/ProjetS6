@@ -1,9 +1,9 @@
 
 #include "level.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
-#include "utils.h"
 
 /**
  * @brief Create an empty level.

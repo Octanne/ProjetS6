@@ -1,9 +1,9 @@
 
 #include "objet.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
-#include "utils.h"
 
 /**
  * @brief Init an object with the given parameters.
