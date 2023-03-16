@@ -1,0 +1,9 @@
+obj/level.o
+obj/utils.o
+obj/liste.o
+obj/objet.o
+obj/level_update.o
+obj/client_gui.o
+obj/editor_gui.o
+obj/level_edit.o
+obj/system_save.o
