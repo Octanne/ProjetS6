@@ -178,3 +178,101 @@ void listeEntier_free(ListeEntier* listeEntier) {
 	}
 }
 
+////////////////////////////////////
+////////////////////////////////////
+////////////////////////////////////
+
+/**
+ * @brief Create a new list of players.
+ * 
+ * @return ListePlayer : The list of players.
+ */
+ListePlayer creerListePlayer() {
+	ListePlayer listePlayer;
+	listePlayer.tete = NULL;
+	listePlayer.taille = 0;
+	return listePlayer;
+}
+
+/**
+ * @brief Add an object to a list of players.
+ * 
+ * @param listePlayer : The list of players.
+ * @param player : The object to add.
+ */
+void listeAjouterPlayer(ListePlayer* listePlayer, Player* player) {
+	EltListe_p* eltListe = malloc(sizeof(EltListe_p));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "listeAjouterPlayer | ERROR malloc eltListe");
+		perror("Error while allocating memory in listeAjouterPlayer\n");
+		exit(EXIT_FAILURE);
+	}
+	eltListe->player = player;
+	eltListe->suivant = listePlayer->tete;
+
+	// Add the element to the list.
+	listePlayer->tete = eltListe;
+	listePlayer->taille++;
+}
+
+/**
+ * @brief Remove an object from a list of players.
+ * 
+ * @param listePlayer : The list of players.
+ * @param player : The object to remove.
+ * @param freePlayer : If the object should be freed.
+ */
+void listeSupprimerPlayer(ListePlayer* listePlayer, Player* player, int freePlayer) {
+	EltListe_p* eltListe = listePlayer->tete;
+	EltListe_p* precedent = NULL;
+
+	// Search for the object in the list.
+	while (eltListe != NULL) {
+		if (eltListe->player == player) {
+			if (precedent == NULL)
+				listePlayer->tete = eltListe->suivant;
+			else
+				precedent->suivant = eltListe->suivant;
+			
+			// Free the object if needed.
+			if (freePlayer)
+				player_free(eltListe->player);
+			
+			// Free the element and update the list size.
+			free(eltListe);
+			listePlayer->taille--;
+			return;
+		}
+
+		// Update the precedent element and the current element to continue the search.
+		precedent = eltListe;
+		eltListe = eltListe->suivant;
+	}
+}
+
+/**
+ * @brief Free a list of players.
+ * 
+ * @param listePlayer : The list of players.
+ * @param freePlayer : If the players should be freed.
+ */
+void listePlayer_free(ListePlayer* listePlayer, int freePlayer) {
+	EltListe_p* eltListe = listePlayer->tete;
+
+	// Free the players and the elements. If freePlayer is false, only the elements are freed.
+	if (freePlayer) {
+		while (eltListe != NULL) {
+			player_free(eltListe->player);
+			EltListe_p* tmp = eltListe;
+			eltListe = eltListe->suivant;
+			free(tmp);
+		}
+	}
+	else {
+		while (eltListe != NULL) {
+			EltListe_p* tmp = eltListe;
+			eltListe = eltListe->suivant;
+			free(tmp);
+		}
+	}
+}

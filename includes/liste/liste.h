@@ -3,6 +3,7 @@
 #define LISTE_H
 
 #include "objet.h"
+#include "player.h"
 
 typedef struct EltListe_o_t EltListe_o;
 struct EltListe_o_t {
@@ -39,6 +40,26 @@ ListeEntier creerListeEntier();
 void listeAjouterEntier(ListeEntier* listeEntier, int entier);
 void listeSupprimerEntier(ListeEntier* listeEntier, int entier);
 void listeEntier_free(ListeEntier* listeEntier);
+
+////////////////////////////////////
+////////////////////////////////////
+////////////////////////////////////
+
+typedef struct EltListe_p_t EltListe_p;
+struct EltListe_p_t {
+    Player* player;
+    EltListe_p* suivant;
+};
+
+typedef struct {
+    EltListe_p* tete;
+    int taille;
+} ListePlayer;
+
+ListePlayer creerListePlayer();
+void listeAjouterPlayer(ListePlayer* listePlayer, Player* player);
+void listeSupprimerPlayer(ListePlayer* listePlayer, Player* player, int freePlayer);
+void listePlayer_free(ListePlayer* listePlayer, int freePlayer);
 
 #endif
 

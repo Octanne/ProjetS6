@@ -9,7 +9,7 @@ CC = @gcc -Wall $(INCLUDE_STD) -c
 LD = @gcc -Wall -o
 LIBS = -lncurses -lpthread
 
-all: prepare client editeur end
+all: prepare client editeur serveur end
 	@echo "Process done."
 
 end:
@@ -19,6 +19,7 @@ end:
 	@echo "Moving exec to zrun/..."
 	@mv client zrun/
 	@mv editeur zrun/
+	@mv serveur zrun/
 
 prepare:
 	@echo "Preparing folder if needed..."
@@ -26,7 +27,7 @@ prepare:
 	@mkdir -p zrun
 
 clean:
-	@rm -f *.o client editeur
+	@rm -f *.o client editeur serveur
 	@rm -f zbin/*.o
 	@echo "Clean done."
 
@@ -40,7 +41,13 @@ editeur: editeur.o level_edit.o editor_gui.o system_save.o level.o liste.o \
 	$(LD) editeur editeur.o level_edit.o editor_gui.o system_save.o \
  level.o liste.o objet.o utils.o $(LIBS)
 
+serveur: serveur.o player_manager.o player.o
+	$(LD) serveur serveur.o player_manager.o player.o $(LIBS)
+
 # Dépendances
+serveur.o: Serveur/serveur.c
+	$(CC) Serveur/serveur.c
+
 client.o: Client/client.c includes/level/level.h \
  includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
  includes/utils/constants.h includes/utils/st_benchmark.h \
@@ -104,3 +111,10 @@ objet.o: includes/objet/objet.c includes/objet/objet.h \
 utils.o: includes/utils/utils.c includes/utils/utils.h \
  includes/utils/constants.h includes/utils/st_benchmark.h
 	$(CC) includes/utils/utils.c
+
+player.o: includes/player/player.c includes/player/player.h
+	$(CC) includes/player/player.c
+
+player_manager.o: Serveur/includes/player_manager/player_manager.c Serveur/includes/player/player_manager.h \
+ includes/player/player.h
+	$(CC) Serveur/includes/player_manager/player_manager.c
