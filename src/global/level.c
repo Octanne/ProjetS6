@@ -220,7 +220,7 @@ void levelUpdateMatriceSprite(Level* level) {
                         // Lead 0
                         if (y == 3 && x < 2) {
                             int8_t numDoor = objet->objet.door.numdoor;
-                            char numDoorChar[4];
+                            char numDoorChar[5];
                             sprintf(numDoorChar, "%02i", numDoor);
                             if (x == 0) level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(numDoorChar[0], WHITE_COLOR);
                             if (x == 1) level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(numDoorChar[1], WHITE_COLOR);

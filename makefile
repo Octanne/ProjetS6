@@ -42,7 +42,22 @@ CCLIBS = -lncurses -lpthread
 all: msg $(addprefix $(OBJECTS_DIR)/,$(OBJECTS)) $(addprefix $(OBJECTS_DIR)/,$(EXEC_O))
 	@echo "Create executables..."
 	@for i in $(EXEC); do \
-	$(CC) -o $(addprefix $(BIN_DIR)/,$$i) $(addprefix $(OBJECTS_DIR)/,$$i.o) $(addprefix $(OBJECTS_DIR)/,$(OBJECTS)) $(CCLIBS) $(INCLUDE_DIR); \
+	# We create the directory if it doesn't exist \
+	mkdir -p $(dir $(addprefix $(BIN_DIR)/,$$i)); \
+	echo "Generating $(addprefix $(BIN_DIR)/,$$i)"; \
+	# We get the objects needed for the executable \
+	# We add in $$objFilter only the objects that contains the name of the executable in their name or if it contains 'global/' \
+	objsFilter=""; \
+	for obj in $(OBJECTS); do \
+	if [[ $$obj == *$$i/*  ]]; then \
+	objsFilter="$$objsFilter $(addprefix $(OBJECTS_DIR)/,$$obj)"; \
+	fi; \
+	echo $$obj | grep -q "global/" && objsFilter="$$objsFilter $(addprefix $(OBJECTS_DIR)/,$$obj)"; \
+	done; \
+	# We remove the last and the first space \
+	objsFilter=`echo $$objsFilter | sed "s/^ //"`; \
+	$(CC) -o $(addprefix $(BIN_DIR)/,$$i) $$objsFilter $(CCLIBS) $(INCLUDE_DIR); \
+	#echo "$(CC) -o $(addprefix $(BIN_DIR)/,$$i) $$objsFilter $(CCLIBS) $(INCLUDE_DIR);"; \
 	done
 	@echo "Done."
 
@@ -60,7 +75,7 @@ $(addprefix $(OBJECTS_DIR)/,%.o) : $(addprefix $(SRC_DIR)/,%.c)
 	@echo "Generating $@"
 	@# We create the directory if it doesn't exist
 	@mkdir -p $(dir $@)
-	@${CC} ${CCFLAGS} -c $< -o $@ $(INCLUDE_DIR)
+	@${CC} ${CCFLAGS} -c $< -o $@ $(CCLIBS) $(INCLUDE_DIR)
 
 #
 # MAIN RULES (must not change it)
