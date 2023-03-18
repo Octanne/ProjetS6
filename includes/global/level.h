@@ -5,6 +5,7 @@
 #include <ncurses.h>
 
 #include "liste.h"
+#include "objet.h"
 
 #define MATRICE_LEVEL_X 60
 #define MATRICE_LEVEL_Y 20
@@ -19,7 +20,7 @@ typedef struct {
 } SpriteData;
 
 typedef struct {
-    ListeObjet listeObjet;
+    Liste listeObjet;
     SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
     Objet* matriceCollide[MATRICE_LEVEL_SIZE];
 } Level;
@@ -34,7 +35,7 @@ void level_free(Level* level);
 void levelAjouterObjet(Level* level, Objet* objet);
 void levelSupprimerObjet(Level* level, Objet* objet);
 void levelUpdateMatriceSprite(Level* level);
-ListeObjet rechercherObjet(Level* level, short x, short y);
+Liste rechercherObjet(Level* level, short x, short y);
 
 #endif
 

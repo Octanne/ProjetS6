@@ -5,7 +5,6 @@
 #include <ncurses.h>
 
 #include "level.h"
-#include "utils.h"
 
 typedef struct {
     int toolsSelected;

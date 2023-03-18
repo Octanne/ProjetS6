@@ -5,6 +5,7 @@
 
 #include "level.h"
 #include "utils.h"
+#include "constants.h"
 
 #include "level_edit.h"
 #include "system_save.h"

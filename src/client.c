@@ -5,6 +5,7 @@
 
 #include "level.h"
 #include "utils.h"
+#include "constants.h"
 
 #include "level_update.h"
 #include "client_gui.h"

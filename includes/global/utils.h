@@ -2,9 +2,6 @@
 #ifndef _FUNCTIONS_
 #define _FUNCTIONS_
 
-#include "constants.h"
-#include "st_benchmark.h"
-
 void ncurses_init();
 void ncurses_stop();
 void ncurses_colors();

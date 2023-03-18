@@ -1,8 +1,10 @@
 
 #include "objet.h"
 #include "utils.h"
+#include "constants.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 
 /**

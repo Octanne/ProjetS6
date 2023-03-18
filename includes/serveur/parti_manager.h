@@ -9,7 +9,7 @@ typedef struct {
 
     int nbPlayers;
     int maxPlayers;
-    ListePlayer players;
+    Liste players;
 } Partie;
 
 void joinPartie();

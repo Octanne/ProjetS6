@@ -1,6 +1,7 @@
 
 #include "system_save.h"
 #include "utils.h"
+#include "constants.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -481,11 +482,11 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     
     // Parcourir la liste des objets
     int i = 0;
-    EltListe_o* obj = level.listeObjet.tete;
+    EltListe* obj = level.listeObjet.tete;
     while (obj != NULL) {
 
 		// Copy object bytes to buffer at the right position & go to next object
-        memcpy(buffer + (i++ * sizeof(Objet)), obj->objet, sizeof(Objet));
+        memcpy(buffer + (i++ * sizeof(Objet)), obj->elmt, sizeof(Objet));
         obj = obj->suivant;
     }
 

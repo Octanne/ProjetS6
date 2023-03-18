@@ -3,6 +3,9 @@
 
 #include <locale.h>
 
+#include "utils.h"
+#include "constants.h"
+
 GameInterface gameInterface;
 
 /**

@@ -56,5 +56,8 @@
 #define RIGHT_ORIENTATION 1
 #define LEFT_ORIENTATION 0
 
+#define TYPE_PLAYER 0
+#define TYPE_OBJET 1
+
 #endif
 

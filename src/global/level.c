@@ -1,6 +1,7 @@
 
 #include "level.h"
 #include "utils.h"
+#include "constants.h"
 
 #include <stdlib.h>
 
@@ -12,7 +13,7 @@
  */
 Level levelEmpty() {
     Level level;
-    level.listeObjet = creerListeObjet();
+    level.listeObjet = liste_create();
     levelUpdateMatriceSprite(&level);
     return level;
 }
@@ -56,14 +57,14 @@ SpriteData creerSpriteDataS(chtype sprite, int color) {
 */
 Level levelCreer() {
     Level level;
-    level.listeObjet = creerListeObjet();
+    level.listeObjet = liste_create();
 
     // Ajouter les murs de la map
     short y, x;
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {
             if (y == 0 || y == MATRICE_LEVEL_Y - 1 || x == 0 || x == MATRICE_LEVEL_X - 1) {
-                listeAjouterObjet(&level.listeObjet, creerBlock(x, y));
+                liste_add(&level.listeObjet, creerBlock(x, y), TYPE_OBJET);
             }
         }
     }
@@ -82,7 +83,7 @@ void level_free(Level* level) {
     if (level == NULL) return;
 
 	// Free the listeObjet
-    listeObjet_free(&level->listeObjet, true);
+    liste_free(&level->listeObjet, true);
 }
 
 /**
@@ -101,7 +102,7 @@ SpriteData emptySprite() {
  * @param objet : The objet to add.
 */
 void levelAjouterObjet(Level* level, Objet* objet) {
-    listeAjouterObjet(&level->listeObjet, objet);
+    liste_add(&level->listeObjet, objet, TYPE_OBJET);
     levelUpdateMatriceSprite(level);
     // TODO update CollideMatrice
 }
@@ -113,7 +114,7 @@ void levelAjouterObjet(Level* level, Objet* objet) {
  * @param objet : The objet to remove.
 */
 void levelSupprimerObjet(Level* level, Objet* objet) {
-    listeSupprimerObjet(&level->listeObjet, objet, true);
+    liste_remove(&level->listeObjet, objet, true);
     levelUpdateMatriceSprite(level);
     // TODO update CollideMatrice
 }
@@ -127,18 +128,18 @@ void levelSupprimerObjet(Level* level, Objet* objet) {
  * 
  * @return ListeObjet* : The list of objet found (can be empty)
 */
-ListeObjet rechercherObjet(Level* level, short x, short y) {
-    ListeObjet liste = creerListeObjet();
+Liste rechercherObjet(Level* level, short x, short y) {
+    Liste liste = liste_create();
     
 	// Search in the list of objet of the level
-    EltListe_o *elt = level->listeObjet.tete;
+    EltListe *elt = level->listeObjet.tete;
     while (elt != NULL) {
 
 		// Check if x and y are in the zone delimited by the coordinates of the objet and its size.
-        Objet* objet = elt->objet;
+        Objet* objet = elt->elmt;
         if ( (x >= objet->x && x < objet->x + objet->xSize) && 
              (y <= objet->y && y > objet->y - objet->ySize)) {
-            listeAjouterObjet(&liste, objet);
+            liste_add(&liste, objet, TYPE_OBJET);
         }
         elt = elt->suivant;
     }
@@ -160,10 +161,10 @@ void levelUpdateMatriceSprite(Level* level) {
 	}
 
     // Parcourir les objets du level
-    EltListe_o *elt = level->listeObjet.tete;
+    EltListe *elt = level->listeObjet.tete;
     while (elt != NULL) {
         char sprite;
-        Objet* objet = elt->objet;
+        Objet* objet = elt->elmt;
         int color, colorB;
         short x, y;
 
