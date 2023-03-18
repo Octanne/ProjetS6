@@ -3,7 +3,7 @@
 #
 
 EXEC = client editeur serveur
-OBJECTS = client/level_update.o client/client_gui.o serveur/parti_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/liste.o global/level.o global/objet.o global/player.o global/utils.o
+OBJECTS = client/level_update.o client/client_gui.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/liste.o global/objet.o global/level.o global/player.o global/utils.o serveur/parti_manager.o
 PROJECT_NAME = ProjetS6
 
 SRC_DIR = src
@@ -49,7 +49,7 @@ all: msg $(addprefix $(OBJECTS_DIR)/,$(OBJECTS)) $(addprefix $(OBJECTS_DIR)/,$(E
 	# We add in $$objFilter only the objects that contains the name of the executable in their name or if it contains 'global/' \
 	objsFilter=""; \
 	for obj in $(OBJECTS); do \
-	if [[ $$obj == *$$i/*  ]]; then \
+	if [ $$obj = *$$i/*  ]; then \
 	objsFilter="$$objsFilter $(addprefix $(OBJECTS_DIR)/,$$obj)"; \
 	fi; \
 	echo $$obj | grep -q "global/" && objsFilter="$$objsFilter $(addprefix $(OBJECTS_DIR)/,$$obj)"; \
@@ -108,7 +108,8 @@ depend:
 	# if the o_name equals $(OBJECTS_DIR)/$(EXEC).o we don't add it \
 	itsGood=1; \
 	for exec in $(EXEC); do \
-	if [ "$$o_name" == "$(OBJECTS_DIR)/$$exec.o" ]; then \
+	comp=$(OBJECTS_DIR)/$$exec.o; \
+	if [ "$$o_name" = "$$comp" ]; then \
 	itsGood=0; \
 	fi; \
 	done; \
@@ -157,9 +158,11 @@ obj/client/client_gui.o: src/client/client_gui.c \
  includes/global/liste.h includes/global/objet.h includes/global/player.h \
  includes/global/utils.h includes/global/constants.h \
  includes/global/st_benchmark.h
-obj/serveur/parti_manager.o: src/serveur/parti_manager.c \
- includes/serveur/parti_manager.h includes/global/liste.h \
- includes/global/objet.h includes/global/player.h
+obj/editeur.o: src/editeur.c includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h includes/editeur/level_edit.h \
+ includes/editeur/system_save.h includes/editeur/editor_gui.h
 obj/editeur/system_save.o: src/editeur/system_save.c \
  includes/editeur/system_save.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/player.h \
@@ -175,27 +178,25 @@ obj/editeur/level_edit.o: src/editeur/level_edit.c \
  includes/global/liste.h includes/global/objet.h includes/global/player.h \
  includes/global/utils.h includes/global/constants.h \
  includes/global/st_benchmark.h
-obj/global/liste.o: src/global/liste.c includes/global/liste.h \
- includes/global/objet.h includes/global/player.h includes/global/utils.h \
- includes/global/constants.h includes/global/st_benchmark.h
-obj/global/level.o: src/global/level.c includes/global/level.h \
- includes/global/liste.h includes/global/objet.h includes/global/player.h \
- includes/global/utils.h includes/global/constants.h \
- includes/global/st_benchmark.h
-obj/global/objet.o: src/global/objet.c includes/global/objet.h \
- includes/global/utils.h includes/global/constants.h \
- includes/global/st_benchmark.h
-obj/global/player.o: src/global/player.c includes/global/player.h
-obj/global/utils.o: src/global/utils.c includes/global/utils.h \
- includes/global/constants.h includes/global/st_benchmark.h
-obj/serveur.o: src/serveur.c
-obj/editeur.o: src/editeur.c includes/global/level.h \
- includes/global/liste.h includes/global/objet.h includes/global/player.h \
- includes/global/utils.h includes/global/constants.h \
- includes/global/st_benchmark.h includes/editeur/level_edit.h \
- includes/editeur/system_save.h includes/editeur/editor_gui.h
 obj/client.o: src/client.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/player.h \
  includes/global/utils.h includes/global/constants.h \
  includes/global/st_benchmark.h includes/client/level_update.h \
  includes/client/client_gui.h
+obj/serveur.o: src/serveur.c
+obj/global/liste.o: src/global/liste.c includes/global/liste.h \
+ includes/global/objet.h includes/global/player.h includes/global/utils.h \
+ includes/global/constants.h includes/global/st_benchmark.h
+obj/global/objet.o: src/global/objet.c includes/global/objet.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/global/level.o: src/global/level.c includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/global/player.o: src/global/player.c includes/global/player.h
+obj/global/utils.o: src/global/utils.c includes/global/utils.h \
+ includes/global/constants.h includes/global/st_benchmark.h
+obj/serveur/parti_manager.o: src/serveur/parti_manager.c \
+ includes/serveur/parti_manager.h includes/global/liste.h \
+ includes/global/objet.h includes/global/player.h
