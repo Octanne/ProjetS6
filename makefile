@@ -1,9 +1,10 @@
 #
-# MAIN CONFIGURATION
+# MAIN CONFIGURATION (DONT MOVE THE LIGN BEFORE OBJECTS)
 #
 
 EXEC = client editeur serveur
-OBJECTS = client/level_update.o client/client_gui.o serveur/parti_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/liste.o global/level.o global/objet.o global/player.o global/utils.oOBJECTS = exemple.o
+OBJECTS = client/level_update.o client/client_gui.o serveur/parti_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/liste.o global/level.o global/objet.o global/player.o global/utils.o
+PROJECT_NAME = ProjetS6
 
 SRC_DIR = src
 OBJECTS_DIR = obj
@@ -100,8 +101,6 @@ depend:
 	echo $$i | sed "s/\(.*\)\\.c$$/\1.o/" >> objs.temp; \
 	fi; \
 	done;
-
-	@echo " " >> dependancies
 	
 	@# replace \n by space on objs.temp
 	@tr '\n' ' ' < objs.temp > objs.temp.new && mv objs.temp.new objs.temp
@@ -109,9 +108,12 @@ depend:
 	@# remove the last space on objs.temp
 	@sed -i 's/ *$$//' objs.temp
 
+	@# We add a \n at the end of objs.temp
+	@echo "" >> objs.temp
+
 	@# We replace the 6th line of dependancies by the content of objs.temp's file
 	@# (the 6th line is the line where we have the OBJECTS = ... part) \
-	sed '5 r objs.temp' dependancies > dependancies.tmp && mv dependancies.tmp dependancies
+	sed '6d; 5r objs.temp' dependancies > dependancies.tmp && mv dependancies.tmp dependancies
 
 	@cat dependancies > makefile
 	@rm dependancies
@@ -182,4 +184,3 @@ obj/client.o: src/client.c includes/global/level.h \
  includes/global/utils.h includes/global/constants.h \
  includes/global/st_benchmark.h includes/client/level_update.h \
  includes/client/client_gui.h
- 
