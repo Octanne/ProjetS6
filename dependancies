@@ -1,0 +1,15 @@
+-MM
+-MT
+-Wall
+-O3
+-Werror
+-iquote
+includes/
+-iquote
+includes/client/
+-iquote
+includes/editeur/
+-iquote
+includes/global/
+-iquote
+includes/serveur/

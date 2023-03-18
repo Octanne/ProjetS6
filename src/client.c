@@ -168,7 +168,7 @@ void main_exit() {
  * @brief Main function
  * @return EXIT_SUCCESS if the program exit correctly
  */
-int main(void) {
+int main(int argc, char *argv[]) {
     // Register exit function
     atexit(main_exit);
 
