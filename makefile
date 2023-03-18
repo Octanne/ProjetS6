@@ -1,120 +1,185 @@
+#
+# MAIN CONFIGURATION
+#
 
-#TODO voir pour auto la génération des dépendances check l'autre script.
+EXEC = client editeur serveur
+OBJECTS = client/level_update.o client/client_gui.o serveur/parti_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/liste.o global/level.o global/objet.o global/player.o global/utils.oOBJECTS = exemple.o
 
-INCLUDES = includes/ Client/includes/ Editeur/includes/ Serveur/includes/
-include_dirs = $(wildcard $(addsuffix */, $(INCLUDES)))
-INCLUDE_STD = $(addprefix -iquote ,$(INCLUDES) $(include_dirs))
+SRC_DIR = src
+OBJECTS_DIR = obj
+INCLUDES = includes/
+INCLUDE_DIR = $(addprefix -iquote ,$(INCLUDES) $(wildcard $(addsuffix */, $(INCLUDES))))
+BIN_DIR = bin
 
-CC = @gcc -Wall $(INCLUDE_STD) -c
-LD = @gcc -Wall -o
-LIBS = -lncurses -lpthread
+#
+# SUFFIXES (must not change it)
+#
 
-all: prepare client editeur serveur end
-	@echo "Process done."
+.SUFFIXES: .c .o
 
-end:
-	@echo "Compilation done."
-	@echo "Moving files to zbin/..."
-	@mv *.o zbin/
-	@echo "Moving exec to zrun/..."
-	@mv client zrun/
-	@mv editeur zrun/
-	@mv serveur zrun/
+#
+# OBJECTS (must not change it)
+#
 
-prepare:
-	@echo "Preparing folder if needed..."
-	@mkdir -p zbin
-	@mkdir -p zrun
+EXEC_O = $(EXEC:=.o)
+OBJECTS_O = $(OBJECTS) $(EXEC_O)
 
+#
+# ARGUMENTS AND COMPILER (to configure)
+#
+
+CC = gcc
+CCFLAGS_STD = -Wall -O3 -Werror
+CCFLAGS_DEBUG = -D _DEBUG_
+CCFLAGS = $(CCFLAGS_STD)
+CCLIBS = -lncurses -lpthread
+
+#
+# RULES (must not change it)
+#
+
+all: msg $(addprefix $(OBJECTS_DIR)/,$(OBJECTS)) $(addprefix $(OBJECTS_DIR)/,$(EXEC_O))
+	@echo "Create executables..."
+	@for i in $(EXEC); do \
+	$(CC) -o $(addprefix $(BIN_DIR)/,$$i) $(addprefix $(OBJECTS_DIR)/,$$i.o) $(addprefix $(OBJECTS_DIR)/,$(OBJECTS)) $(CCLIBS) $(INCLUDE_DIR); \
+	done
+	@echo "Done."
+
+msg:
+	@echo "Create objects..."
+
+debug: CCFLAGS = $(CCFLAGS_STD) $(CCFLAGS_DEBUG)
+debug: all
+
+#
+# DEFAULT RULES (must not change it)
+#
+
+$(addprefix $(OBJECTS_DIR)/,%.o) : $(addprefix $(SRC_DIR)/,%.c)
+	@echo "Generating $@"
+	@# We create the directory if it doesn't exist
+	@mkdir -p $(dir $@)
+	@${CC} ${CCFLAGS} -c $< -o $@ $(INCLUDE_DIR)
+
+#
+# MAIN RULES (must not change it)
+#
+
+# You can add your own commands
 clean:
-	@rm -f *.o client editeur serveur
-	@rm -f zbin/*.o
-	@echo "Clean done."
+	@echo "Delete objects, temporary files..."
+	@rm -f $(addprefix $(OBJECTS_DIR)/,$(OBJECTS_O))
+	@rm -f $(addprefix $(OBJECTS_DIR)/,$(EXEC_O))
+	@rm -f $(addprefix $(OBJECTS_DIR)/,*~) $(addprefix $(OBJECTS_DIR)/,*#)
+	@#rm -f $(addprefix $(INCLUDE_DIR)/,*~) $(addprefix $(INCLUDE_DIR)/,*#)
+	@rm -f $(addprefix $(BIN_DIR)/,$(EXEC))
+	@rm -f dependancies
+	@echo "Done."
 
-# Compilation
-client: client.o level_update.o client_gui.o level.o liste.o objet.o utils.o
-	$(LD) client client.o level_update.o client_gui.o level.o liste.o \
- objet.o utils.o $(LIBS)
+depend:
+	@echo "Create dependancies..."
+	@sed -e "/^# DEPENDANCIES/,$$ d" makefile > dependancies
+	@echo "# DEPENDANCIES" >> dependancies
+	@echo "OBJECTS =" >> objs.temp
 
-editeur: editeur.o level_edit.o editor_gui.o system_save.o level.o liste.o \
- objet.o utils.o
-	$(LD) editeur editeur.o level_edit.o editor_gui.o system_save.o \
- level.o liste.o objet.o utils.o $(LIBS)
+	@files_c=`find $(SRC_DIR) -mindepth 1 -maxdepth 2 -type f`; \
+	for i in $$files_c; do \
+	i=`echo $$i | sed "s/$(SRC_DIR)\///"`; # We remove the 'includes/' part of the path \
+	o_name=$(OBJECTS_DIR)/`echo $$i | sed "s/\(.*\)\\.c$$/\1.o/"`; \
+	c_name=$(SRC_DIR)/`echo $$i`; \
+	echo "dependancies for $$c_name..."; \
+	$(CC) -MM -MT $$o_name $(CCFLAGS) $$c_name $(INCLUDE_DIR) >> dependancies; \
+	# if the o_name equals $(OBJECTS_DIR)/$(EXEC).o we don't add it \
+	itsGood=1; \
+	for exec in $(EXEC); do \
+	if [ "$$o_name" == "$(OBJECTS_DIR)/$$exec.o" ]; then \
+	itsGood=0; \
+	fi; \
+	done; \
+	if [ $$itsGood -eq 1 ]; then \
+	echo $$i | sed "s/\(.*\)\\.c$$/\1.o/" >> objs.temp; \
+	fi; \
+	done;
 
-serveur: serveur.o player_manager.o player.o
-	$(LD) serveur serveur.o player_manager.o player.o $(LIBS)
+	@echo " " >> dependancies
+	
+	@# replace \n by space on objs.temp
+	@tr '\n' ' ' < objs.temp > objs.temp.new && mv objs.temp.new objs.temp
+	
+	@# remove the last space on objs.temp
+	@sed -i 's/ *$$//' objs.temp
 
-# Dépendances
-serveur.o: Serveur/serveur.c
-	$(CC) Serveur/serveur.c
+	@# We replace the 6th line of dependancies by the content of objs.temp's file
+	@# (the 6th line is the line where we have the OBJECTS = ... part) \
+	sed '5 r objs.temp' dependancies > dependancies.tmp && mv dependancies.tmp dependancies
 
-client.o: Client/client.c includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h \
- Client/includes/level_update/level_update.h \
- Client/includes/client_gui/client_gui.h
-	$(CC) Client/client.c
+	@cat dependancies > makefile
+	@rm dependancies
+	@rm objs.temp
+	@echo "Done."
 
-editeur.o: Editeur/editeur.c includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h \
- Editeur/includes/level_edit/level_edit.h \
- Editeur/includes/system_save/system_save.h \
- Editeur/includes/editor_gui/editor_gui.h
-	$(CC) Editeur/editeur.c
+#
+# CREATE ARCHIVE (must not modify)
+#
 
-level_edit.o: Editeur/includes/level_edit/level_edit.c \
- Editeur/includes/level_edit/level_edit.h includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) Editeur/includes/level_edit/level_edit.c
+ARCHIVE_FILES = *
 
-editor_gui.o: Editeur/includes/editor_gui/editor_gui.c \
- Editeur/includes/editor_gui/editor_gui.h includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) Editeur/includes/editor_gui/editor_gui.c
+archive: clean
+	@echo "Create archive $(PROJECT_NAME)_$(shell date '+%y%m%d.tar.gz')..."
+	@REP=`basename "$$PWD"`; cd .. && tar zcf $(PROJECT_NAME)_$(shell date '+%y%m%d.tar.gz') $(addprefix "$$REP"/,$(ARCHIVE_FILES))
+	@echo "Done."
 
-system_save.o: Editeur/includes/system_save/system_save.c \
- Editeur/includes/system_save/system_save.h includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) Editeur/includes/system_save/system_save.c
-
-level_update.o: Client/includes/level_update/level_update.c \
- Client/includes/level_update/level_update.h includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) Client/includes/level_update/level_update.c
-
-client_gui.o: Client/includes/client_gui/client_gui.c \
- Client/includes/client_gui/client_gui.h includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) Client/includes/client_gui/client_gui.c
-
-level.o: includes/level/level.c includes/level/level.h \
- includes/liste/liste.h includes/objet/objet.h includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) includes/level/level.c
-
-liste.o: includes/liste/liste.c includes/liste/liste.h \
- includes/objet/objet.h includes/utils/utils.h includes/utils/constants.h \
- includes/utils/st_benchmark.h
-	$(CC) includes/liste/liste.c
-
-objet.o: includes/objet/objet.c includes/objet/objet.h \
- includes/utils/utils.h includes/utils/constants.h \
- includes/utils/st_benchmark.h
-	$(CC) includes/objet/objet.c
-
-utils.o: includes/utils/utils.c includes/utils/utils.h \
- includes/utils/constants.h includes/utils/st_benchmark.h
-	$(CC) includes/utils/utils.c
-
-player.o: includes/player/player.c includes/player/player.h
-	$(CC) includes/player/player.c
-
-player_manager.o: Serveur/includes/player_manager/player_manager.c Serveur/includes/player/player_manager.h \
- includes/player/player.h
-	$(CC) Serveur/includes/player_manager/player_manager.c
+# DEPENDANCIES
+obj/client/level_update.o: src/client/level_update.c \
+ includes/client/level_update.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/client/client_gui.o: src/client/client_gui.c \
+ includes/client/client_gui.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/serveur/parti_manager.o: src/serveur/parti_manager.c \
+ includes/serveur/parti_manager.h includes/global/liste.h \
+ includes/global/objet.h includes/global/player.h
+obj/editeur/system_save.o: src/editeur/system_save.c \
+ includes/editeur/system_save.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/editeur/editor_gui.o: src/editeur/editor_gui.c \
+ includes/editeur/editor_gui.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/editeur/level_edit.o: src/editeur/level_edit.c \
+ includes/editeur/level_edit.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/global/liste.o: src/global/liste.c includes/global/liste.h \
+ includes/global/objet.h includes/global/player.h includes/global/utils.h \
+ includes/global/constants.h includes/global/st_benchmark.h
+obj/global/level.o: src/global/level.c includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/global/objet.o: src/global/objet.c includes/global/objet.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h
+obj/global/player.o: src/global/player.c includes/global/player.h
+obj/global/utils.o: src/global/utils.c includes/global/utils.h \
+ includes/global/constants.h includes/global/st_benchmark.h
+obj/serveur.o: src/serveur.c
+obj/editeur.o: src/editeur.c includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h includes/editeur/level_edit.h \
+ includes/editeur/system_save.h includes/editeur/editor_gui.h
+obj/client.o: src/client.c includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h includes/global/player.h \
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/st_benchmark.h includes/client/level_update.h \
+ includes/client/client_gui.h
+ 
