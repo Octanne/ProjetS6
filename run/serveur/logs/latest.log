@@ -1,0 +1,10 @@
+
+[01:20:36][INFO] Network | Init network...
+[01:20:36][INFO] Network | Port : 1236, Host : H=ðÿÿsÃH‹%ä
+[01:20:36][INFO] Network | Network init done PID : 87734
+[01:20:36][INFO] Network | Waiting for a request
+[01:20:51][INFO] Network | Received request 0 from 127.0.0.1:59963
+[01:20:51][INFO] Network | Received ping request from 127.0.0.1:59963
+[01:20:51][INFO] Network | Sending response to 127.0.0.1:59963
+[01:20:51][INFO] Network | Response sent
+[01:20:51][INFO] Network | Waiting for a request
