@@ -3,20 +3,37 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <string.h>
 #include <errno.h>
 #include <getopt.h>
-#include <stdbool.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "constants.h"
 
 #include "net_message.h"
+
+#define MESSAGE_QUEUE_KEY "ProjetS6"
+
+int pid_net;
+int msqid_network;
+bool network_running = true;
+
+void close_network() {
+    logs(L_INFO, "Network | Closing network...");
+    network_running = false;
+}
 
 int init_network(int argc, char *argv[]) {
     logs(L_INFO, "Network | Init network...");
@@ -65,40 +82,146 @@ int init_network(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Send request
-    NetMessage request;
-    request.type = NET_REQ_PING;
-
-    if(sendto(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
-        perror("Error sending message");
-        logs(L_INFO, "Network | Error sending message");
+    // Configuration du timeout
+    struct timeval tv;
+    tv.tv_sec = NET_TIMEOUT;
+    tv.tv_usec = 0;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        logs(L_INFO, "Network | Error setting timeout");
+        perror("Error setting timeout");
         exit(EXIT_FAILURE);
     }
-    logs(L_INFO, "Network | Message status sent");
 
-    // Receive response
-    NetMessage response;
-    if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
-        perror("Error receiving response");
-        logs(L_INFO, "Network | Error receiving response");
+    // Création de la file de message
+    key_t key = ftok(MESSAGE_QUEUE_KEY, 1);
+    if ((msqid_network = msgget(key, IPC_CREAT | 0666)) < 0) {
+        logs(L_INFO, "Network | Error creating message queue");
+        perror("Error creating message queue");
         exit(EXIT_FAILURE);
     }
-    logs(L_INFO, "Network | Message status received");
+
+    // Faire le ping pour vérifier que le serveur est bien là
+    NetMessage message;
+    message.type = NET_REQ_PING;
+    if(!process_udp_message(&message, sockfd, serv_addr)) {
+        logs(L_INFO, "Network | Error the server is not responding");
+        perror("Error the server is not responding");
+        exit(EXIT_FAILURE);
+    }
+
+    logs(L_INFO, "Network | Network initialized");
 
     // ouverture d'un processus fils
-    int pid = fork();
+    pid_net = fork();
 
-    if (pid != 0) {
+    if (pid_net != 0) {
         // processus père
-        return pid;
+        return pid_net;
     }
 
-    bool isRun = true; // TODO faire un sigaction pour gérer le ctrl+c
-    while (isRun) {
-        // Processus gestion creation/join de partie
-        // TODO
+    // TODO faire un sigaction pour gérer le ctrl+c
+
+    // Signal handler via sigaction
+    struct sigaction sa;
+    sa.sa_handler = close_network;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        perror("sigaction");
+        logs(L_INFO, "Network | Error setting signal handler");
+        exit(EXIT_FAILURE);
     }
+
+    while (network_running) {
+        network_running = udp_message_handler(sockfd, serv_addr);
+    }
+
+    logs(L_INFO, "Network | Network processus ended");
+
+    exit(EXIT_SUCCESS);
+}
+
+bool add_udp_message_to_queue(NetMessage *message) {
+    // Use message queue to send message
+    if (msgsnd(msqid_network, message, sizeof(NetMessage), 0) < 0) {
+        logs(L_INFO, "Network | Error sending message to queue");
+        perror("Error sending message to queue");
+        exit(EXIT_FAILURE);
+    }
+    return true;
+}
+
+NetMessage *get_udp_message_from_queue() {
+    // Use message queue to get message
+    NetMessage *message = malloc(sizeof(NetMessage));
+    if (msgrcv(msqid_network, message, sizeof(NetMessage), 0, 0) < 0) {
+        // Si interruption du programme, on quitte proprement
+        if (errno == EINTR) {
+            logs(L_INFO, "Network | Interrupted by signal");
+            exit(EXIT_SUCCESS);
+        }
+
+        logs(L_INFO, "Network | Error getting message from queue");
+        perror("Error getting message from queue");
+        exit(EXIT_FAILURE);
+    }
+    return message;
+}
+
+bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in serv_addr) {
+    bool received = false;
+    int nb_try = 0;
+    while (!received && nb_try < NET_MAX_TRIES) {
+        // Send message
+        if(sendto(sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
+            perror("Error sending message");
+            logs(L_INFO, "Network | Error sending message");
+            exit(EXIT_FAILURE);
+        }
+        logs(L_INFO, "Network | Message sent");
+
+        // Receive response
+        NetMessage response;
+        if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                logs(L_INFO, "Network | Timeout");
+                printf("Timeout, try %d/%d \r", nb_try, NET_MAX_TRIES);
+                nb_try++;
+            } else {
+                perror("Error receiving response");
+                logs(L_INFO, "Network | Error receiving response");
+                printf("Error receiving response \r");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            logs(L_INFO, "Network | Message received");
+
+            if (message->type == NET_REQ_PING && response.type == NET_REQ_PING) {
+                logs(L_INFO, "Network | Ping received");
+            } else {
+                logs(L_INFO, "Network | Unknown message received");
+            }
+            
+            // TODO ajouter autre chose que le ping
+
+            received = true;
+        }
+    }
+
+    return received;
+}
+
+bool udp_message_handler(int sockfd, struct sockaddr_in serv_addr) {
+    // Get message from queue
+    NetMessage *message = get_udp_message_from_queue();
     
-    return 0;
+    // Send message
+    bool received = process_udp_message(message, sockfd, serv_addr);
+
+    // Free message
+    free(message);
+
+    return received;
 }
 

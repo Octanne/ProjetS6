@@ -1,4 +1,5 @@
 obj/*.o
 obj/**/*.o
 bin/
+*.log
 .vscode/

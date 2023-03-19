@@ -1,9 +1,11 @@
 
 #include "serveur_network.h"
 
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -11,12 +13,19 @@
 #include <string.h>
 #include <errno.h>
 #include <getopt.h>
-#include <stdbool.h>
 
 #include "utils.h"
 #include "constants.h"
 
 #include "net_message.h"
+
+int network_running = true;
+
+void close_network() {
+    logs(L_INFO, "Network | Closing network...");
+    printf("Network | Closing network...\n");
+    network_running = false;
+}
 
 int init_network(int argc, char *argv[]) {
     logs(L_INFO, "Network | Init network...");
@@ -75,14 +84,24 @@ int init_network(int argc, char *argv[]) {
         return pid;
     }
 
+    // register close_network as the handler for SIGINT with sigaction
+    struct sigaction sa;
+    sa.sa_handler = close_network;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+
     // processus réseau
-    bool isRun = true;
-    while (isRun) {
-        isRun = udp_request_handler(sockfd);
+    while (network_running) {
+        network_running = udp_request_handler(sockfd);
     }
 
     close(sockfd);
-    return 0;
+
+    printf("Network | Network processus closed\n");
+    logs(L_INFO, "Network | Network processus closed");
+
+    exit(EXIT_SUCCESS);
 }
 
 bool udp_request_handler(int sockfd) {
@@ -95,6 +114,12 @@ bool udp_request_handler(int sockfd) {
     printf("Network | waiting for a request.\n");
     logs(L_INFO, "Network | Waiting for a request");
     if(recvfrom(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&client_address, &addr_len) == -1) {
+        if (errno == EINTR) {
+            // SIGINT received
+            status = false;
+            return status;
+        }
+
         perror("Error receiving message");
         logs(L_INFO, "Network | Error receiving message");
         exit(EXIT_FAILURE);

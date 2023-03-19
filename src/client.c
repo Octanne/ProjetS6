@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #include "level.h"
 #include "utils.h"
@@ -24,9 +25,6 @@ void stop_game() {
 
 	// Free the game interface
     stop_gui();
-
-	// Close logs
-    closeLogs();
 }
 
 /**
@@ -45,7 +43,11 @@ void control_handler() {
  */
 void main_exit() {
     stop_game();
-    kill(pid_network, SIGKILL);
+    kill(pid_network, SIGINT);
+    waitpid(pid_network, NULL, 0);
+
+    // Close logs
+    closeLogs();
 }
 
 /**
@@ -53,20 +55,17 @@ void main_exit() {
  * @return EXIT_SUCCESS if the program exit correctly
  */
 int main(int argc, char *argv[]) {
-    // Register exit function
-    atexit(main_exit);
-
     // Network init
     pid_network = init_network(argc, argv);
+
+    // Register exit function
+    atexit(main_exit);
 
     // Init gui
     init_gui();
 
     // Launch control handler
     control_handler();
-
-    // Stop network
-    kill(pid_network, SIGKILL);
 
 	return EXIT_SUCCESS;
 }

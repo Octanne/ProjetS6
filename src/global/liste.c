@@ -39,6 +39,10 @@ void liste_add(Liste* liste, void* elmt, char type) {
 	// Add the element to the list.
 	liste->tete = eltListe;
 	liste->taille++;
+
+	// Update the queue if needed.
+	if (liste->taille == 1)
+		liste->queue = eltListe;
 }
 
 /**
@@ -59,6 +63,10 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 				liste->tete = eltListe->suivant;
 			else
 				precedent->suivant = eltListe->suivant;
+
+			// Update the queue if needed.
+			if (liste->queue == eltListe)
+				liste->queue = precedent;
 			
 			// Free the pointer if needed.
 			if (freeElmt) {
@@ -69,6 +77,9 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 					case TYPE_PLAYER:
 						player_free(eltListe->elmt);
 						break;
+					case TYPE_NET_MESSAGE:
+						free(eltListe->elmt);
+						break;
 					default:
 						logs(L_INFO, "liste_free | ERROR type inconnu");
 						break;
@@ -78,6 +89,7 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 			// Free the element and update the list size.
 			free(eltListe);
 			liste->taille--;
+
 			return;
 		}
 
@@ -106,6 +118,9 @@ void liste_free(Liste* liste, int freeElmt) {
 				case TYPE_PLAYER:
 					player_free(eltListe->elmt);
 					break;
+				case TYPE_NET_MESSAGE:
+					free(eltListe->elmt);
+					break;
 				default:
 					logs(L_INFO, "liste_free | ERROR type inconnu");
 					break;
@@ -123,4 +138,32 @@ void liste_free(Liste* liste, int freeElmt) {
 			free(tmp);
 		}
 	}
+}
+
+void* liste_get(Liste* liste, int index) {
+	EltListe* eltListe = liste->tete;
+	int i = 0;
+
+	// Search for the pointer in the list.
+	while (eltListe != NULL) {
+		if (i == index)
+			return eltListe->elmt;
+		
+		// Update the precedent element and the current element to continue the search.
+		eltListe = eltListe->suivant;
+		i++;
+	}
+
+	return NULL;
+}
+
+void* liste_pop(Liste* liste) {
+	// get from the queue
+	EltListe* eltListe = liste->queue;
+	void* elmt = eltListe->elmt;
+
+	// remove from the list
+	liste_remove(liste, elmt, 0);
+
+	return elmt;
 }

@@ -11,6 +11,7 @@ struct EltListe_t {
 
 typedef struct {
     EltListe* tete;
+    EltListe* queue;
     int taille;
 } Liste;
 
@@ -18,5 +19,8 @@ Liste liste_create();
 void liste_add(Liste* liste, void* elmt, char type);
 void liste_remove(Liste* liste, void* elmt, int freeElmt);
 void liste_free(Liste* liste, int freeElmt);
+
+void* liste_get(Liste* liste, int index);
+void* liste_pop(Liste* liste);
 
 #endif

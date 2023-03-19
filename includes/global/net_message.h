@@ -11,6 +11,9 @@
 #define NET_REQ_PARTIE_LEAVE   4
 #define NET_REQ_PARTIE_CREATE  5
 
+#define NET_TIMEOUT 2 // 5 seconds
+#define NET_MAX_TRIES 3
+
 typedef struct {
     int type;
     int size;

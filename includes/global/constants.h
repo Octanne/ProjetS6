@@ -58,6 +58,7 @@
 
 #define TYPE_PLAYER 0
 #define TYPE_OBJET 1
+#define TYPE_NET_MESSAGE 2
 
 #endif
 
