@@ -1,10 +1,11 @@
 
-[01:20:36][INFO] Network | Init network...
-[01:20:36][INFO] Network | Port : 1236, Host : H=ðÿÿsÃH‹%ä
-[01:20:36][INFO] Network | Network init done PID : 87734
-[01:20:36][INFO] Network | Waiting for a request
-[01:20:51][INFO] Network | Received request 0 from 127.0.0.1:59963
-[01:20:51][INFO] Network | Received ping request from 127.0.0.1:59963
-[01:20:51][INFO] Network | Sending response to 127.0.0.1:59963
-[01:20:51][INFO] Network | Response sent
-[01:20:51][INFO] Network | Waiting for a request
+[18:16:25][INFO] Network | Init network...
+[18:16:25][INFO] Network | Port : 25565, Host : 0.0.0.0
+[18:16:25][INFO] Network | Network init done PID : 34421
+[18:16:25][INFO] Network | Waiting for a request
+[18:16:27][INFO] Network | Received request 0 from 127.0.0.1:56953
+[18:16:27][INFO] Network | Received ping request from 127.0.0.1:56953
+[18:16:27][INFO] Network | Sending response to 127.0.0.1:56953
+[18:16:27][INFO] Network | Response sent
+[18:16:27][INFO] Network | Waiting for a request
+[18:16:32][INFO] Network | Killing network processus

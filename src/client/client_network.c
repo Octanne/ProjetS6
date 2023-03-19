@@ -18,8 +18,6 @@
 
 #include "net_message.h"
 
-bool isRun = true; // TODO faire un sigaction pour gérer le ctrl+c
-
 int init_network(int argc, char *argv[]) {
     logs(L_INFO, "Network | Init network...");
     int opt;
@@ -95,10 +93,9 @@ int init_network(int argc, char *argv[]) {
         return pid;
     }
 
-    // Processus gestion creation/join de partie
-    // TODO
-
+    bool isRun = true; // TODO faire un sigaction pour gérer le ctrl+c
     while (isRun) {
+        // Processus gestion creation/join de partie
         // TODO
     }
     

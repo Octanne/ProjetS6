@@ -3,13 +3,13 @@
 #
 
 EXEC = client editeur serveur
-OBJECTS = client/level_update.o client/client_gui.o client/client_network.o serveur/partie_manager.o serveur/serveur_network.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/level.o global/objet.o global/player.o global/utils.o global/liste.o
+OBJECTS = client/level_update.o client/client_network.o client/gui/client_gui.o client/gui/gui_struct.o client/gui/game_gui.o client/gui/menu_gui.o serveur/partie_manager.o serveur/serveur_network.o serveur/console_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/level.o global/objet.o global/player.o global/utils.o global/liste.o
 PROJECT_NAME = ProjetS6
 
 SRC_DIR = src
 OBJECTS_DIR = obj
 INCLUDES = includes/
-INCLUDE_DIR = $(addprefix -iquote ,$(INCLUDES) $(wildcard $(addsuffix */, $(INCLUDES))))
+INCLUDE_DIR = $(addprefix -iquote ,$(shell find $(INCLUDES) -type d))
 BIN_DIR = bin
 
 #
@@ -110,8 +110,8 @@ depend:
 	@sed -e "/^# DEPENDANCIES/,$$ d" makefile > dependancies
 	@echo "# DEPENDANCIES" >> dependancies
 	@echo "OBJECTS =" >> objs.temp
-
-	@files_c=`find $(SRC_DIR) -mindepth 1 -maxdepth 2 -type f`; \
+	@echo "INCLUDE_DIR = $(INCLUDE_DIR)";
+	@files_c=`find $(SRC_DIR) -mindepth 1 -type f`; \
 	for i in $$files_c; do \
 	i=`echo $$i | sed "s/$(SRC_DIR)\///"`; # We remove the 'includes/' part of the path \
 	o_name=$(OBJECTS_DIR)/`echo $$i | sed "s/\(.*\)\\.c$$/\1.o/"`; \
@@ -165,18 +165,33 @@ obj/client/level_update.o: src/client/level_update.c \
  includes/client/level_update.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
  includes/global/constants.h
-obj/client/client_gui.o: src/client/client_gui.c \
- includes/client/client_gui.h includes/global/level.h \
- includes/global/liste.h includes/global/objet.h includes/global/utils.h \
- includes/global/constants.h
 obj/client/client_network.o: src/client/client_network.c \
  includes/client/client_network.h includes/global/utils.h \
  includes/global/constants.h includes/global/net_message.h
+obj/client/gui/client_gui.o: src/client/gui/client_gui.c \
+ includes/client/gui/client_gui.h includes/global/utils.h \
+ includes/global/constants.h includes/client/gui/gui_struct.h \
+ includes/global/level.h includes/global/liste.h includes/global/objet.h \
+ includes/client/gui/menu_gui.h includes/client/gui/game_gui.h
+obj/client/gui/gui_struct.o: src/client/gui/gui_struct.c \
+ includes/client/gui/gui_struct.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h \
+ includes/global/constants.h
+obj/client/gui/game_gui.o: src/client/gui/game_gui.c \
+ includes/client/gui/game_gui.h includes/global/utils.h \
+ includes/global/constants.h includes/client/gui/gui_struct.h \
+ includes/global/level.h includes/global/liste.h includes/global/objet.h \
+ includes/client/level_update.h
+obj/client/gui/menu_gui.o: src/client/gui/menu_gui.c \
+ includes/client/gui/menu_gui.h
 obj/serveur/partie_manager.o: src/serveur/partie_manager.c \
  includes/serveur/partie_manager.h includes/global/liste.h
 obj/serveur/serveur_network.o: src/serveur/serveur_network.c \
  includes/serveur/serveur_network.h includes/global/utils.h \
  includes/global/constants.h includes/global/net_message.h
+obj/serveur/console_manager.o: src/serveur/console_manager.c \
+ includes/serveur/console_manager.h includes/global/utils.h \
+ includes/global/constants.h
 obj/editeur/system_save.o: src/editeur/system_save.c \
  includes/editeur/system_save.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
@@ -200,12 +215,14 @@ obj/global/utils.o: src/global/utils.c includes/global/utils.h \
 obj/global/liste.o: src/global/liste.c includes/global/liste.h \
  includes/global/utils.h includes/global/constants.h \
  includes/global/player.h includes/global/objet.h
-obj/serveur.o: src/serveur.c includes/serveur/serveur_network.h
+obj/serveur.o: src/serveur.c includes/serveur/serveur_network.h \
+ includes/serveur/console_manager.h includes/global/utils.h \
+ includes/global/constants.h
 obj/editeur.o: src/editeur.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
  includes/global/constants.h includes/editeur/level_edit.h \
  includes/editeur/system_save.h includes/editeur/editor_gui.h
 obj/client.o: src/client.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
- includes/global/constants.h includes/client/level_update.h \
- includes/client/client_gui.h includes/client/client_network.h
+ includes/global/constants.h includes/client/gui/client_gui.h \
+ includes/client/client_network.h

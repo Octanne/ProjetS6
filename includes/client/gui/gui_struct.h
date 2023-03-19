@@ -1,8 +1,10 @@
 
-#ifndef CLIENT_GUI_H
-#define CLIENT_GUI_H
+#ifndef __GUI_STRUCT_H__
+#define __GUI_STRUCT_H__
 
 #include <ncurses.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "level.h"
 
@@ -16,35 +18,35 @@ typedef struct {
     int8_t key4;
 
     int currentLevel;
-} PlayerMenu;
+    Level level;
+} GameInfo;
 
 typedef struct {
-    WINDOW* winLEVEL;
+    char player_name[255];
+} MenuInfo;
+
+typedef struct {
+    WINDOW* winMAIN;
     WINDOW* winTOOLS;
     WINDOW* winINFOS;
 
-    WINDOW* cwinLEVEL;
+    WINDOW* cwinMAIN;
     WINDOW* cwinTOOLS;
     WINDOW* cwinINFOS;
 } GUI;
 
 typedef struct {
     GUI gui;
-    PlayerMenu playerMenu;
+    union {
+        GameInfo gameInfo;
+        MenuInfo menuInfo;
+    };
+    bool inMenu;
 } GameInterface;
 
 extern GameInterface gameInterface;
 
-void init_gui();
-void stop_gui();
-
-void gen_game_window();
-void gen_player_menu();
-
-void refresh_level(Level level);
-void refresh_player_menu();
-
-void set_text_info(const char *text, int line, int color);
+void set_text_info_gui(const char *text, int line, int color);
 
 #endif
 

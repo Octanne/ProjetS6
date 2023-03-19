@@ -1,0 +1,16 @@
+
+[14:17:30][INFO] Network | Init network...
+[14:17:30][INFO] Network | Port : 25565, Host : 127.0.0.1
+[14:17:30][INFO] Network | Message status sent
+[14:17:30][INFO] Network | Message status received
+[14:17:30][INFO] Main | Ncurses windows init...
+[14:17:30][INFO] Main | Ncurses windows init success!
+[14:17:30][INFO] Main | Game Window created!
+[14:17:30][INFO] Main | Tools menu created!
+[14:17:30][INFO] Main | New level load : 1
+[14:17:30][INFO] Main | Level 1 : 156 items loaded
+[14:18:08][INFO] Main | Level value : 417A6290
+[14:18:14][INFO] Main | Stopping game...
+[14:18:14][INFO] Main | Ncurses windows deleted!
+[14:18:14][INFO] End of the session of the game.
+
