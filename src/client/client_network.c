@@ -29,6 +29,7 @@
 int pid_net;
 int msqid_network;
 bool network_running = true;
+bool network_init = false;
 
 void close_network() {
     logs(L_INFO, "Network | Closing network...");
@@ -105,7 +106,7 @@ int init_network(int argc, char *argv[]) {
     message.type = NET_REQ_PING;
     if(!process_udp_message(&message, sockfd, serv_addr)) {
         logs(L_INFO, "Network | Error the server is not responding");
-        perror("Error the server is not responding");
+        printf("Network | Error the server is not responding\n");
         exit(EXIT_FAILURE);
     }
 
@@ -119,13 +120,13 @@ int init_network(int argc, char *argv[]) {
         return pid_net;
     }
 
-    // TODO faire un sigaction pour gérer le ctrl+c
-
     // Signal handler via sigaction
     struct sigaction sa;
     sa.sa_handler = close_network;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
+
+    network_init = true;
 
     if (sigaction(SIGINT, &sa, NULL) == -1) {
         perror("sigaction");
@@ -186,12 +187,12 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 logs(L_INFO, "Network | Timeout");
-                printf("Timeout, try %d/%d \r", nb_try, NET_MAX_TRIES);
+                if (!network_init) printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
+                fflush(stdout);
                 nb_try++;
             } else {
                 perror("Error receiving response");
                 logs(L_INFO, "Network | Error receiving response");
-                printf("Error receiving response \r");
                 exit(EXIT_FAILURE);
             }
         } else {
@@ -199,13 +200,14 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
 
             if (message->type == NET_REQ_PING && response.type == NET_REQ_PING) {
                 logs(L_INFO, "Network | Ping received");
+                received = true;
             } else {
                 logs(L_INFO, "Network | Unknown message received");
+                received = false;
             }
             
             // TODO ajouter autre chose que le ping
 
-            received = true;
         }
     }
 
