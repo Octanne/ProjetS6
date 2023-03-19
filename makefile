@@ -68,7 +68,7 @@ debug: all
 runClient: 
 	@# create folder run if it doesn't exist
 	@mkdir -p run/client
-	@cd run/client && ../../bin/client
+	@cd run/client && ../../bin/client -p 25565 -h 127.0.0.1
 
 runEditeur:
 	@# create folder run if it doesn't exist
@@ -78,7 +78,7 @@ runEditeur:
 runServeur:
 	@# create folder run if it doesn't exist
 	@mkdir -p run/serveur
-	@cd run/serveur && ../../bin/serveur
+	@cd run/serveur && ../../bin/serveur -p 25565
 
 #
 # DEFAULT RULES (must not change it)
