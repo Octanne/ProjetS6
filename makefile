@@ -3,7 +3,7 @@
 #
 
 EXEC = client editeur serveur
-OBJECTS = client/level_update.o client/client_gui.o serveur/parti_manager.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/level.o global/objet.o global/player.o global/utils.o global/liste.o
+OBJECTS = client/level_update.o client/client_gui.o client/client_network.o serveur/partie_manager.o serveur/serveur_network.o editeur/system_save.o editeur/editor_gui.o editeur/level_edit.o global/level.o global/objet.o global/player.o global/utils.o global/liste.o
 PROJECT_NAME = ProjetS6
 
 SRC_DIR = src
@@ -167,16 +167,24 @@ obj/client/level_update.o: src/client/level_update.c \
  includes/global/constants.h
 obj/client/client_gui.o: src/client/client_gui.c \
  includes/client/client_gui.h includes/global/level.h \
- includes/global/liste.h includes/global/objet.h includes/global/utils.h
-obj/serveur/parti_manager.o: src/serveur/parti_manager.c \
- includes/serveur/parti_manager.h includes/global/liste.h
+ includes/global/liste.h includes/global/objet.h includes/global/utils.h \
+ includes/global/constants.h
+obj/client/client_network.o: src/client/client_network.c \
+ includes/client/client_network.h includes/global/utils.h \
+ includes/global/constants.h includes/global/net_message.h
+obj/serveur/partie_manager.o: src/serveur/partie_manager.c \
+ includes/serveur/partie_manager.h includes/global/liste.h
+obj/serveur/serveur_network.o: src/serveur/serveur_network.c \
+ includes/serveur/serveur_network.h includes/global/utils.h \
+ includes/global/constants.h includes/global/net_message.h
 obj/editeur/system_save.o: src/editeur/system_save.c \
  includes/editeur/system_save.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
  includes/global/constants.h
 obj/editeur/editor_gui.o: src/editeur/editor_gui.c \
  includes/editeur/editor_gui.h includes/global/level.h \
- includes/global/liste.h includes/global/objet.h includes/global/utils.h
+ includes/global/liste.h includes/global/objet.h includes/global/utils.h \
+ includes/global/constants.h
 obj/editeur/level_edit.o: src/editeur/level_edit.c \
  includes/editeur/level_edit.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
@@ -190,8 +198,9 @@ obj/global/player.o: src/global/player.c includes/global/player.h
 obj/global/utils.o: src/global/utils.c includes/global/utils.h \
  includes/global/constants.h
 obj/global/liste.o: src/global/liste.c includes/global/liste.h \
- includes/global/utils.h includes/global/constants.h
-obj/serveur.o: src/serveur.c
+ includes/global/utils.h includes/global/constants.h \
+ includes/global/player.h includes/global/objet.h
+obj/serveur.o: src/serveur.c includes/serveur/serveur_network.h
 obj/editeur.o: src/editeur.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
  includes/global/constants.h includes/editeur/level_edit.h \
@@ -199,4 +208,4 @@ obj/editeur.o: src/editeur.c includes/global/level.h \
 obj/client.o: src/client.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h includes/global/utils.h \
  includes/global/constants.h includes/client/level_update.h \
- includes/client/client_gui.h
+ includes/client/client_gui.h includes/client/client_network.h

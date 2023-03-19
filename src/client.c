@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include "level.h"
 #include "utils.h"
@@ -10,9 +12,12 @@
 #include "level_update.h"
 #include "client_gui.h"
 
+#include "client_network.h"
+
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
 Level level;
+int pid_network;
 
 /**
  * @brief Function to clear the level and generate a new one
@@ -163,6 +168,7 @@ void control_handler() {
  */
 void main_exit() {
     stop_game();
+    kill(pid_network, SIGKILL);
 }
 
 /**
@@ -173,6 +179,9 @@ int main(int argc, char *argv[]) {
     // Register exit function
     atexit(main_exit);
 
+    // Network init
+    pid_network = init_network(argc, argv);
+
     // Init gui
     init_gui();
 
@@ -181,6 +190,9 @@ int main(int argc, char *argv[]) {
 
     // Launch control handler
     control_handler();
+
+    // Stop network
+    kill(pid_network, SIGKILL);
 
 	return EXIT_SUCCESS;
 }
