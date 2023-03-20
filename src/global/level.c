@@ -4,7 +4,7 @@
 #include "constants.h"
 
 #include <stdlib.h>
-
+#include <string.h>
 
 /**
  * @brief Create an empty level.
@@ -137,8 +137,9 @@ Liste rechercherObjet(Level* level, short x, short y) {
 
 		// Check if x and y are in the zone delimited by the coordinates of the objet and its size.
         Objet* objet = elt->elmt;
-        if ( (x >= objet->x && x < objet->x + objet->xSize) && 
-             (y <= objet->y && y > objet->y - objet->ySize)) {
+        ObjetSize size = objet_getSize(objet);
+        if ( (x >= objet->x && x < objet->x + size.xSize) && 
+             (y <= objet->y && y > objet->y - size.ySize)) {
             liste_add(&liste, objet, TYPE_OBJET);
         }
         elt = elt->suivant;
@@ -146,6 +147,82 @@ Liste rechercherObjet(Level* level, short x, short y) {
 
 	// Return the list of objet found.
     return liste;
+}
+
+/**
+ * @brief Convert a level to bytes
+ * 
+ * @param level Level to convert
+ * @param size pointer to the number of bytes (will be set by the function)
+ * 
+ * @return char* bytes
+*/
+char* convert_level_to_bytes(Level level, size_t* size) {
+
+	// Logs
+    logs(L_INFO, "Level Converter | Convert level to bytes: %d items.", level.listeObjet.taille);
+
+	// Calculate size
+    *size = level.listeObjet.taille * sizeof(Objet);
+
+	// Memory allocation
+    char* buffer = malloc(*size);
+	if (buffer == NULL) {
+		logs(L_DEBUG, "Level Converter | Convert level to bytes: Error while allocating memory.");
+		perror("Error while allocating memory in convert_level_to_bytes\n");
+		exit(EXIT_FAILURE);
+	}
+    
+    // Parcourir la liste des objets
+    int i = 0;
+    EltListe* obj = level.listeObjet.tete;
+    while (obj != NULL) {
+
+		// Copy object bytes to buffer at the right position & go to next object
+        memcpy(buffer + (i++ * sizeof(Objet)), obj->elmt, sizeof(Objet));
+        obj = obj->suivant;
+    }
+
+	// Logs and return
+    logs(L_INFO, "Level Converter | Convert level to bytes: Success! %d bytes.", *size);
+    return buffer;
+}
+
+/**
+ * @brief Convert bytes to a level
+ * 
+ * @param bytes Bytes to convert
+ * @param size Number of bytes
+*/
+Level convert_bytes_to_level(char* bytes, size_t size) {
+
+	// Logs
+    logs(L_INFO, "Level Converter | Convert bytes to level: %d bytes.", size);
+
+	// Create empty level
+    Level level = levelEmpty();
+
+	// Parcourir la liste des objets
+    int i;
+    int num_obj = size / sizeof(Objet);
+    for (i = 0; i < num_obj; i++) {
+
+		// Copy bytes to object
+        Objet* obj = malloc(sizeof(Objet));
+		if (obj == NULL) {
+			logs(L_DEBUG, "Level Converter | ERROR malloc obj");
+			perror("Error while allocating memory in convert_bytes_to_level\n");
+			exit(EXIT_FAILURE);
+		}
+        memcpy(obj, bytes + (i * sizeof(Objet)), sizeof(Objet));
+
+		// Add object to the level
+        levelAjouterObjet(&level, obj);
+    }
+
+	// Logs and return
+    logs(L_INFO, "Level Converter | Convert bytes to level: Success! %d items.", level.listeObjet.taille);
+    return level;
 }
 
 /**
@@ -165,6 +242,7 @@ void levelUpdateMatriceSprite(Level* level) {
     while (elt != NULL) {
         char sprite;
         Objet* objet = elt->elmt;
+        ObjetSize objSize = objet_getSize(objet);
         int color, colorB;
         short x, y;
 
@@ -188,25 +266,25 @@ void levelUpdateMatriceSprite(Level* level) {
                 break;
             case GATE_ID :
                 color = WHITE_COLOR;
-                if (objet->objet.gate.numgate == 0) color = PURPLE_COLOR;
-                else if (objet->objet.gate.numgate == 1) color = GREEN_COLOR;
-                else if (objet->objet.gate.numgate == 2) color = YELLOW_COLOR;
-                else if (objet->objet.gate.numgate == 3) color = LBLUE_COLOR;
+                if (objet->gate.numgate == 0) color = PURPLE_COLOR;
+                else if (objet->gate.numgate == 1) color = GREEN_COLOR;
+                else if (objet->gate.numgate == 2) color = YELLOW_COLOR;
+                else if (objet->gate.numgate == 3) color = LBLUE_COLOR;
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_PLUS, color);
                 break;
             case KEY_ID :
                 color = WHITE_COLOR;
                 colorB = WHITE_COLOR;
-                if (objet->objet.key.numkey == 0) {
+                if (objet->key.numkey == 0) {
                     color = PURPLE_COLOR;
                     colorB = PURPLE_BLOCK;
-                } else if (objet->objet.key.numkey == 1) {
+                } else if (objet->key.numkey == 1) {
                     color = GREEN_COLOR;
                     colorB = GREEN_BLOCK;
-                } else if (objet->objet.key.numkey == 2) {
+                } else if (objet->key.numkey == 2) {
                      color = YELLOW_COLOR;
                      colorB = YELLOW_BLOCK;
-                } else if (objet->objet.key.numkey == 3) {
+                } else if (objet->key.numkey == 3) {
                     color = LBLUE_COLOR;
                     colorB = LBLUE_BLOCK;
                 }
@@ -216,11 +294,12 @@ void levelUpdateMatriceSprite(Level* level) {
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_LLCORNER, color);
                 break; 
             case DOOR_ID:
-                for (y = 0; y < objet->ySize; y++) {
-                    for (x = 0; x < objet->xSize; x++) {
+
+                for (y = 0; y < objSize.ySize; y++) {
+                    for (x = 0; x < objSize.xSize; x++) {
                         // Lead 0
                         if (y == 3 && x < 2) {
-                            int8_t numDoor = objet->objet.door.numdoor;
+                            int8_t numDoor = objet->door.numdoor;
                             char numDoorChar[5];
                             sprintf(numDoorChar, "%02i", numDoor);
                             if (x == 0) level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(numDoorChar[0], WHITE_COLOR);
@@ -230,15 +309,15 @@ void levelUpdateMatriceSprite(Level* level) {
                 }
                 break;
             case EXIT_ID :
-                for (y = 0; y < objet->ySize; y++) {
-                    for (x = 0; x < objet->xSize; x++) {
+                for (y = 0; y < objSize.ySize; y++) {
+                    for (x = 0; x < objSize.xSize; x++) {
                         level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(' ', YELLOW_BLOCK);
                     }
                 }
                 break;
             case START_ID :
-                for (y = 0; y < objet->ySize; y++) {
-                    for (x = 0; x < objet->xSize; x++) {
+                for (y = 0; y < objSize.ySize; y++) {
+                    for (x = 0; x < objSize.xSize; x++) {
                         level->matriceSprite[(objet->y-y) + (objet->x+x)*MATRICE_LEVEL_Y] = creerSpriteData(' ', PURPLE_BLOCK);
                     }
                 }
@@ -275,9 +354,9 @@ void levelUpdateMatriceSprite(Level* level) {
                 level->matriceSprite[objet->y + (objet->x+2)*MATRICE_LEVEL_Y] = creerSpriteDataS(ACS_URCORNER, WHITE_COLOR);
                 break;
             case PLAYER_ID :
-                color = objet->objet.player.color;
+                color = objet->player.color;
                 // head
-                if (objet->objet.player.orientation == LEFT_ORIENTATION) {
+                if (objet->player.orientation == LEFT_ORIENTATION) {
                     level->matriceSprite[objet->y-3 + (objet->x+1)*MATRICE_LEVEL_Y] = creerSpriteData(' ', RED_BLOCK);
                     level->matriceSprite[objet->y-3 + (objet->x)*MATRICE_LEVEL_Y] = creerSpriteData('-', RED_BLOCK);
                 } else {

@@ -7,7 +7,7 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "gui_struct.h"
+#include "gui_updater.h"
 
 void menu_init_gui(){
     menu_gen_main_window();
@@ -37,7 +37,37 @@ void menu_mouse_right_menu(int x, int y){
 }
 
 void menu_keyboard_handler(int key){
+    switch (key) {
+        case KEY_UP:
+            // Write down the action
+            set_text_info_gui("Action: UP", 1, GREEN_COLOR);
+        break;
+        
+        case KEY_DOWN:
+            // Write down the action
+            set_text_info_gui("Action: DOWN", 1, GREEN_COLOR);
+        break;
 
+        case KEY_LEFT:
+            // Write down the action
+            set_text_info_gui("Action: LEFT", 1, GREEN_COLOR);
+        break;
+
+        case KEY_RIGHT:
+            // Write down the action
+            set_text_info_gui("Action: RIGHT", 1, GREEN_COLOR);
+        break;
+
+        case KEY_VALIDATE:
+            // Write down the action
+            set_text_info_gui("Action: VALIDATE", 1, GREEN_COLOR);
+        break;
+
+        default:
+            // Write down the action
+            set_text_info_gui("Action: UNKNOWN", 1, RED_COLOR);
+        break;
+    }
 }
 
 void menu_refresh_main_window(){

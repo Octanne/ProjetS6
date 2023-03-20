@@ -2,6 +2,9 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// #####################
+// #    LOGS SYSTEM    #
+
 #define L_INFO 1
 #define L_DEBUG 2
 #define lvl_log(log_level) (log_level == L_INFO ? "INFO" : (log_level == L_DEBUG ? "DEBUG" : "UNKNOWN"))
@@ -14,8 +17,14 @@
 #define FILENAME "level.dat"
 #define EMPTY_LINE "                                                                           "
 
+// #####################
+// #      KEYBOARD     #
+
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10
+
+// #####################
+// #      COLORS       #
 
 #define WHITE_COLOR 1
 #define RED_COLOR 2
@@ -35,6 +44,9 @@
 #define RED_BUTTON 14
 #define ARROW_BUTTON 15
 
+// #####################
+// #      OBJECTS      #
+
 #define DELETE_ID 0
 #define BLOCK_ID 1
 #define LADDER_ID 2
@@ -48,17 +60,28 @@
 #define PROBE_ID 10
 #define HEART_ID 11
 #define BOMB_ID 12
-
 #define PLAYER_ID 13
 
 #define TOTAL_TOOLS 12
-
 #define RIGHT_ORIENTATION 1
 #define LEFT_ORIENTATION 0
+
+
+// #####################
+// #    Liste Type     #
 
 #define TYPE_PLAYER 0
 #define TYPE_OBJET 1
 #define TYPE_NET_MESSAGE 2
+
+// #####################
+// #       Level       #
+
+#define MATRICE_LEVEL_X 60
+#define MATRICE_LEVEL_Y 20
+#define MATRICE_LEVEL_SIZE 1200
+
+#define MAX_PLAYERS 4
 
 #endif
 

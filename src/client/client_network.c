@@ -24,7 +24,7 @@
 
 #include "net_message.h"
 
-#define MESSAGE_QUEUE_KEY "ProjetS6"
+#define MESSAGE_QUEUE_KEY "ProjetS6Network"
 
 int pid_net;
 int msqid_network;
@@ -34,6 +34,12 @@ bool network_init = false;
 void close_network() {
     logs(L_INFO, "Network | Closing network...");
     network_running = false;
+
+    // Close the message queue
+    if (msgctl(msqid_network, IPC_RMID, NULL) == -1) {
+        logs(L_INFO, "Network | Error while closing the message queue");
+        exit(EXIT_FAILURE);
+    }
 }
 
 int init_network(int argc, char *argv[]) {
@@ -138,7 +144,7 @@ int init_network(int argc, char *argv[]) {
         network_running = udp_message_handler(sockfd, serv_addr);
     }
 
-    logs(L_INFO, "Network | Network processus ended");
+    close_network();
 
     exit(EXIT_SUCCESS);
 }

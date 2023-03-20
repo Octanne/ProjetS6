@@ -6,7 +6,7 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "gui_struct.h"
+#include "gui_updater.h"
 #include "level_update.h"
 
 /**
@@ -43,7 +43,9 @@ void load_level(int newLevel) {
  * @brief Refresh the level window from scratch.
  */
 void refresh_level() {
-	// Draw level
+    // Update level matrice
+    levelUpdateMatriceSprite(&(gameInterface.gameInfo.level));
+	// Draw level from matrice
     short y, x;
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {

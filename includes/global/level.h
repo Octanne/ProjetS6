@@ -6,10 +6,7 @@
 
 #include "liste.h"
 #include "objet.h"
-
-#define MATRICE_LEVEL_X 60
-#define MATRICE_LEVEL_Y 20
-#define MATRICE_LEVEL_SIZE 1200
+#include "constants.h"
 
 typedef struct {
     char sprite;
@@ -36,6 +33,8 @@ void levelAjouterObjet(Level* level, Objet* objet);
 void levelSupprimerObjet(Level* level, Objet* objet);
 void levelUpdateMatriceSprite(Level* level);
 Liste rechercherObjet(Level* level, short x, short y);
+Level convert_bytes_to_level(char* bytes, size_t size);
+char* convert_level_to_bytes(Level level, size_t* size);
 
 #endif
 

@@ -5,7 +5,7 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "gui_struct.h"
+#include "gui_updater.h"
 
 #include "menu_gui.h"
 #include "game_gui.h"

@@ -3,6 +3,7 @@
 #define OBJET_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 // Type d'objet
 typedef struct {} Block_obj;
@@ -23,38 +24,37 @@ typedef struct {
     int8_t orientation;
 } Player_obj;
 
-// Union des objets
-typedef union {
-    Block_obj block;
-    Heart_obj heart;
-    Trap_obj trap;
-    Bomb_obj bomb;
-    Gate_obj gate;
-    Key_obj key;
-    Door_obj door;
-    Exit_obj exit;
-    Start_obj start;
-    Ladder_obj ladder;
-    Probe_obj probe;
-    Robot_obj robot;
-    Player_obj player;
-} ObjetU;
-
 // Objet générique (utilisé pour les listes)
 typedef struct {
     int8_t type;
-    ObjetU objet;
-
-    short xSize;
-    short ySize;
+    union {
+        Block_obj block;
+        Heart_obj heart;
+        Trap_obj trap;
+        Bomb_obj bomb;
+        Gate_obj gate;
+        Key_obj key;
+        Door_obj door;
+        Exit_obj exit;
+        Start_obj start;
+        Ladder_obj ladder;
+        Probe_obj probe;
+        Robot_obj robot;
+        Player_obj player;
+    };
 
     short x;
     short y;
 
-    int8_t isActive;
+    bool isActive;
 } Objet;
 
-Objet* initObjet(short x, short y, short xSize, short ySize, int8_t type);
+typedef struct {
+    short xSize;
+    short ySize;
+} ObjetSize;
+
+Objet* initObjet(short x, short y, int8_t type);
 
 Objet* creerVie(short x, short y);
 Objet* creerRobot(short x, short y);
@@ -71,6 +71,7 @@ Objet* creerDoor(short x, short y, int8_t numdoor);
 Objet* creerPlayer(short x, short y);
 
 void objet_free(Objet* objet);
+ObjetSize objet_getSize(Objet* objet);
 
 #endif
 

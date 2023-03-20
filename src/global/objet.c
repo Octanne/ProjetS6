@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 /**
  * @brief Init an object with the given parameters.
  * 
@@ -18,7 +17,7 @@
  * 
  * @return Objet* : The object.
  */
-Objet* initObjet(short x, short y, short xSize, short ySize, int8_t type) {
+Objet* initObjet(short x, short y, int8_t type) {
     Objet* objet = malloc(sizeof(Objet));
 	if (objet == NULL) {
 		logs(L_DEBUG, "initObjet | ERROR malloc objet");
@@ -26,50 +25,47 @@ Objet* initObjet(short x, short y, short xSize, short ySize, int8_t type) {
 		exit(EXIT_FAILURE);
 	}
     objet->type = type;
-    objet->isActive = 1;
+    objet->isActive = true;
 
     objet->x = x;
     objet->y = y;
 
-    objet->xSize = xSize;
-    objet->ySize = ySize;
-
     return objet;
 }
 
-Objet* creerBlock(short x, short y) { return initObjet(x, y, 1, 1, BLOCK_ID); }
-Objet* creerVie(short x, short y) { return initObjet(x, y, 1, 1, HEART_ID); }
-Objet* creerBomb(short x, short y) { return initObjet(x, y, 1, 1, BOMB_ID); }
-Objet* creerTrap(short x, short y) { return initObjet(x, y, 1, 1, TRAP_ID); }
-Objet* creerExit(short x, short y) { return initObjet(x, y, 3, 4, EXIT_ID); }
-Objet* creerStart(short x, short y) { return initObjet(x, y, 3, 4, START_ID); }
-Objet* creerLadder(short x, short y) { return initObjet(x, y, 3, 1, LADDER_ID); }
-Objet* creerProbe(short x, short y) { return initObjet(x, y, 3, 2, PROBE_ID); }
-Objet* creerRobot(short x, short y) { return initObjet(x, y, 4, 3, ROBOT_ID); }
+Objet* creerBlock(short x, short y) { return initObjet(x, y, BLOCK_ID); }
+Objet* creerVie(short x, short y) { return initObjet(x, y, HEART_ID); }
+Objet* creerBomb(short x, short y) { return initObjet(x, y, BOMB_ID); }
+Objet* creerTrap(short x, short y) { return initObjet(x, y, TRAP_ID); }
+Objet* creerExit(short x, short y) { return initObjet(x, y, EXIT_ID); }
+Objet* creerStart(short x, short y) { return initObjet(x, y, START_ID); }
+Objet* creerLadder(short x, short y) { return initObjet(x, y, LADDER_ID); }
+Objet* creerProbe(short x, short y) { return initObjet(x, y, PROBE_ID); }
+Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
 
 Objet* creerGate(short x, short y, int8_t numgate) {
-	Objet *objet = initObjet(x, y, 1, 1, GATE_ID);
-    objet->objet.gate.numgate = numgate;
+	Objet *objet = initObjet(x, y, GATE_ID);
+    objet->gate.numgate = numgate;
     return objet;
 }
 
 Objet* creerKey(short x, short y, int8_t numkey) {
-	Objet *objet = initObjet(x, y, 1, 2, KEY_ID);
-    objet->objet.key.numkey = numkey;
+	Objet *objet = initObjet(x, y, KEY_ID);
+    objet->key.numkey = numkey;
     return objet;
 }
 
 Objet* creerDoor(short x, short y, int8_t numdoor) {
-	Objet *objet = initObjet(x, y, 3, 4, DOOR_ID);
-    objet->objet.door.numdoor = numdoor;
+	Objet *objet = initObjet(x, y, DOOR_ID);
+    objet->door.numdoor = numdoor;
     return objet;
 }
 
 Objet* creerPlayer(short x, short y) {
-    Objet* objet = initObjet(x, y, 3, 3, PLAYER_ID);
-    objet->objet.player.life = 3;
-    objet->objet.player.orientation = RIGHT_ORIENTATION;
-    objet->objet.player.color = LBLUE_COLOR;
+    Objet* objet = initObjet(x, y, PLAYER_ID);
+    objet->player.life = 3;
+    objet->player.orientation = RIGHT_ORIENTATION;
+    objet->player.color = LBLUE_COLOR;
     return objet;
 }
 
@@ -80,5 +76,52 @@ void objet_free(Objet* objet) {
     if (objet == NULL)
 		return;
     free(objet);
+}
+
+ObjetSize objet_getSize(Objet* objet) {
+    ObjetSize size;
+    switch (objet->type) {
+        case BLOCK_ID:
+        case HEART_ID:
+        case BOMB_ID:
+        case TRAP_ID:
+        case GATE_ID:
+            size.xSize = 1;
+            size.ySize = 1;
+            break;
+        case KEY_ID:
+            size.xSize = 1;
+            size.ySize = 2;
+            break;
+        case EXIT_ID:
+        case START_ID:
+        case DOOR_ID:
+            size.xSize = 3;
+            size.ySize = 4;
+            break;
+        case LADDER_ID:
+            size.xSize = 3;
+            size.ySize = 1;
+            break;
+        case PROBE_ID:
+            size.xSize = 3;
+            size.ySize = 2;
+            break;
+        case ROBOT_ID:
+            size.xSize = 4;
+            size.ySize = 3;
+            break;
+        case PLAYER_ID:
+            size.xSize = 3;
+            size.ySize = 3;
+            break;
+        default:
+            logs(L_INFO, "objet_getSize | ERROR unknown type");
+            size.xSize = 0;
+            size.ySize = 0;
+            break;
+    }
+
+    return size;
 }
 
