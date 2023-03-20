@@ -183,6 +183,7 @@ void closeLogs() {
 		logs(L_INFO, "No logs has been written during this session.");
 	}
 	
+
 	logs(L_INFO, "End of the session of the game.\n");
 
 	// Create the logs folder archives if it doesn't exist
@@ -201,8 +202,9 @@ void closeLogs() {
 	char time_string[30];
 	strftime(time_string, sizeof(time_string), "%Y-%m-%d_%H-%M-%S", t);
 
+
 	// Format the file name
-	char file_name[30] = LOGS_FOLDER_ARCHIVES;
+	char file_name[255] = LOGS_FOLDER_ARCHIVES;
 	strcat(file_name, time_string);
 	strcat(file_name, ".log");
 
