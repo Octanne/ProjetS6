@@ -241,3 +241,11 @@ void closeLogs() {
 	file_logs_desc = -1;
 }
 
+void center_string(const char* str, const int dest_len, char* dest) {
+    int str_len = strlen(str);
+    int spaces = dest_len - str_len;
+    int left_spaces = spaces / 2;
+    int right_spaces = spaces - left_spaces;
+    sprintf(dest, "%*s%s%*s", left_spaces, " ", str, right_spaces, " ");
+}
+

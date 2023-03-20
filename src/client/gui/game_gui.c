@@ -62,6 +62,9 @@ void refresh_level() {
             wattroff(gameInterface.gui.winMAIN, COLOR_PAIR(spriteD.color));
         }
     }
+
+    // Refresh window
+    wrefresh(gameInterface.gui.winMAIN);
 }
 
 /**
@@ -122,48 +125,17 @@ void refresh_player_menu() {
 
 	// Refresh window
     wattroff(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+    wrefresh(gameInterface.gui.winTOOLS);
 }
 
 /**
  * @brief Generate the game editor window
  */
 void gen_game_window() {
-
-    // Level window
-    gameInterface.gui.cwinMAIN = newwin(22, 62, 0, 0);
-    box(gameInterface.gui.cwinMAIN, 0, 0);
+    // Afficher le titre de la main window
     wmove(gameInterface.gui.cwinMAIN, 0, 0);
     wprintw(gameInterface.gui.cwinMAIN, " Level ");
     wrefresh(gameInterface.gui.cwinMAIN);
-
-	// Create a subwindow using derwin
-    gameInterface.gui.winMAIN = derwin(gameInterface.gui.cwinMAIN, MATRICE_LEVEL_Y, MATRICE_LEVEL_X, 1, 1);
-    wrefresh(gameInterface.gui.winMAIN);
-
-    // Tools window
-    gameInterface.gui.cwinTOOLS = newwin(22, 15, 0, 62);
-    box(gameInterface.gui.cwinTOOLS, 0, 0);
-    wmove(gameInterface.gui.cwinTOOLS, 0, 0);
-    //wprintw(gameInterface.gui.cwinTOOLS, " Tools ");
-    wrefresh(gameInterface.gui.cwinTOOLS);
-
-	// Create a subwindow using derwin
-    gameInterface.gui.winTOOLS = derwin(gameInterface.gui.cwinTOOLS, 20, 13, 1, 1);
-    wrefresh(gameInterface.gui.winTOOLS);
-
-    // Informations window
-    gameInterface.gui.cwinINFOS = newwin(5, 77, 22, 0);
-    box(gameInterface.gui.cwinINFOS, 0, 0);
-    wmove(gameInterface.gui.cwinINFOS, 0, 0);
-    wprintw(gameInterface.gui.cwinINFOS, " Informations ");
-    wrefresh(gameInterface.gui.cwinINFOS);
-
-	// Create a subwindow using derwin
-    gameInterface.gui.winINFOS = derwin(gameInterface.gui.cwinINFOS, 3, 75, 1, 1);
-
-	// Set text info and refresh window
-    set_text_info_gui("Press 'Q' to quit...", 0, RED_COLOR);
-    wrefresh(gameInterface.gui.winINFOS);
 }
 
 /**
@@ -187,7 +159,7 @@ void game_init_gui() {
     gen_game_window();
     logs(L_INFO, "Main | Game Window created!");
     gen_player_menu();
-    logs(L_INFO, "Main | Tools menu created!");
+    logs(L_INFO, "Main | Player info menu created!");
 
     // Init level
     load_level(1);

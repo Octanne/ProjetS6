@@ -5,6 +5,9 @@
 void game_init_gui();
 void game_stop_gui();
 
+void game_gen_level();
+void game_gen_player_menu();
+
 void game_mouse_level_window(int x, int y);
 void game_mouse_player_menu(int x, int y);
 void game_keyboard_handler(int key);

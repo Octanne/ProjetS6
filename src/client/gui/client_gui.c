@@ -25,6 +25,9 @@ void init_gui() {
     getmaxyx(stdscr, LINES, COLS);
     logs(L_INFO, "Main | Ncurses windows init success!");
 
+    gen_right_menu_gui();
+    gen_main_gui();
+
     if (gameInterface.inMenu == true) {
         menu_init_gui();
     } else {
@@ -53,6 +56,46 @@ void stop_gui() {
     }
 }
 
+void gen_main_gui() {
+    // Main window
+    gameInterface.gui.cwinMAIN = newwin(22, 62, 0, 0);
+    box(gameInterface.gui.cwinMAIN, 0, 0);
+    wrefresh(gameInterface.gui.cwinMAIN);
+
+	// Create a subwindow using derwin
+    gameInterface.gui.winMAIN = derwin(gameInterface.gui.cwinMAIN, MATRICE_LEVEL_Y, MATRICE_LEVEL_X, 1, 1);
+    wrefresh(gameInterface.gui.winMAIN);
+
+    // Right window
+    gameInterface.gui.cwinTOOLS = newwin(22, 15, 0, 62);
+    box(gameInterface.gui.cwinTOOLS, 0, 0);
+    wmove(gameInterface.gui.cwinTOOLS, 0, 0);
+    //wprintw(gameInterface.gui.cwinTOOLS, " Tools ");
+    wrefresh(gameInterface.gui.cwinTOOLS);
+
+	// Create a subwindow using derwin
+    gameInterface.gui.winTOOLS = derwin(gameInterface.gui.cwinTOOLS, 20, 13, 1, 1);
+    wrefresh(gameInterface.gui.winTOOLS);
+
+    // Informations window
+    gameInterface.gui.cwinINFOS = newwin(5, 77, 22, 0);
+    box(gameInterface.gui.cwinINFOS, 0, 0);
+    wmove(gameInterface.gui.cwinINFOS, 0, 0);
+    wprintw(gameInterface.gui.cwinINFOS, " Informations ");
+    wrefresh(gameInterface.gui.cwinINFOS);
+
+	// Create a subwindow using derwin
+    gameInterface.gui.winINFOS = derwin(gameInterface.gui.cwinINFOS, 3, 75, 1, 1);
+
+	// Set text info and refresh window
+    set_text_info_gui("Press 'Q' to quit...", 0, RED_COLOR);
+    wrefresh(gameInterface.gui.winINFOS);
+}
+
+void gen_right_menu_gui() {
+    gameInterface.inMenu = true;
+}
+
 void refresh_main_gui() {
     // Clear window
     wclear(gameInterface.gui.winMAIN);
@@ -68,7 +111,7 @@ void refresh_main_gui() {
     wrefresh(gameInterface.gui.winMAIN);
 }
 
-void refresh_tools_gui() {
+void refresh_right_menu_gui() {
     // Clear window
     wclear(gameInterface.gui.winTOOLS);
 

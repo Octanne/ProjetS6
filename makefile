@@ -65,17 +65,17 @@ msg:
 debug: CCFLAGS = $(CCFLAGS_STD) $(CCFLAGS_DEBUG)
 debug: all
 
-runClient: 
+runClient: all
 	@# create folder run if it doesn't exist
 	@mkdir -p run/client
 	@cd run/client && ../../bin/client -p 25565 -h 127.0.0.1
 
-runEditeur:
+runEditeur: all
 	@# create folder run if it doesn't exist
 	@mkdir -p run/editeur
 	@cd run/editeur && ../../bin/editeur
 
-runServeur:
+runServeur: all
 	@# create folder run if it doesn't exist
 	@mkdir -p run/serveur
 	@cd run/serveur && ../../bin/serveur -p 25565
