@@ -7,6 +7,7 @@
 #include <sys/msg.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -67,14 +68,38 @@ int init_updater_gui() {
 
     // Child process
     if (pid_gui_updater == 0) {
+        // Init gui
+        init_gui();
+
+        // Signal handler via sigaction
+        struct sigaction sa;
+        sa.sa_handler = close_updater_gui;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+
+        if (sigaction(SIGINT, &sa, NULL) == -1) {
+            perror("sigaction");
+            logs(L_INFO, "Network | Error setting signal handler");
+            exit(EXIT_FAILURE);
+        }
+
         while (gui_updater_running) {
             // block until a message is available
             DataUpdateGame data;
             if (msgrcv(msqid_gui_updater, &data, sizeof(DataUpdateGame), 0, 0) == -1) {
+                // Si SIGINT
+                if (errno == EINTR) {
+                    logs(L_INFO, "GUI Updater | gui_updater closed by signal");
+                    exit(EXIT_SUCCESS);
+                }
                 logs(L_DEBUG, "GUI Updater | Error while receiving a message");
                 exit(EXIT_FAILURE);
             }
         }
+        
+        close_updater_gui();
+        logs(L_INFO, "GUI Updater | gui_updater closed");
+
         exit(EXIT_SUCCESS);
     }
 

@@ -145,6 +145,7 @@ int init_network(int argc, char *argv[]) {
     }
 
     close_network();
+    logs(L_INFO, "Network | Network closed");
 
     exit(EXIT_SUCCESS);
 }
@@ -165,7 +166,7 @@ NetMessage *get_udp_message_from_queue() {
     if (msgrcv(msqid_network, message, sizeof(NetMessage), 0, 0) < 0) {
         // Si interruption du programme, on quitte proprement
         if (errno == EINTR) {
-            logs(L_INFO, "Network | Interrupted by signal");
+            logs(L_INFO, "Network | Network closed by signal");
             exit(EXIT_SUCCESS);
         }
 
@@ -182,6 +183,10 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
     while (!received && nb_try < NET_MAX_TRIES) {
         // Send message
         if(sendto(sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
+            if (errno == EINTR) {
+                logs(L_INFO, "Network | Network closed by signal");
+                exit(EXIT_SUCCESS);
+            }
             perror("Error sending message");
             logs(L_INFO, "Network | Error sending message");
             exit(EXIT_FAILURE);
@@ -191,7 +196,10 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         // Receive response
         NetMessage response;
         if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            if (errno == EINTR) {
+                logs(L_INFO, "Network | Network closed by signal");
+                exit(EXIT_SUCCESS);
+            } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 logs(L_INFO, "Network | Timeout");
                 if (!network_init) printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
                 fflush(stdout);

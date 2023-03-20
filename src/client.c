@@ -14,7 +14,7 @@
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-int pid_network;
+int pid_network, pid_updater_graphics;
 
 /**
  * @brief Function runned when the game is stopped
@@ -46,6 +46,9 @@ void main_exit() {
     kill(pid_network, SIGINT);
     waitpid(pid_network, NULL, 0);
 
+    kill(pid_updater_graphics, SIGINT);
+    waitpid(pid_updater_graphics, NULL, 0);
+
     // Close logs
     closeLogs();
 }
@@ -61,8 +64,8 @@ int main(int argc, char *argv[]) {
     // Register exit function
     atexit(main_exit);
 
-    // Init gui
-    init_gui();
+    // Graphics updater
+    pid_updater_graphics = init_updater_gui();
 
     // Launch control handler
     control_handler();
