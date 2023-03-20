@@ -1,13 +1,11 @@
 
-#ifndef __GUI_UPDATER_H__
-#define __GUI_UPDATER_H__
+#ifndef __GUI_STRUCT_H__
+#define __GUI_STRUCT_H__
 
 #include <ncurses.h>
-#include <stdint.h>
 #include <stdbool.h>
 
 #include "level.h"
-#include "net_message.h"
 
 typedef struct {
     int8_t nbBombs;
@@ -26,7 +24,7 @@ typedef struct {
     char player_name[255];
 } MenuInfo;
 
-typedef struct {
+typedef struct gui {
     WINDOW* winMAIN;
     WINDOW* winTOOLS;
     WINDOW* winINFOS;
@@ -37,22 +35,13 @@ typedef struct {
 } GUI;
 
 typedef struct {
-    GUI gui;
     union {
         GameInfo gameInfo;
         MenuInfo menuInfo;
     };
     bool inMenu;
+    
+    GUI gui;
 } GameInterface;
 
-extern GameInterface gameInterface;
-
-void set_text_info_gui(const char *text, int line, int color);
-
-int init_updater_gui();
-
-void update_menu_gui(DataUpdateMenu *data);
-void update_game_gui(DataUpdateGame *data);
-
 #endif
-

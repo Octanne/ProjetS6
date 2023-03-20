@@ -5,17 +5,14 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "gui_updater.h"
 
 #include "menu_gui.h"
 #include "game_gui.h"
 
-GameInterface gameInterface;
-
 /**
  * @brief Init ncurses windows.
  */
-void init_gui() {
+void init_gui(GameInterface *gameI) {
     logs(L_INFO, "Main | Ncurses windows init...");
     setlocale(LC_ALL, "");
     ncurses_init();
@@ -25,162 +22,134 @@ void init_gui() {
     getmaxyx(stdscr, LINES, COLS);
     logs(L_INFO, "Main | Ncurses windows init success!");
 
-    gen_right_menu_gui();
-    gen_main_gui();
+    gen_right_menu_gui(gameI);
+    gen_main_gui(gameI);
 
-    if (gameInterface.inMenu == true) {
-        menu_init_gui();
+    if (gameI->inMenu == true) {
+        menu_init_gui(gameI);
     } else {
-        game_init_gui();
+        game_init_gui(gameI);
+    }
+}
+
+void switch_gui(GameInterface *gameI) {
+    if (gameI->inMenu == true) {
+        gameI->inMenu = false;
+        menu_stop_gui(gameI);
+        game_init_gui(gameI);
+    } else {
+        gameI->inMenu = true;
+        game_stop_gui(gameI);
+        menu_init_gui(gameI);
     }
 }
 
 /**
  * @brief Stop ncurses windows and free memory.
  */
-void stop_gui() {
-    delwin(gameInterface.gui.winMAIN);
-    delwin(gameInterface.gui.winTOOLS);
-    delwin(gameInterface.gui.winINFOS);
-    delwin(gameInterface.gui.cwinMAIN);
-    delwin(gameInterface.gui.cwinTOOLS);
-    delwin(gameInterface.gui.cwinINFOS);
+void stop_gui(GameInterface *gameI) {
+    delwin(gameI->gui.winMAIN);
+    delwin(gameI->gui.winTOOLS);
+    delwin(gameI->gui.winINFOS);
+    delwin(gameI->gui.cwinMAIN);
+    delwin(gameI->gui.cwinTOOLS);
+    delwin(gameI->gui.cwinINFOS);
 
     ncurses_stop();
     logs(L_INFO, "Main | Ncurses windows deleted!");
 
-    if (gameInterface.inMenu == true) {
-        menu_stop_gui();
+    if (gameI->inMenu == true) {
+        menu_stop_gui(gameI);
     } else {
-        game_stop_gui();
+        game_stop_gui(gameI);
     }
 }
 
-void gen_main_gui() {
+void gen_main_gui(GameInterface *gameI) {
     // Main window
-    gameInterface.gui.cwinMAIN = newwin(22, 62, 0, 0);
-    box(gameInterface.gui.cwinMAIN, 0, 0);
-    wrefresh(gameInterface.gui.cwinMAIN);
+    gameI->gui.cwinMAIN = newwin(22, 62, 0, 0);
+    box(gameI->gui.cwinMAIN, 0, 0);
+    wrefresh(gameI->gui.cwinMAIN);
 
 	// Create a subwindow using derwin
-    gameInterface.gui.winMAIN = derwin(gameInterface.gui.cwinMAIN, MATRICE_LEVEL_Y, MATRICE_LEVEL_X, 1, 1);
-    wrefresh(gameInterface.gui.winMAIN);
+    gameI->gui.winMAIN = derwin(gameI->gui.cwinMAIN, MATRICE_LEVEL_Y, MATRICE_LEVEL_X, 1, 1);
+    wrefresh(gameI->gui.winMAIN);
 
     // Right window
-    gameInterface.gui.cwinTOOLS = newwin(22, 15, 0, 62);
-    box(gameInterface.gui.cwinTOOLS, 0, 0);
-    wmove(gameInterface.gui.cwinTOOLS, 0, 0);
-    //wprintw(gameInterface.gui.cwinTOOLS, " Tools ");
-    wrefresh(gameInterface.gui.cwinTOOLS);
+    gameI->gui.cwinTOOLS = newwin(22, 15, 0, 62);
+    box(gameI->gui.cwinTOOLS, 0, 0);
+    wmove(gameI->gui.cwinTOOLS, 0, 0);
+    //wprintw(gameI->gui.cwinTOOLS, " Tools ");
+    wrefresh(gameI->gui.cwinTOOLS);
 
 	// Create a subwindow using derwin
-    gameInterface.gui.winTOOLS = derwin(gameInterface.gui.cwinTOOLS, 20, 13, 1, 1);
-    wrefresh(gameInterface.gui.winTOOLS);
+    gameI->gui.winTOOLS = derwin(gameI->gui.cwinTOOLS, 20, 13, 1, 1);
+    wrefresh(gameI->gui.winTOOLS);
 
     // Informations window
-    gameInterface.gui.cwinINFOS = newwin(5, 77, 22, 0);
-    box(gameInterface.gui.cwinINFOS, 0, 0);
-    wmove(gameInterface.gui.cwinINFOS, 0, 0);
-    wprintw(gameInterface.gui.cwinINFOS, " Informations ");
-    wrefresh(gameInterface.gui.cwinINFOS);
+    gameI->gui.cwinINFOS = newwin(5, 77, 22, 0);
+    box(gameI->gui.cwinINFOS, 0, 0);
+    wmove(gameI->gui.cwinINFOS, 0, 0);
+    wprintw(gameI->gui.cwinINFOS, " Informations ");
+    wrefresh(gameI->gui.cwinINFOS);
 
 	// Create a subwindow using derwin
-    gameInterface.gui.winINFOS = derwin(gameInterface.gui.cwinINFOS, 3, 75, 1, 1);
+    gameI->gui.winINFOS = derwin(gameI->gui.cwinINFOS, 3, 75, 1, 1);
 
 	// Set text info and refresh window
-    set_text_info_gui("Press 'Q' to quit...", 0, RED_COLOR);
-    wrefresh(gameInterface.gui.winINFOS);
+    set_text_info_gui(gameI, "Press 'Q' to quit...", 0, RED_COLOR);
+    wrefresh(gameI->gui.winINFOS);
 }
 
-void gen_right_menu_gui() {
-    gameInterface.inMenu = true;
+void gen_right_menu_gui(GameInterface *gameI) {
+    gameI->inMenu = true;
 }
 
-void refresh_main_gui() {
+void refresh_main_gui(GameInterface *gameI) {
     // Clear window
-    wclear(gameInterface.gui.winMAIN);
+    wclear(gameI->gui.winMAIN);
 
     // Draw window
-    if (gameInterface.inMenu == true) {
-        menu_refresh_main_window();
+    if (gameI->inMenu == true) {
+        menu_refresh_main_window(gameI);
     } else {
-        refresh_level();
+        refresh_level(gameI);
     }
 
     // Refresh window
-    wrefresh(gameInterface.gui.winMAIN);
+    wrefresh(gameI->gui.winMAIN);
 }
 
-void refresh_right_menu_gui() {
+void refresh_right_menu_gui(GameInterface *gameI) {
     // Clear window
-    wclear(gameInterface.gui.winTOOLS);
+    wclear(gameI->gui.winTOOLS);
 
     // Draw window
-    if (gameInterface.inMenu == true) {
-        menu_refresh_right_menu();
+    if (gameI->inMenu == true) {
+        menu_refresh_right_menu(gameI);
     } else {
-        refresh_player_menu();
+        refresh_player_menu(gameI);
     }
 
     // Refresh window
-    wrefresh(gameInterface.gui.winTOOLS);
+    wrefresh(gameI->gui.winTOOLS);
 }
 
 /**
- * @brief Function managing the mouse events
- * 
- * @param posX : mouse position on X axis
- * @param posY : mouse position on Y axis
+ * @brief Append text to the info window.
  */
-void mouse_event(short posX, short posY) {
-    // convert to window level coordinates
-    posX -= 1;
-    posY -= 1;
+void set_text_info_gui(GameInterface *gameI, const char *text, int line, int color) {
+	// Clear line
+    mvwprintw(gameI->gui.winINFOS, line, 0, EMPTY_LINE);
 
-    // Check if the mouse is inside the main window
-    if (posX >= 0 && posX < MATRICE_LEVEL_X && posY >= 0 && posY < MATRICE_LEVEL_Y) {
-        if (gameInterface.inMenu == true) {
-            menu_mouse_main_window(posX, posY);
-        } else {
-            game_mouse_level_window(posX, posY);
-        }
-    }
+	// Move cursor to line
+    wmove(gameI->gui.winINFOS, line, 0);
 
-    // Check if the mouse is inside the right window
-    else if (posX >= 62 && posX < 77 && posY >= 0 && posY < 20) {
-        if (gameInterface.inMenu == true) {
-            menu_mouse_right_menu(posX, posY);
-        } else {
-            game_mouse_player_menu(posX, posY);
-        }
-    }
+	// Set color and print text
+    wattron(gameI->gui.winINFOS, COLOR_PAIR(color));
+    mvwprintw(gameI->gui.winINFOS, line, 0, "%s", text);
+    wattroff(gameI->gui.winINFOS, COLOR_PAIR(color));
 
-    // Write down mouse position
-    char text[100];
-    sprintf(text, "Position : (Y, X) -> (%i, %i)", posY, posX);
-    set_text_info_gui(text, 2, LBLUE_COLOR);
+	// Refresh window
+    wrefresh(gameI->gui.winINFOS);
 }
-
-/**
- * @brief Function managing the keyboard events
- * 
- * @param key : character typed
- */
-void control_handler_gui(int key) {
-	int posX, posY;
-    switch (key) {
-        case KEY_MOUSE:
-            // Mouse event handler
-            if (mouse_getpos(&posX, &posY) == OK)
-                mouse_event((short)posX, (short)posY);
-        break;
-        default: 
-            if (gameInterface.inMenu == true) {
-                menu_keyboard_handler(key);
-            } else {
-                game_keyboard_handler(key);
-            }
-        break;
-    }
-}
-

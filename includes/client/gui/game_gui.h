@@ -2,18 +2,20 @@
 #ifndef __GAME_GUI_H__
 #define __GAME_GUI_H__
 
-void game_init_gui();
-void game_stop_gui();
+#include "gui_struct.h"
 
-void game_gen_level();
-void game_gen_player_menu();
+void game_init_gui(GameInterface *gameI);
+void game_stop_gui(GameInterface *gameI);
 
-void game_mouse_level_window(int x, int y);
-void game_mouse_player_menu(int x, int y);
-void game_keyboard_handler(int key);
+void game_gen_level(GameInterface *gameI);
+void game_gen_player_menu(GameInterface *gameI);
 
-void refresh_level();
-void refresh_player_menu();
+void game_mouse_level_window(GameInterface *gameI, int x, int y);
+void game_mouse_player_menu(GameInterface *gameI, int x, int y);
+void game_keyboard_handler(GameInterface *gameI, int key);
+
+void refresh_level(GameInterface *gameI);
+void refresh_player_menu(GameInterface *gameI);
 
 #endif
 

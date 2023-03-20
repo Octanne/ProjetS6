@@ -17,6 +17,7 @@
 #include <sys/msg.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <signal.h>
 
 #include "utils.h"
@@ -24,22 +25,24 @@
 
 #include "net_message.h"
 
-#define MESSAGE_QUEUE_KEY "ProjetS6Network"
-
 int pid_net;
 int msqid_network;
 bool network_running = true;
 bool network_init = false;
 
-void close_network() {
-    logs(L_INFO, "Network | Closing network...");
+void close_network_trigger() {
+    logs(L_INFO, "Network | Closing network asked...");
     network_running = false;
+}
 
-    // Close the message queue
-    if (msgctl(msqid_network, IPC_RMID, NULL) == -1) {
-        logs(L_INFO, "Network | Error while closing the message queue");
+void close_network() {
+    // On supprime la file de message
+    if (msgctl(msqid_network, IPC_RMID, NULL) < 0) {
+        logs(L_INFO, "Network | Error deleting message queue : %s", strerror(errno));
+        perror("Error deleting message queue");
         exit(EXIT_FAILURE);
     }
+    logs(L_INFO, "Network | Network closed");
 }
 
 int init_network(int argc, char *argv[]) {
@@ -100,8 +103,9 @@ int init_network(int argc, char *argv[]) {
     }
 
     // Création de la file de message
-    key_t key = ftok(MESSAGE_QUEUE_KEY, 1);
-    if ((msqid_network = msgget(key, IPC_CREAT | 0666)) < 0) {
+    // Génération d'une clef unique
+    //key_t key = ftok("/tmp/net_cli_s6", 'a');
+    if ((msqid_network = msgget(1040, S_IRUSR | S_IWUSR | IPC_CREAT)) < 0) {
         logs(L_INFO, "Network | Error creating message queue");
         perror("Error creating message queue");
         exit(EXIT_FAILURE);
@@ -128,7 +132,7 @@ int init_network(int argc, char *argv[]) {
 
     // Signal handler via sigaction
     struct sigaction sa;
-    sa.sa_handler = close_network;
+    sa.sa_handler = close_network_trigger;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
 
@@ -145,7 +149,6 @@ int init_network(int argc, char *argv[]) {
     }
 
     close_network();
-    logs(L_INFO, "Network | Network closed");
 
     exit(EXIT_SUCCESS);
 }
@@ -166,11 +169,12 @@ NetMessage *get_udp_message_from_queue() {
     if (msgrcv(msqid_network, message, sizeof(NetMessage), 0, 0) < 0) {
         // Si interruption du programme, on quitte proprement
         if (errno == EINTR) {
-            logs(L_INFO, "Network | Network closed by signal");
+            logs(L_INFO, "Network | Network closing while waiting for message in queue");
+            close_network();
             exit(EXIT_SUCCESS);
         }
 
-        logs(L_INFO, "Network | Error getting message from queue");
+        logs(L_INFO, "Network | Error getting message from queue : %s", strerror(errno));
         perror("Error getting message from queue");
         exit(EXIT_FAILURE);
     }
@@ -184,7 +188,8 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         // Send message
         if(sendto(sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
             if (errno == EINTR) {
-                logs(L_INFO, "Network | Network closed by signal");
+                logs(L_INFO, "Network | Network closing while sending message");
+                close_network();
                 exit(EXIT_SUCCESS);
             }
             perror("Error sending message");
@@ -197,7 +202,8 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         NetMessage response;
         if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
             if (errno == EINTR) {
-                logs(L_INFO, "Network | Network closed by signal");
+                logs(L_INFO, "Network | Network closing while receiving response");
+                close_network();
                 exit(EXIT_SUCCESS);
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 logs(L_INFO, "Network | Timeout");

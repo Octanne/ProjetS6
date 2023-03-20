@@ -6,210 +6,210 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "gui_updater.h"
-#include "level_update.h"
+
+#include "client_gui.h"
 
 /**
  * @brief Function to clear the level and generate a new one
  */
-void clear_level() {
+void clear_level(GameInterface *gameI) {
 	// Free level and generate a new one
-    level_free(&(gameInterface.gameInfo.level));
-    gameInterface.gameInfo.level = levelCreer();
+    level_free(&(gameI->gameInfo.level));
+    gameI->gameInfo.level = levelCreer();
 
 	// Logs and refresh level
     logs(L_INFO, "Main | Level cleared");
-    logs(L_INFO, "Main | Level value : %X", gameInterface.gameInfo.level);
-    refresh_level();
+    logs(L_INFO, "Main | Level value : %X", gameI->gameInfo.level);
+    refresh_level(gameI);
 }
 
 /**
  * @brief Function to load a level and save the old one
  */
-void load_level(int newLevel) {
+void load_level(GameInterface *gameI, int newLevel) {
     // TODO to change
-    level_free(&(gameInterface.gameInfo.level));
-    gameInterface.gameInfo.level = levelCreer();
+    level_free(&(gameI->gameInfo.level));
+    gameI->gameInfo.level = levelCreer();
 
     // Logs and refresh level
     logs(L_INFO, "Main | New level load : %d", newLevel);
-    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, gameInterface.gameInfo.level.listeObjet.taille);
-    set_text_info_gui("Level loaded", 1, GREEN_COLOR);
+    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, gameI->gameInfo.level.listeObjet.taille);
+    set_text_info_gui(gameI, "Level loaded", 1, GREEN_COLOR);
 
-    refresh_level();
+    refresh_level(gameI);
 }
 
 /**
  * @brief Refresh the level window from scratch.
  */
-void refresh_level() {
+void refresh_level(GameInterface *gameI) {
     // Update level matrice
-    levelUpdateMatriceSprite(&(gameInterface.gameInfo.level));
+    levelUpdateMatriceSprite(&(gameI->gameInfo.level));
 	// Draw level from matrice
     short y, x;
     for (y = 0; y < MATRICE_LEVEL_Y; y++) {
         for (x = 0; x < MATRICE_LEVEL_X; x++) {
 			// Get sprite data
-            SpriteData spriteD = gameInterface.gameInfo.level.matriceSprite[y + x * MATRICE_LEVEL_Y];
+            SpriteData spriteD = gameI->gameInfo.level.matriceSprite[y + x * MATRICE_LEVEL_Y];
 
 			// Move cursor to sprite position
-            wmove(gameInterface.gui.winMAIN, y, x);
+            wmove(gameI->gui.winMAIN, y, x);
 
 			// Set color and draw sprite
-            wattron(gameInterface.gui.winMAIN, COLOR_PAIR(spriteD.color));
+            wattron(gameI->gui.winMAIN, COLOR_PAIR(spriteD.color));
             if (spriteD.specialChar)
-				waddch(gameInterface.gui.winMAIN, spriteD.spSprite);
+				waddch(gameI->gui.winMAIN, spriteD.spSprite);
             else
-				waddch(gameInterface.gui.winMAIN, spriteD.sprite);
-            wattroff(gameInterface.gui.winMAIN, COLOR_PAIR(spriteD.color));
+				waddch(gameI->gui.winMAIN, spriteD.sprite);
+            wattroff(gameI->gui.winMAIN, COLOR_PAIR(spriteD.color));
         }
     }
 
     // Refresh window
-    wrefresh(gameInterface.gui.winMAIN);
+    wrefresh(gameI->gui.winMAIN);
 }
 
 /**
  * @brief Refresh the tools menu from scratch.
  */
-void refresh_player_menu() {
+void refresh_player_menu(GameInterface *gameI) {
 	// Draw player infos
     // Draw Keys
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 2, 2, "Keys");
-    if (gameInterface.gameInfo.key1 == 1) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
-        mvwaddch(gameInterface.gui.winTOOLS, 4, 2, ' ');
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(PURPLE_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 5, 2, ACS_LLCORNER);
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameI->gui.winTOOLS, 2, 2, "Keys");
+    if (gameI->gameInfo.key1 == 1) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
+        mvwaddch(gameI->gui.winTOOLS, 4, 2, ' ');
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(PURPLE_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 5, 2, ACS_LLCORNER);
     }
-    if (gameInterface.gameInfo.key2 == 1) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
-        mvwaddch(gameInterface.gui.winTOOLS, 4, 4, ' ');
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(GREEN_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 5, 4, ACS_LLCORNER);
+    if (gameI->gameInfo.key2 == 1) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
+        mvwaddch(gameI->gui.winTOOLS, 4, 4, ' ');
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 5, 4, ACS_LLCORNER);
     }
-    if (gameInterface.gameInfo.key3 == 1) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-        mvwaddch(gameInterface.gui.winTOOLS, 4, 6, ' ');
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 5, 6, ACS_LLCORNER);
+    if (gameI->gameInfo.key3 == 1) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
+        mvwaddch(gameI->gui.winTOOLS, 4, 6, ' ');
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 5, 6, ACS_LLCORNER);
     }
-    if (gameInterface.gameInfo.key4 == 1) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
-        mvwaddch(gameInterface.gui.winTOOLS, 4, 8, ' ');
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(LBLUE_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 5, 8, ACS_LLCORNER);
+    if (gameI->gameInfo.key4 == 1) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
+        mvwaddch(gameI->gui.winTOOLS, 4, 8, ' ');
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 5, 8, ACS_LLCORNER);
     }
 
     // Draw Lives
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 7, 2, "Lives");
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameI->gui.winTOOLS, 7, 2, "Lives");
     int i;
-    for (i = 0; i < gameInterface.gameInfo.nbLives; i++) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 9, 2 + 2*i, 'V');
+    for (i = 0; i < gameI->gameInfo.nbLives; i++) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 9, 2 + 2*i, 'V');
     }
 
     // Draw Bombs
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 11, 2, "Bombs");
-    for (i = 0; i < gameInterface.gameInfo.nbBombs; i++) {
-        wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
-        mvwaddch(gameInterface.gui.winTOOLS, 13, 2 + 2*i, 'O');
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameI->gui.winTOOLS, 11, 2, "Bombs");
+    for (i = 0; i < gameI->gameInfo.nbBombs; i++) {
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+        mvwaddch(gameI->gui.winTOOLS, 13, 2 + 2*i, 'O');
     }
 
     // Draw Level
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameInterface.gui.winTOOLS, 15, 2, "Level");
-    wattron(gameInterface.gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-    mvwprintw(gameInterface.gui.winTOOLS, 17, 2, " %03i ", gameInterface.gameInfo.currentLevel);
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
+    mvwprintw(gameI->gui.winTOOLS, 15, 2, "Level");
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
+    mvwprintw(gameI->gui.winTOOLS, 17, 2, " %03i ", gameI->gameInfo.currentLevel);
 
 	// Refresh window
-    wattroff(gameInterface.gui.winTOOLS, COLOR_PAIR(RED_COLOR));
-    wrefresh(gameInterface.gui.winTOOLS);
+    wattroff(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
+    wrefresh(gameI->gui.winTOOLS);
 }
 
 /**
  * @brief Generate the game editor window
  */
-void gen_game_window() {
+void gen_game_window(GameInterface *gameI) {
     // Afficher le titre de la main window
-    wmove(gameInterface.gui.cwinMAIN, 0, 0);
-    wprintw(gameInterface.gui.cwinMAIN, " Level ");
-    wrefresh(gameInterface.gui.cwinMAIN);
+    wmove(gameI->gui.cwinMAIN, 0, 0);
+    wprintw(gameI->gui.cwinMAIN, " Level ");
+    wrefresh(gameI->gui.cwinMAIN);
 }
 
 /**
  * @brief Generate the players menu
  */
-void gen_player_menu() {
-    gameInterface.gameInfo.nbLives = 5;
-    gameInterface.gameInfo.nbBombs = 5;
+void gen_player_menu(GameInterface *gameI) {
+    gameI->gameInfo.nbLives = 5;
+    gameI->gameInfo.nbBombs = 5;
 
-    gameInterface.gameInfo.key1 = 1;
-    gameInterface.gameInfo.key2 = 1;
-    gameInterface.gameInfo.key3 = 1;
-    gameInterface.gameInfo.key4 = 1;
+    gameI->gameInfo.key1 = 1;
+    gameI->gameInfo.key2 = 1;
+    gameI->gameInfo.key3 = 1;
+    gameI->gameInfo.key4 = 1;
 
-    gameInterface.gameInfo.currentLevel = 1;
+    gameI->gameInfo.currentLevel = 1;
 
-    refresh_player_menu();
+    refresh_player_menu(gameI);
 }
 
-void game_init_gui() {
-    gen_game_window();
+void game_init_gui(GameInterface *gameI) {
+    gen_game_window(gameI);
     logs(L_INFO, "Main | Game Window created!");
-    gen_player_menu();
+    gen_player_menu(gameI);
     logs(L_INFO, "Main | Player info menu created!");
 
     // Init level
-    load_level(1);
+    load_level(gameI, 1);
 }
 
-void game_stop_gui() {
+void game_stop_gui(GameInterface *gameI) {
 	// Free the level
-    level_free(&(gameInterface.gameInfo.level));
+    level_free(&(gameI->gameInfo.level));
 }
 
-void game_mouse_level_window(int x, int y) {
+void game_mouse_level_window(GameInterface *gameI, int x, int y) {
     // TODO if we want to use the mouse
 }
 
-void game_mouse_player_menu(int x, int y) {
+void game_mouse_player_menu(GameInterface *gameI, int x, int y) {
     // TODO if we want to use the mouse
 }
 
-void game_keyboard_handler(int key) {
+void game_keyboard_handler(GameInterface *gameI, int key) {
     switch (key) {
         case KEY_UP:
             // Write down the action
-            set_text_info_gui("Action: UP", 1, GREEN_COLOR);
+            set_text_info_gui(gameI, "Action: UP", 1, GREEN_COLOR);
         break;
         
         case KEY_DOWN:
             // Write down the action
-            set_text_info_gui("Action: DOWN", 1, GREEN_COLOR);
+            set_text_info_gui(gameI, "Action: DOWN", 1, GREEN_COLOR);
         break;
 
         case KEY_LEFT:
             // Write down the action
-            set_text_info_gui("Action: LEFT", 1, GREEN_COLOR);
+            set_text_info_gui(gameI, "Action: LEFT", 1, GREEN_COLOR);
         break;
 
         case KEY_RIGHT:
             // Write down the action
-            set_text_info_gui("Action: RIGHT", 1, GREEN_COLOR);
+            set_text_info_gui(gameI, "Action: RIGHT", 1, GREEN_COLOR);
         break;
 
         case KEY_VALIDATE:
             // Write down the action
-            set_text_info_gui("Action: VALIDATE", 1, GREEN_COLOR);
+            set_text_info_gui(gameI, "Action: VALIDATE", 1, GREEN_COLOR);
         break;
 
         default:
             // Write down the action
-            set_text_info_gui("Action: UNKNOWN", 1, RED_COLOR);
+            set_text_info_gui(gameI, "Action: UNKNOWN", 1, RED_COLOR);
         break;
     }
 }

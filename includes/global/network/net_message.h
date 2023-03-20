@@ -16,8 +16,8 @@
 
 typedef struct {
     int type;
-    int size;
     union {
+        DataTextInfoGUI textInfoGUI;
         DataUpdateGame updateGame;
         DataUpdateMenu updateMenu;
         DataInputPlayer inputPlayer;
