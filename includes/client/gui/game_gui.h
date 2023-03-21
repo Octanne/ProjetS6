@@ -14,6 +14,7 @@ void game_mouse_level_window(GameInterface *gameI, int x, int y);
 void game_mouse_player_menu(GameInterface *gameI, int x, int y);
 void game_keyboard_handler(GameInterface *gameI, int key);
 
+void load_level(GameInterface *gameI, Level * newLevel);
 void refresh_level(GameInterface *gameI);
 void refresh_player_menu(GameInterface *gameI);
 

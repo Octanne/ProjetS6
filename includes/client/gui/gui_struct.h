@@ -7,22 +7,26 @@
 #include <pthread.h>
 
 #include "level.h"
+#include "player.h"
 
 typedef struct {
-    int8_t nbBombs;
-    int8_t nbLives;
-
-    int8_t key1;
-    int8_t key2;
-    int8_t key3;
-    int8_t key4;
-
-    int currentLevel;
-    Level level;
+    Player player;
+    Level *level;
 } GameInfo;
 
 typedef struct {
+    char name[36];
+    int nbPlayers;
+    int maxPlayers;
+    int status;
+
+    WINDOW* winTAB;
+} TabPartie;
+
+typedef struct {
     char player_name[255];
+
+    TabPartie tabPartie[4];
 } MenuInfo;
 
 typedef struct gui {

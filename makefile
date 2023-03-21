@@ -166,31 +166,35 @@ obj/client/process/client_network.o: src/client/process/client_network.c \
  includes/global/network/net_struct.h \
  includes/global/network/data_update.h includes/global/utils/constants.h \
  includes/global/player.h includes/global/objet.h \
+ includes/client/gui/gui_struct.h includes/global/level.h \
+ includes/global/liste.h includes/global/objet.h \
  includes/global/utils/utils.h
 obj/client/process/gui_process.o: src/client/process/gui_process.c \
  includes/client/process/gui_process.h \
  includes/global/network/net_struct.h \
  includes/global/network/data_update.h includes/global/utils/constants.h \
  includes/global/player.h includes/global/objet.h \
- includes/global/utils/utils.h includes/client/gui/client_gui.h \
  includes/client/gui/gui_struct.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h \
- includes/client/gui/menu_gui.h includes/client/gui/game_gui.h
+ includes/global/utils/utils.h includes/client/gui/client_gui.h \
+ includes/client/gui/gui_struct.h includes/client/gui/menu_gui.h \
+ includes/client/gui/game_gui.h
 obj/client/gui/game_gui.o: src/client/gui/game_gui.c \
  includes/client/gui/game_gui.h includes/client/gui/gui_struct.h \
  includes/global/level.h includes/global/liste.h includes/global/objet.h \
- includes/global/utils/constants.h includes/global/utils/utils.h \
- includes/client/gui/client_gui.h
+ includes/global/utils/constants.h includes/global/player.h \
+ includes/global/utils/utils.h includes/client/gui/client_gui.h
 obj/client/gui/menu_gui.o: src/client/gui/menu_gui.c \
  includes/client/gui/menu_gui.h includes/client/gui/gui_struct.h \
  includes/global/level.h includes/global/liste.h includes/global/objet.h \
- includes/global/utils/constants.h includes/global/utils/utils.h \
- includes/client/gui/client_gui.h
+ includes/global/utils/constants.h includes/global/player.h \
+ includes/global/utils/utils.h includes/client/gui/client_gui.h
 obj/client/gui/client_gui.o: src/client/gui/client_gui.c \
  includes/client/gui/client_gui.h includes/client/gui/gui_struct.h \
  includes/global/level.h includes/global/liste.h includes/global/objet.h \
- includes/global/utils/constants.h includes/global/utils/utils.h \
- includes/client/gui/menu_gui.h includes/client/gui/game_gui.h
+ includes/global/utils/constants.h includes/global/player.h \
+ includes/global/utils/utils.h includes/client/gui/menu_gui.h \
+ includes/client/gui/game_gui.h
 obj/editeur.o: src/editeur.c includes/global/level.h \
  includes/global/liste.h includes/global/objet.h \
  includes/global/utils/constants.h includes/global/utils/utils.h \
@@ -213,7 +217,9 @@ obj/client.o: src/client.c includes/global/utils/utils.h \
  includes/client/process/client_network.h \
  includes/global/network/net_struct.h \
  includes/global/network/data_update.h includes/global/player.h \
- includes/global/objet.h includes/client/process/gui_process.h
+ includes/global/objet.h includes/client/gui/gui_struct.h \
+ includes/global/level.h includes/global/liste.h includes/global/objet.h \
+ includes/client/process/gui_process.h
 obj/serveur.o: src/serveur.c includes/serveur/serveur_network.h \
  includes/serveur/console_manager.h includes/global/utils/utils.h \
  includes/global/utils/constants.h
@@ -237,8 +243,8 @@ obj/serveur/serveur_network.o: src/serveur/serveur_network.c \
  includes/global/network/data_update.h includes/global/player.h \
  includes/global/objet.h
 obj/serveur/partie/level_update.o: src/serveur/partie/level_update.c \
- includes/serveur/level_update.h includes/global/level.h \
+ includes/serveur/partie/level_update.h includes/global/level.h \
  includes/global/liste.h includes/global/objet.h \
  includes/global/utils/constants.h includes/global/utils/utils.h
 obj/serveur/partie/partie_manager.o: src/serveur/partie/partie_manager.c \
- includes/serveur/partie_manager.h includes/global/liste.h
+ includes/serveur/partie/partie_manager.h includes/global/liste.h

@@ -16,11 +16,55 @@ void menu_init_gui(GameInterface *gameI){
 }
 
 void menu_stop_gui(GameInterface *gameI){
-
+    // Destroy TabPartie window 1 to 4
+    int i = 0;
+    for (i = 0; i < 4; i++) {
+        delwin(gameI->menuInfo.tabPartie[i].winTAB);
+        logs(L_INFO, "Menu | TabPartie %d deleted!", i);
+    }
 }
 
 void menu_gen_main_window(GameInterface *gameI) {
+    // Create TabPartie window 1 to 4
+    int i = 0;
+    for (i = 0; i < 4; i++) {
+        // Mock data
+        strcpy(gameI->menuInfo.tabPartie[i].name, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        gameI->menuInfo.tabPartie[i].nbPlayers = 2;
+        gameI->menuInfo.tabPartie[i].maxPlayers = 4;
+        gameI->menuInfo.tabPartie[i].status = 0;
 
+
+        gameI->menuInfo.tabPartie[i].winTAB = 
+            derwin(gameI->gui.winMAIN, 5, MATRICE_LEVEL_X, 5*i, 0);
+        wattron(gameI->menuInfo.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        box(gameI->menuInfo.tabPartie[i].winTAB, 0, 0);
+        wattron(gameI->menuInfo.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_BLOCK));
+        // Information partie
+        mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 1, 2, 
+            " Nom de la partie: %36s ", 
+            gameI->menuInfo.tabPartie[i].name);
+        // Status partie
+        if (gameI->menuInfo.tabPartie[i].status == 0) {
+            mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 2, 2, 
+            " Status: En attente                                     ");
+        } else {
+            mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 2, 2, 
+            " Status: En cours                                       ");
+        }
+        mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 2, MATRICE_LEVEL_X-20, 
+            " Joueur(s): %02i/%02i",
+            gameI->menuInfo.tabPartie[i].nbPlayers, gameI->menuInfo.tabPartie[i].maxPlayers);
+
+        // Bouton rejoindre
+        wattron(gameI->menuInfo.tabPartie[i].winTAB, COLOR_PAIR(YELLOW_BLOCK));
+        mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, " Rejoindre ");
+        
+        logs(L_INFO, "Menu | TabPartie %d created!", i);
+        wrefresh(gameI->menuInfo.tabPartie[i].winTAB);
+    }
+
+    menu_refresh_main_window(gameI);
 }
 
 void menu_gen_right_menu(GameInterface *gameI) {
@@ -72,7 +116,15 @@ void menu_keyboard_handler(GameInterface *gameI, int key){
 }
 
 void menu_refresh_main_window(GameInterface *gameI){
+    // Draw partie disponible on title
+    wattron(gameI->gui.cwinMAIN, COLOR_PAIR(LBLUE_COLOR));
+    mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Partie disponible ");
 
+    // Draw the list of available games
+    wattron(gameI->gui.cwinMAIN, COLOR_PAIR(COLOR_WHITE));
+
+    wrefresh(gameI->gui.cwinMAIN);
+    wrefresh(gameI->gui.winMAIN);
 }
 
 void menu_refresh_right_menu(GameInterface *gameI){

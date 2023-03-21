@@ -90,3 +90,39 @@ void init_gui_process(NetworkSocket *netSocket) {
 
     logs(L_INFO, "GUI Process | Gui process stopped!");
 }
+
+void update_game_gui(GameInterface *gameI, DataUpdateGame *data) {
+    // Lock mutex
+    pthread_mutex_lock(&gameI->mutex);
+    // Update game data
+    gameI->gameInfo.player = data->player;
+    refresh_player_menu(gameI);
+    Level *level = malloc(sizeof(Level));
+    *level = convert_bytes_to_level(data->levelBytes, data->sizeLevel);
+    load_level(gameI, level);
+    // Unlock mutex
+    pthread_mutex_unlock(&gameI->mutex);
+}
+
+void update_menu_gui(GameInterface *gameI, DataUpdateMenu *data) {
+    // Lock mutex
+    pthread_mutex_lock(&gameI->mutex);
+    // Update menu data
+
+    // TODO
+
+    // Refresh menu
+    refresh_main_gui(gameI);
+    refresh_right_menu_gui(gameI);
+    // Unlock mutex
+    pthread_mutex_unlock(&gameI->mutex);
+}
+
+void write_text_info_bar(GameInterface *gameI, DataTextInfoGUI *data) {
+    // Lock mutex
+    pthread_mutex_lock(&gameI->mutex);
+    // Write text
+    set_text_info_gui(gameI, data->text, data->line, data->color);
+    // Unlock mutex
+    pthread_mutex_unlock(&gameI->mutex);
+}
