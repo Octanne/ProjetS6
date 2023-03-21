@@ -25,12 +25,35 @@ typedef struct {
 } TabPartie;
 
 typedef struct {
-    char player_name[255];
+    char name[36];
 
+    bool set;
+    WINDOW* winTAB;
+} TabMap;
+
+typedef struct {
     int numPage;
     int selPartie;
     int nbParties;
+    bool newPartie;
     TabPartie tabPartie[4];
+} TabPartieMenu;
+
+typedef struct {
+    int numPage;
+    int selMap;
+    int nbMaps;
+
+    int maxPlayers;
+    TabMap tabMap[6];
+} CreatePartieMenu;
+
+typedef struct {
+    char player_name[255];
+    bool newPartie;
+
+    CreatePartieMenu createPartieMenu;
+    TabPartieMenu tabPartieMenu;
 } MenuInfo;
 
 typedef struct gui {
