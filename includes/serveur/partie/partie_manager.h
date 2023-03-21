@@ -2,7 +2,9 @@
 #define __PARTIE_MANAGER_H__
 
 #include <stdbool.h>
+
 #include "liste.h"
+#include "data_update.h"
 
 typedef struct {
     bool isStart;
@@ -10,13 +12,31 @@ typedef struct {
     int nbPlayers;
     int maxPlayers;
     Liste players;
+    Liste load_level;
+
+    char map_file[255];
 } Partie;
+
+typedef struct {
+    char name[255];
+    int nbPlayers;
+    int maxPlayers;
+    int isStart;
+
+    int portTCP;
+} PartieStatutInfo;
+
+typedef struct {
+    Liste partieInfoListe;
+} PartieManager;
 
 void joinPartie();
 void leavePartie();
-
-void listPartie();
 void addPartie();
-void removePartie();
+
+PartieListMessage listPartie(PartieManager *partieManager, int numPage);
+void listMaps();
+
+PartieManager partieManager_create();
 
 #endif

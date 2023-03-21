@@ -9,14 +9,31 @@
 #include "objet.h"
 
 typedef struct {
+    char name[36];
+    int nbPlayers;
+    int maxPlayers;
+    int status;
+
+    bool set;
+} PartieInfo;
+
+typedef struct {
+    int numPage;
+    int nbParties;
+    PartieInfo partieInfo[4];
+} PartieListMessage;
+
+// ######## //
+
+typedef struct {
+
+} DataUpdateMenu;
+
+typedef struct {
     Player player;
     size_t sizeLevel;
     char levelBytes[sizeof(Objet)*(MATRICE_LEVEL_SIZE+MAX_PLAYERS)];
 } DataUpdateGame;
-
-typedef struct {
-    // TODO add needed
-} DataUpdateMenu;
 
 typedef struct {
     char playerID[255];
@@ -27,16 +44,6 @@ typedef struct {
     int line;
     int color;
 } DataTextInfoGUI;
-
-typedef struct {
-    int type;
-    union {
-        DataUpdateGame updateGame;
-        DataUpdateMenu updateMenu;
-        DataInputPlayer inputPlayer;
-        DataTextInfoGUI textInfoGUI;
-    };
-} DataChangeMessage;
 
 #endif // __DATA_UPDATE_H__
 

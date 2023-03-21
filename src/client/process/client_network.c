@@ -137,9 +137,13 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
             if (message->type == NET_REQ_PING && response.type == NET_REQ_PING) {
                 logs(L_INFO, "Network | Ping received");
                 received = true;
+            } else if (message->type == NET_REQ_PARTIE_LIST && response.type == NET_REQ_PARTIE_LIST) {
+                logs(L_INFO, "Network | Partie Liste received");
+                received = true;
             } else {
                 logs(L_INFO, "Network | Unknown message received");
                 received = false;
+                nb_try++;
             }
             
             // TODO ajouter autre chose que le ping

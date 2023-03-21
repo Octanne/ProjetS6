@@ -9,6 +9,7 @@
 #include "constants.h"
 
 #include "client_gui.h"
+#include "client_network.h"
 
 void menu_init_gui(GameInterface *gameI){
     strcpy(gameI->menuInfo.player_name, "User 1");
@@ -90,22 +91,55 @@ void menu_gen_right_menu(GameInterface *gameI) {
     menu_refresh_right_menu(gameI);
 }
 
-void menu_mouse_main_window(GameInterface *gameI, int x, int y){
-    // TODO
-}
-
 void changerPagePartieMenu(GameInterface *gameI, int page){
-    // TODO
+    // TODO Network call
+    NetMessage messageReq;
+    messageReq.type = NET_REQ_PARTIE_LIST;
+    messageReq.partieListMessage.numPage = page;
+    NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+
+    if (messageUDP.type == NET_REQ_PARTIE_LIST) {
+        // Si pas de partie sur la page on change pas de page
+        if (messageUDP.partieListMessage.nbParties == 0) {
+            set_text_info_gui(gameI, "Vous êtes sur la dernire page!", 0, RED_COLOR);
+            return;
+        }
+
+        gameI->menuInfo.tabPartieMenu.numPage = messageUDP.partieListMessage.numPage;
+        gameI->menuInfo.tabPartieMenu.nbParties = messageUDP.partieListMessage.nbParties;
+        int i = 0;
+        for (i = 0; i < 4; i++) {
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = false;
+        }
+        for (i = 0; i < messageUDP.partieListMessage.nbParties; i++) {
+            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].name, messageUDP.partieListMessage.partieInfo[i].name);
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].nbPlayers = messageUDP.partieListMessage.partieInfo[i].nbPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].maxPlayers = messageUDP.partieListMessage.partieInfo[i].maxPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].status = messageUDP.partieListMessage.partieInfo[i].status;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = true;
+        }
+    } else {
+        set_text_info_gui(gameI, "Erreur lors du changement de page!", 0, RED_COLOR);
+    }
 
     menu_refresh_main_window(gameI);
-    set_text_info_gui(gameI, "Page changee avec succes!", 0, YELLOW_COLOR);
 }
 
 void changerPageCreatePartie(GameInterface *gameI, int page){
-    // TODO
-
+    // TODO Network call
     menu_refresh_main_window(gameI);
     set_text_info_gui(gameI, "Page changee avec succes!", 0, YELLOW_COLOR);
+}
+
+void rejoindrePartie(GameInterface *gameI){
+    // TODO Network call
+
+    set_text_info_gui(gameI, "Partie rejointe avec succes!", 0, YELLOW_COLOR);
+}
+
+void createPartie(GameInterface *gameI){
+    // TODO Network call
+    set_text_info_gui(gameI, "Partie creee avec succes!", 0, YELLOW_COLOR);
 }
 
 void switchBetweenCreateAndChoose(GameInterface *gameI){
@@ -117,16 +151,18 @@ void switchBetweenCreateAndChoose(GameInterface *gameI){
     menu_gen_right_menu(gameI);
 }
 
-void rejoindrePartie(GameInterface *gameI){
-    // TODO
-
-    set_text_info_gui(gameI, "Partie rejointe avec succes!", 0, YELLOW_COLOR);
-}
-
-void createPartie(GameInterface *gameI){
-    // TODO
-
-    set_text_info_gui(gameI, "Partie creee avec succes!", 0, YELLOW_COLOR);
+void menu_mouse_main_window(GameInterface *gameI, int x, int y){
+    int i = 0;
+    if (x >= 48 && x <= 58) {
+        for (i = 0; i < 4; i++) {
+            if (y == 4 + i*5) {
+                gameI->menuInfo.tabPartieMenu.selPartie = i;
+                menu_refresh_main_window(gameI);
+                rejoindrePartie(gameI);
+                break;
+            }
+        }
+    }
 }
 
 void menu_mouse_right_menu(GameInterface *gameI, int x, int y){

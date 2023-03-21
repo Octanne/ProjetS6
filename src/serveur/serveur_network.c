@@ -16,6 +16,7 @@
 
 #include "utils.h"
 #include "constants.h"
+#include "liste.h"
 
 #include "net_struct.h"
 
@@ -91,9 +92,11 @@ int init_network(int argc, char *argv[]) {
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
+    PartieManager partieManager = partieManager_create();
+
     // processus réseau
     while (network_running) {
-        network_running = udp_request_handler(sockfd);
+        network_running = udp_request_handler(sockfd, &partieManager);
     }
 
     close(sockfd);
@@ -104,7 +107,7 @@ int init_network(int argc, char *argv[]) {
     exit(EXIT_SUCCESS);
 }
 
-bool udp_request_handler(int sockfd) {
+bool udp_request_handler(int sockfd, PartieManager *partieManager) {
     bool status = true;
     NetMessage request;
     socklen_t addr_len = sizeof(struct sockaddr_in);
@@ -138,6 +141,13 @@ bool udp_request_handler(int sockfd) {
             printf("Network | received ping request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
             logs(L_INFO, "Network | Received ping request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
             response.type = NET_REQ_PING;
+            status = true;
+            break;
+        case NET_REQ_PARTIE_LIST:
+            printf("Network | received partie list request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            logs(L_INFO, "Network | Received partie list request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            response.partieListMessage = listPartie(partieManager, request.partieListMessage.numPage);
+            response.type = NET_REQ_PARTIE_LIST;
             status = true;
             break;
         // TODO add other requests

@@ -8,6 +8,7 @@
 
 #include "level.h"
 #include "player.h"
+#include "net_struct.h"
 
 typedef struct {
     Player player;
@@ -74,6 +75,7 @@ typedef struct {
     bool inMenu;
     
     GUI gui;
+    NetworkSocket *netSocket;
     pthread_mutex_t mutex;
 } GameInterface;
 

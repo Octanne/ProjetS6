@@ -80,7 +80,7 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 					case TYPE_NET_MESSAGE:
 						free(eltListe->elmt);
 						break;
-					default:
+					default: // TODO
 						logs(L_INFO, "liste_free | ERROR type inconnu");
 						break;
 				}
@@ -121,7 +121,7 @@ void liste_free(Liste* liste, int freeElmt) {
 				case TYPE_NET_MESSAGE:
 					free(eltListe->elmt);
 					break;
-				default:
+				default: // TODO
 					logs(L_INFO, "liste_free | ERROR type inconnu");
 					break;
 			}

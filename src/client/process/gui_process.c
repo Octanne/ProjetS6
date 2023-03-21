@@ -77,6 +77,9 @@ void init_gui_process(NetworkSocket *netSocket) {
     GameInterface gameI;
     init_gui(&gameI);
 
+    // Add network socket to game interface
+    gameI.netSocket = netSocket;
+
     // Control handler
     int ch;
     logs(L_INFO, "Main | Launching control handler...");

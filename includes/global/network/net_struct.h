@@ -4,7 +4,7 @@
 
 #define NET_REQ_PING           1
 #define NET_REQ_PARTIE_LIST    2
-#define NET_REQ_PARTIE_INFO    3
+#define NET_REQ_MAP_LIST       3
 #define NET_REQ_PARTIE_JOIN    4
 #define NET_REQ_PARTIE_LEAVE   5
 #define NET_REQ_PARTIE_CREATE  6
@@ -42,8 +42,8 @@ typedef struct {
     union {
         DataTextInfoGUI textInfoGUI;
         DataUpdateGame updateGame;
-        DataUpdateMenu updateMenu;
         DataInputPlayer inputPlayer;
+        PartieListMessage partieListMessage;
     };
 } NetMessage;
 
