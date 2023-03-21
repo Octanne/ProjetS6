@@ -1,11 +1,8 @@
 
-#include "control_handler.h"
+#include "gui_process.h"
 
 #include <locale.h>
-#include <pthread.h>
-#include <stdbool.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <unistd.h>
 
 #include "utils.h"
@@ -73,21 +70,7 @@ void control_handler_gui(GameInterface *gameI, int key) {
     }
 }
 
-/**
- * @brief Function managing the keyboard events.
- * Running indefinitely until the user press the key to quit the game
- */
-void control_handler(GameInterface *gameI) {
-    int ch;
-    logs(L_INFO, "Main | Launching control handler...");
-
-    while((ch = getch()) != KEY_QUIT_GAME) {
-        control_handler_gui(gameI, ch);
-    }
-    logs(L_INFO, "Main | Control handler stopped!");
-}
-
-int init_gui_process(NetworkSocket *netSocket) {
+void init_gui_process(NetworkSocket *netSocket) {
     logs(L_INFO, "GUI Process | Init gui process...");
     
     // Init graphics
@@ -95,6 +78,15 @@ int init_gui_process(NetworkSocket *netSocket) {
     init_gui(&gameI);
 
     // Control handler
+    int ch;
+    logs(L_INFO, "Main | Launching control handler...");
+    while((ch = getch()) != KEY_QUIT_GAME) {
+        control_handler_gui(&gameI, ch);
+    }
+    logs(L_INFO, "Main | Control handler stopped!");
 
-    
+    // Close graphics
+    stop_gui(&gameI);
+
+    logs(L_INFO, "GUI Process | Gui process stopped!");
 }

@@ -9,12 +9,12 @@
 #include <errno.h>
 #include <getopt.h>
 #include <sys/time.h>
+#include <arpa/inet.h>
 
 #include "utils.h"
 #include "constants.h"
-#include "net_struct.h"
 
-NetworkSocket init_network(int argc, char *argv[], int *pid_tcp_handler) {
+NetworkSocket init_udp_network(int argc, char *argv[], int *pid_tcp_handler) {
     logs(L_INFO, "Network | Init network...");
     int opt;
     int port = 0;
@@ -75,27 +75,29 @@ NetworkSocket init_network(int argc, char *argv[], int *pid_tcp_handler) {
 
     // Create network socket
     NetworkSocket networkSocket;
-    networkSocket.pid_tcp_handler = pid_tcp_handler;
+    networkSocket.pid_tcp_handler = &pid_tcp_handler;
     networkSocket.udpSocket.sockfd = sockfd;
     networkSocket.udpSocket.serv_addr = serv_addr;
+    networkSocket.udpSocket.network_init = false;
 
     // Faire le ping pour vérifier que le serveur est bien là
     NetMessage message;
     message.type = NET_REQ_PING;
-    if(process_udp_message(&networkSocket.udpSocket, &message).type != NET_REQ_PING) {
+    if(send_udp_message(&networkSocket.udpSocket, &message).type != NET_REQ_PING) {
         logs(L_INFO, "Network | Error the server is not responding");
         printf("Network | Error the server is not responding\n");
         exit(EXIT_FAILURE);
     }
 
     logs(L_INFO, "Network | Network initialized");
+    networkSocket.udpSocket.network_init = true;
 
     logs(L_INFO, "Network | Return socket data info");
 
     return networkSocket;
 }
 
-NetMessage process_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
+NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     int nb_try = 0;
     NetMessage response;
     bool received = false;
@@ -119,7 +121,10 @@ NetMessage process_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
                 exit(EXIT_SUCCESS);
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 logs(L_INFO, "Network | Timeout");
-                if (!udpSocket->network_init) printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
+                if (!udpSocket->network_init) {
+                    printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
+                    fflush(stdout);
+                }
                 nb_try++;
             } else {
                 perror("Error receiving response");
@@ -145,3 +150,15 @@ NetMessage process_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     return response;
 }
 
+int init_tcp_network(NetworkSocket *netSocket, GameInterface *gameI) {
+    // TODO
+
+    return 0;
+}
+
+NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
+    // TODO
+    NetMessage response = {0};
+
+    return response;
+}

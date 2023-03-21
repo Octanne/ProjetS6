@@ -17,7 +17,7 @@
 #include "utils.h"
 #include "constants.h"
 
-#include "net_message.h"
+#include "net_struct.h"
 
 int network_running = true;
 

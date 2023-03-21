@@ -31,10 +31,13 @@ void main_exit() {
 
     // check if the network is still running
     logs(L_INFO, "Main | Check tcp network...");
-    if (pid_tcp_network != 0 && kill(pid_tcp_network, 0) == 0) {
+    if (*pid_tcp_network != 0 && kill(*pid_tcp_network, 0) == 0) {
         logs(L_INFO, "Main | Stopping tcp network...");
-        kill(pid_tcp_network, SIGINT);
-        waitpid(pid_tcp_network, NULL, 0);
+        kill(*pid_tcp_network, SIGINT);
+        waitpid(*pid_tcp_network, NULL, 0);
+        // free the pid
+        *pid_tcp_network = 0;
+        free(pid_tcp_network);
     }
 
     // Close logs
@@ -46,8 +49,11 @@ void main_exit() {
  * @return EXIT_SUCCESS if the program exit correctly
  */
 int main(int argc, char *argv[]) {
+    // Init pid pointer for the network
+    pid_tcp_network = malloc(sizeof(int));
+
     // Network init
-    NetworkSocket netSocket = init_network(argc, argv, &pid_tcp_network); // Non bloquant
+    NetworkSocket netSocket = init_udp_network(argc, argv, pid_tcp_network); // Non bloquant
 
     // Register exit function
     atexit(main_exit);
