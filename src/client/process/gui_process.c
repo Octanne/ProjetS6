@@ -73,12 +73,11 @@ void control_handler_gui(GameInterface *gameI, int key) {
 void init_gui_process(NetworkSocket *netSocket) {
     logs(L_INFO, "GUI Process | Init gui process...");
     
-    // Init graphics
     GameInterface gameI;
-    init_gui(&gameI);
-
     // Add network socket to game interface
     gameI.netSocket = netSocket;
+    // Init graphics
+    init_gui(&gameI);
 
     // Control handler
     int ch;

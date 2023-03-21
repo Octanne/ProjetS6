@@ -61,6 +61,9 @@ void menu_gen_main_window(GameInterface *gameI) {
             wrefresh(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB);
         }
         gameI->menuInfo.createPartieMenu.nbMaps = 6;
+
+        // Get map list
+        changerPageCreatePartie(gameI, 1);
     } else {
         // Draw parties disponible on title
         wattron(gameI->gui.cwinMAIN, COLOR_PAIR(LBLUE_COLOR));
@@ -69,20 +72,15 @@ void menu_gen_main_window(GameInterface *gameI) {
 
         // Create TabPartie window 1 to 4
         for (i = 0; i < 4; i++) {
-            // Mock data
-            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].name, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].nbPlayers = 2;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].maxPlayers = 4;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].status = 0;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = true;
-
             gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB = derwin(gameI->gui.winMAIN, 5, MATRICE_LEVEL_X, 5*i, 0);
+            // Disable all partie
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = false;
             logs(L_INFO, "Menu | TabPartie %d created!", i);
-            wrefresh(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB);
         }
-        gameI->menuInfo.tabPartieMenu.nbParties = 4;
-    }
 
+        // Get partie list
+        changerPagePartieMenu(gameI, 1);
+    }
 
     menu_refresh_main_window(gameI);
 }
@@ -92,7 +90,9 @@ void menu_gen_right_menu(GameInterface *gameI) {
 }
 
 void changerPagePartieMenu(GameInterface *gameI, int page){
-    // TODO Network call
+    // Remise sur 0 de la selection
+    gameI->menuInfo.tabPartieMenu.selPartie = 0;
+    
     NetMessage messageReq;
     messageReq.type = NET_REQ_PARTIE_LIST;
     messageReq.partieListMessage.numPage = page;
@@ -101,7 +101,6 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
     if (messageUDP.type == NET_REQ_PARTIE_LIST) {
         // Si pas de partie sur la page on change pas de page
         if (messageUDP.partieListMessage.nbParties == 0) {
-            set_text_info_gui(gameI, "Vous êtes sur la dernire page!", 0, RED_COLOR);
             return;
         }
 
@@ -123,6 +122,7 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
     }
 
     menu_refresh_main_window(gameI);
+    menu_refresh_right_menu(gameI);
 }
 
 void changerPageCreatePartie(GameInterface *gameI, int page){
@@ -208,6 +208,11 @@ void menu_mouse_right_menu(GameInterface *gameI, int x, int y){
         // Nouvelle Partie
         if (y == 2 && x >= 63 && x <= 73) {
             switchBetweenCreateAndChoose(gameI);
+        }
+
+        // Rafrachir
+        if (y == 15 && x >= 63 && x <= 73) {
+            changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
         }
 
         // Page Right
@@ -403,6 +408,10 @@ void menu_refresh_right_menu(GameInterface *gameI){
         /*wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_BLOCK));
         mvwprintw(gameI->gui.winTOOLS, 4, 1, " Supprimer ");*/
 
+        // Actualiser partie
+        wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
+        mvwprintw(gameI->gui.winTOOLS, 15, 1, "  Refresh  ");
+
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(DBLUE_BLOCK));
         // Pagination
         mvwprintw(gameI->gui.winTOOLS, 17, 1, "  Page %02i  ", gameI->menuInfo.tabPartieMenu.numPage);
@@ -426,7 +435,7 @@ void menu_refresh_right_menu(GameInterface *gameI){
         // Bouton add
         mvwprintw(gameI->gui.winTOOLS, 6, 8, " -> ");
 
-                // Retour
+        // Retour
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
         mvwprintw(gameI->gui.winTOOLS, 13, 2, " Valider ");
 

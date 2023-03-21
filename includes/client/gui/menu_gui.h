@@ -17,5 +17,8 @@ void menu_keyboard_handler(GameInterface *gameI, int key);
 void menu_refresh_main_window(GameInterface *gameI);
 void menu_refresh_right_menu(GameInterface *gameI);
 
+void changerPagePartieMenu(GameInterface *gameI, int page);
+void changerPageCreatePartie(GameInterface *gameI, int page);
+
 #endif
 

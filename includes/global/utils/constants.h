@@ -73,6 +73,7 @@
 #define TYPE_PLAYER 0
 #define TYPE_OBJET 1
 #define TYPE_NET_MESSAGE 2
+#define TYPE_PARTIE_INFO 3
 
 // #####################
 // #       Level       #
