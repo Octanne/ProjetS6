@@ -9,11 +9,11 @@
 #include "constants.h"
 
 #include "client_network.h"
-#include "gui_updater.h"
+#include "gui_process.h"
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-int pid_network, pid_updater_graphics;
+int* pid_tcp_network;
 
 /**
  * @brief Function runned when the game is stopped
@@ -30,19 +30,11 @@ void main_exit() {
     stop_game();
 
     // check if the network is still running
-    logs(L_INFO, "Main | Check network...");
-    if (kill(pid_network, 0) == 0) {
-        logs(L_INFO, "Main | Stopping network...");
-        kill(pid_network, SIGINT);
-        waitpid(pid_network, NULL, 0);
-    }
-
-    // check if the updater is still running
-    logs(L_INFO, "Main | Check updater...");
-    if (kill(pid_updater_graphics, 0) == 0) {
-        logs(L_INFO, "Main | Stopping updater...");
-        kill(pid_updater_graphics, SIGINT);
-        waitpid(pid_updater_graphics, NULL, 0);
+    logs(L_INFO, "Main | Check tcp network...");
+    if (pid_tcp_network != 0 && kill(pid_tcp_network, 0) == 0) {
+        logs(L_INFO, "Main | Stopping tcp network...");
+        kill(pid_tcp_network, SIGINT);
+        waitpid(pid_tcp_network, NULL, 0);
     }
 
     // Close logs
@@ -55,16 +47,13 @@ void main_exit() {
  */
 int main(int argc, char *argv[]) {
     // Network init
-    pid_network = init_network(argc, argv);
+    NetworkSocket netSocket = init_network(argc, argv, &pid_tcp_network); // Non bloquant
 
     // Register exit function
     atexit(main_exit);
 
     // Graphics updater & control handler
-    pid_updater_graphics = init_updater_gui();
-
-    // Wait for the end of the game
-    waitpid(pid_updater_graphics, NULL, 0);
+    init_gui_process(&netSocket); // Bloquant (wait for the gui to close) press Q to close
 
 	return EXIT_SUCCESS;
 }

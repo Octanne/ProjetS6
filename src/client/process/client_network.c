@@ -8,48 +8,19 @@
 #include <string.h>
 #include <errno.h>
 #include <getopt.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <signal.h>
+#include <sys/time.h>
 
 #include "utils.h"
 #include "constants.h"
+#include "net_struct.h"
 
-#include "net_message.h"
-
-int pid_net;
-int msqid_network;
-bool network_running = true;
-bool network_init = false;
-
-void close_network_trigger() {
-    logs(L_INFO, "Network | Closing network asked...");
-    network_running = false;
-}
-
-void close_network() {
-    // On supprime la file de message
-    if (msgctl(msqid_network, IPC_RMID, NULL) < 0) {
-        logs(L_INFO, "Network | Error deleting message queue : %s", strerror(errno));
-        perror("Error deleting message queue");
-        exit(EXIT_FAILURE);
-    }
-    logs(L_INFO, "Network | Network closed");
-}
-
-int init_network(int argc, char *argv[]) {
+NetworkSocket init_network(int argc, char *argv[], int *pid_tcp_handler) {
     logs(L_INFO, "Network | Init network...");
     int opt;
     int port = 0;
     char *host = NULL;
+
+    *pid_tcp_handler = 0;
 
     while ((opt = getopt(argc, argv, "p:h:")) != -1) {
         switch (opt) {
@@ -102,19 +73,16 @@ int init_network(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Création de la file de message
-    // Génération d'une clef unique
-    //key_t key = ftok("/tmp/net_cli_s6", 'a');
-    if ((msqid_network = msgget(1040, S_IRUSR | S_IWUSR | IPC_CREAT)) < 0) {
-        logs(L_INFO, "Network | Error creating message queue");
-        perror("Error creating message queue");
-        exit(EXIT_FAILURE);
-    }
+    // Create network socket
+    NetworkSocket networkSocket;
+    networkSocket.pid_tcp_handler = pid_tcp_handler;
+    networkSocket.udpSocket.sockfd = sockfd;
+    networkSocket.udpSocket.serv_addr = serv_addr;
 
     // Faire le ping pour vérifier que le serveur est bien là
     NetMessage message;
     message.type = NET_REQ_PING;
-    if(!process_udp_message(&message, sockfd, serv_addr)) {
+    if(process_udp_message(&networkSocket.udpSocket, &message).type != NET_REQ_PING) {
         logs(L_INFO, "Network | Error the server is not responding");
         printf("Network | Error the server is not responding\n");
         exit(EXIT_FAILURE);
@@ -122,74 +90,20 @@ int init_network(int argc, char *argv[]) {
 
     logs(L_INFO, "Network | Network initialized");
 
-    // ouverture d'un processus fils
-    pid_net = fork();
+    logs(L_INFO, "Network | Return socket data info");
 
-    if (pid_net != 0) {
-        // processus père
-        return pid_net;
-    }
-
-    // Signal handler via sigaction
-    struct sigaction sa;
-    sa.sa_handler = close_network_trigger;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-
-    network_init = true;
-
-    if (sigaction(SIGINT, &sa, NULL) == -1) {
-        perror("sigaction");
-        logs(L_INFO, "Network | Error setting signal handler");
-        exit(EXIT_FAILURE);
-    }
-
-    while (network_running) {
-        network_running = udp_message_handler(sockfd, serv_addr);
-    }
-
-    close_network();
-
-    exit(EXIT_SUCCESS);
+    return networkSocket;
 }
 
-bool add_udp_message_to_queue(NetMessage *message) {
-    // Use message queue to send message
-    if (msgsnd(msqid_network, message, sizeof(NetMessage), 0) < 0) {
-        logs(L_INFO, "Network | Error sending message to queue");
-        perror("Error sending message to queue");
-        exit(EXIT_FAILURE);
-    }
-    return true;
-}
-
-NetMessage *get_udp_message_from_queue() {
-    // Use message queue to get message
-    NetMessage *message = malloc(sizeof(NetMessage));
-    if (msgrcv(msqid_network, message, sizeof(NetMessage), 0, 0) < 0) {
-        // Si interruption du programme, on quitte proprement
-        if (errno == EINTR) {
-            logs(L_INFO, "Network | Network closing while waiting for message in queue");
-            close_network();
-            exit(EXIT_SUCCESS);
-        }
-
-        logs(L_INFO, "Network | Error getting message from queue : %s", strerror(errno));
-        perror("Error getting message from queue");
-        exit(EXIT_FAILURE);
-    }
-    return message;
-}
-
-bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in serv_addr) {
-    bool received = false;
+NetMessage process_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     int nb_try = 0;
+    NetMessage response;
+    bool received = false;
     while (!received && nb_try < NET_MAX_TRIES) {
         // Send message
-        if(sendto(sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
+        if(sendto(udpSocket->sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&udpSocket->serv_addr, sizeof(struct sockaddr_in)) == -1) {
             if (errno == EINTR) {
-                logs(L_INFO, "Network | Network closing while sending message");
-                close_network();
+                logs(L_INFO, "Network | Network closed while sending message");
                 exit(EXIT_SUCCESS);
             }
             perror("Error sending message");
@@ -199,16 +113,13 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         logs(L_INFO, "Network | Message sent");
 
         // Receive response
-        NetMessage response;
-        if(recvfrom(sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+        if(recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
             if (errno == EINTR) {
-                logs(L_INFO, "Network | Network closing while receiving response");
-                close_network();
+                logs(L_INFO, "Network | Network closed while receiving response");
                 exit(EXIT_SUCCESS);
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 logs(L_INFO, "Network | Timeout");
-                if (!network_init) printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
-                fflush(stdout);
+                if (!udpSocket->network_init) printf("Timeout, try %d/%d...\r", 1+nb_try, NET_MAX_TRIES);
                 nb_try++;
             } else {
                 perror("Error receiving response");
@@ -231,19 +142,6 @@ bool process_udp_message(NetMessage *message, int sockfd, struct sockaddr_in ser
         }
     }
 
-    return received;
-}
-
-bool udp_message_handler(int sockfd, struct sockaddr_in serv_addr) {
-    // Get message from queue
-    NetMessage *message = get_udp_message_from_queue();
-    
-    // Send message
-    bool received = process_udp_message(message, sockfd, serv_addr);
-
-    // Free message
-    free(message);
-
-    return received;
+    return response;
 }
 

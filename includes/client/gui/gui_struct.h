@@ -4,6 +4,7 @@
 
 #include <ncurses.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #include "level.h"
 
@@ -42,6 +43,7 @@ typedef struct {
     bool inMenu;
     
     GUI gui;
+    pthread_mutex_t mutex;
 } GameInterface;
 
 #endif

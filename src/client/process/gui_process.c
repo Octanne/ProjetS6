@@ -15,9 +15,6 @@
 #include "menu_gui.h"
 #include "game_gui.h"
 
-extern GameInterface *gameI_global;
-extern pthread_mutex_t gameI_global_lock;
-
 /**
  * @brief Function managing the mouse events
  * 
@@ -80,24 +77,24 @@ void control_handler_gui(GameInterface *gameI, int key) {
  * @brief Function managing the keyboard events.
  * Running indefinitely until the user press the key to quit the game
  */
-void *control_handler(void *arg) {
+void control_handler(GameInterface *gameI) {
     int ch;
     logs(L_INFO, "Main | Launching control handler...");
 
     while((ch = getch()) != KEY_QUIT_GAME) {
-        // Lock the mutex to access the game interface and check return value
-        if (pthread_mutex_lock(&gameI_global_lock) != 0) {
-            logs(L_INFO, "Main | Error while locking the mutex!");
-            exit(EXIT_FAILURE);
-        }
-        control_handler_gui(gameI_global, ch);
-        // Unlock the mutex to access the game interface and check return value
-        if (pthread_mutex_unlock(&gameI_global_lock) != 0) {
-            logs(L_INFO, "Main | Error while unlocking the mutex!");
-            exit(EXIT_FAILURE);
-        }
+        control_handler_gui(gameI, ch);
     }
     logs(L_INFO, "Main | Control handler stopped!");
-    kill(getpid(), SIGINT); // On quitte le programme
-    pthread_exit(NULL); // On quitte le thread
+}
+
+int init_gui_process(NetworkSocket *netSocket) {
+    logs(L_INFO, "GUI Process | Init gui process...");
+    
+    // Init graphics
+    GameInterface gameI;
+    init_gui(&gameI);
+
+    // Control handler
+
+    
 }
