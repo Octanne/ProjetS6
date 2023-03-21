@@ -20,12 +20,16 @@ typedef struct {
     int maxPlayers;
     int status;
 
+    bool set;
     WINDOW* winTAB;
 } TabPartie;
 
 typedef struct {
     char player_name[255];
 
+    int numPage;
+    int selPartie;
+    int nbParties;
     TabPartie tabPartie[4];
 } MenuInfo;
 
