@@ -56,6 +56,10 @@ void menu_gen_main_window(GameInterface *gameI) {
             " Joueur(s): %02i/%02i",
             gameI->menuInfo.tabPartie[i].nbPlayers, gameI->menuInfo.tabPartie[i].maxPlayers);
 
+        // Bande du bas
+        wattron(gameI->menuInfo.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_BLOCK));
+        
+
         // Bouton rejoindre
         wattron(gameI->menuInfo.tabPartie[i].winTAB, COLOR_PAIR(YELLOW_BLOCK));
         mvwprintw(gameI->menuInfo.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, " Rejoindre ");
