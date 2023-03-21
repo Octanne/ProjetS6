@@ -10,10 +10,26 @@
 
 typedef struct {
     char name[36];
+
+    int numMap;
+    bool set;
+} MapInfo;
+
+typedef struct {
+    int numPage;
+    int nbMaps;
+    MapInfo mapInfo[4];
+} MapListeMessage;
+
+// ######## //
+
+typedef struct {
+    char name[36];
     int nbPlayers;
     int maxPlayers;
     int status;
 
+    int numPartie;
     bool set;
 } PartieInfo;
 

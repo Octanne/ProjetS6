@@ -43,7 +43,9 @@ typedef struct {
         DataTextInfoGUI textInfoGUI;
         DataUpdateGame updateGame;
         DataInputPlayer inputPlayer;
+
         PartieListMessage partieListMessage;
+        MapListeMessage mapListMessage;
     };
 } NetMessage;
 

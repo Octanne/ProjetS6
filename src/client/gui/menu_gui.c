@@ -53,8 +53,8 @@ void menu_gen_main_window(GameInterface *gameI) {
         // Create MapPartie window 1 to 6
         for (i = 0; i < 6; i++) {
             // Mock data
-            strcpy(gameI->menuInfo.createPartieMenu.tabMap[i].name, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            gameI->menuInfo.createPartieMenu.tabMap[i].set = true;
+            strcpy(gameI->menuInfo.createPartieMenu.tabMap[i].info.name, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.set = true;
 
             gameI->menuInfo.createPartieMenu.tabMap[i].winTAB = derwin(gameI->gui.winMAIN, 3, MATRICE_LEVEL_X, 1+3*i, 0);
             logs(L_INFO, "Menu | TabMap %d created!", i);
@@ -74,7 +74,7 @@ void menu_gen_main_window(GameInterface *gameI) {
         for (i = 0; i < 4; i++) {
             gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB = derwin(gameI->gui.winMAIN, 5, MATRICE_LEVEL_X, 5*i, 0);
             // Disable all partie
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = false;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = false;
             logs(L_INFO, "Menu | TabPartie %d created!", i);
         }
 
@@ -108,14 +108,14 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
         gameI->menuInfo.tabPartieMenu.nbParties = messageUDP.partieListMessage.nbParties;
         int i = 0;
         for (i = 0; i < 4; i++) {
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = false;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = false;
         }
         for (i = 0; i < messageUDP.partieListMessage.nbParties; i++) {
-            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].name, messageUDP.partieListMessage.partieInfo[i].name);
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].nbPlayers = messageUDP.partieListMessage.partieInfo[i].nbPlayers;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].maxPlayers = messageUDP.partieListMessage.partieInfo[i].maxPlayers;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].status = messageUDP.partieListMessage.partieInfo[i].status;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].set = true;
+            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].info.name, messageUDP.partieListMessage.partieInfo[i].name);
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers = messageUDP.partieListMessage.partieInfo[i].nbPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers = messageUDP.partieListMessage.partieInfo[i].maxPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.status = messageUDP.partieListMessage.partieInfo[i].status;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = true;
         }
     } else {
         set_text_info_gui(gameI, "Erreur lors du changement de page!", 0, RED_COLOR);
@@ -126,9 +126,36 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
 }
 
 void changerPageCreatePartie(GameInterface *gameI, int page){
-    // TODO Network call
+    // Remise sur 0 de la selection
+    gameI->menuInfo.createPartieMenu.selMap = 0;
+
+    NetMessage messageReq;
+    messageReq.type = NET_REQ_MAP_LIST;
+    messageReq.mapListMessage.numPage = page;
+    NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+
+    if (messageUDP.type == NET_REQ_MAP_LIST) {
+        // Si pas de map sur la page on change pas de page
+        if (messageUDP.mapListMessage.nbMaps == 0) {
+            return;
+        }
+
+        gameI->menuInfo.createPartieMenu.numPage = messageUDP.mapListMessage.numPage;
+        gameI->menuInfo.createPartieMenu.nbMaps = messageUDP.mapListMessage.nbMaps;
+        int i = 0;
+        for (i = 0; i < 6; i++) {
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.set = false;
+        }
+        for (i = 0; i < messageUDP.mapListMessage.nbMaps; i++) {
+            strcpy(gameI->menuInfo.createPartieMenu.tabMap[i].info.name, messageUDP.mapListMessage.mapInfo[i].name);
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.set = true;
+        }
+    } else {
+        set_text_info_gui(gameI, "Erreur lors du changement de page!", 0, RED_COLOR);
+    }
+
     menu_refresh_main_window(gameI);
-    set_text_info_gui(gameI, "Page changee avec succes!", 0, YELLOW_COLOR);
+    menu_refresh_right_menu(gameI);
 }
 
 void rejoindrePartie(GameInterface *gameI){
@@ -230,7 +257,7 @@ void menu_new_partie(GameInterface *gameI){
      // Draw the list of available games
     int i = 0;
     for (i = 0; i < 6; i++) {
-        if (!gameI->menuInfo.createPartieMenu.tabMap[i].set) continue;
+        if (!gameI->menuInfo.createPartieMenu.tabMap[i].info.set) continue;
         wclear(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB);
         wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
 
@@ -242,7 +269,7 @@ void menu_new_partie(GameInterface *gameI){
         // Information partie
         mvwprintw(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, 1, 2, 
             " Nom de la map: %38s ", 
-            gameI->menuInfo.createPartieMenu.tabMap[i].name);
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.name);
 
         wrefresh(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB);
     }
@@ -334,7 +361,7 @@ void menu_choose_partie(GameInterface *gameI){
     // Draw the list of available games
     int i = 0;
     for (i = 0; i < 4; i++) {
-        if (!gameI->menuInfo.tabPartieMenu.tabPartie[i].set) continue;
+        if (!gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set) continue;
         wclear(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB);
         wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
 
@@ -346,9 +373,9 @@ void menu_choose_partie(GameInterface *gameI){
         // Information partie
         mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 1, 2, 
             " Nom de la partie: %36s ", 
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].name);
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.name);
         // Status partie
-        if (gameI->menuInfo.tabPartieMenu.tabPartie[i].status == 0) {
+        if (gameI->menuInfo.tabPartieMenu.tabPartie[i].info.status == 0) {
             mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 2, 2, 
             " Status: En attente                                     ");
         } else {
@@ -357,7 +384,7 @@ void menu_choose_partie(GameInterface *gameI){
         }
         mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 2, MATRICE_LEVEL_X-20, 
             " Joueur(s): %02i/%02i",
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].nbPlayers, gameI->menuInfo.tabPartieMenu.tabPartie[i].maxPlayers);
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers, gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers);
 
         // Bande du bas
         wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_BLOCK));

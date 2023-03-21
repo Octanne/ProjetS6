@@ -74,6 +74,7 @@
 #define TYPE_OBJET 1
 #define TYPE_NET_MESSAGE 2
 #define TYPE_PARTIE_INFO 3
+#define TYPE_MAP_INFO 4
 
 // #####################
 // #       Level       #

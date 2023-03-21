@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -148,6 +149,13 @@ bool udp_request_handler(int sockfd, PartieManager *partieManager) {
             logs(L_INFO, "Network | Received partie list request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
             response.partieListMessage = listPartie(partieManager, request.partieListMessage.numPage);
             response.type = NET_REQ_PARTIE_LIST;
+            status = true;
+            break;
+        case NET_REQ_MAP_LIST:
+            printf("Network | received map list request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            logs(L_INFO, "Network | Received map list request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            response.mapListMessage = listMaps(partieManager, request.mapListMessage.numPage);
+            response.type = NET_REQ_MAP_LIST;
             status = true;
             break;
         // TODO add other requests

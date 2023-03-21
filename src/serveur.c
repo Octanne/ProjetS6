@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include <stdbool.h>
 
@@ -23,6 +24,30 @@ void main_exit() {
 
 // Main method
 int main(int argc, char *argv[]) {
+    // create map folder if not exist
+    char *path = "./maps/";
+
+    // Check if the directory exists
+    struct stat st;
+    if (stat(path, &st) == -1) {
+        // Directory does not exist, create it
+        if (mkdir(path, 0700) == -1) {
+            // Print an error message if the directory cannot be created
+            printf("Cannot create directory: %s\n", path);
+            exit(1);
+        } else {
+            // Print a message if the directory is created successfully
+            printf("Directory created: %s\n", path);
+        }
+    } else if (S_ISDIR(st.st_mode)) {
+        // Directory exists
+        printf("Directory already exists: %s\n", path);
+    } else {
+        // Path exists but is not a directory
+        printf("%s exists but is not a directory\n", path);
+        exit(1);
+    }
+
     // init network
     pid_udp_processus = init_network(argc, argv);
     logs(L_INFO, "Network | Network init done PID : %d", pid_udp_processus);

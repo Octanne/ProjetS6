@@ -35,7 +35,7 @@ void leavePartie();
 void addPartie();
 
 PartieListMessage listPartie(PartieManager *partieManager, int numPage);
-void listMaps();
+MapListeMessage listMaps(PartieManager *partieManager, int numPage);
 
 PartieManager partieManager_create();
 

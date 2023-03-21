@@ -2,7 +2,10 @@
 #include "partie_manager.h"
 
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <dirent.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -33,6 +36,7 @@ PartieListMessage listPartie(PartieManager *partieManager, int numPage) {
             partieListMessage.partieInfo[i].status = partieInfo->isStart;
             strcpy(partieListMessage.partieInfo[i].name, partieInfo->name);
             partieListMessage.partieInfo[i].set = true;
+            partieListMessage.partieInfo[i].numPartie = (i + (numPage-1) * 4);
 
             // Incremente partieListMessage.nbParties
             partieListMessage.nbParties++;
@@ -43,6 +47,59 @@ PartieListMessage listPartie(PartieManager *partieManager, int numPage) {
 
     return partieListMessage;
 }
+
+MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
+    // Take the name of the maps in the folder maps
+    // and return a MapListeMessage
+    MapListeMessage mapListeMessage;
+    mapListeMessage.numPage = numPage;
+    mapListeMessage.nbMaps = 0;
+
+    // Reads the file of a folder of relative paths "maps"
+    DIR *dir;
+    struct dirent *ent;
+    char *path = "./maps/";
+    char *extension = ".dat";
+
+    // Open the directory
+    if ((dir = opendir(path)) != NULL) {
+        int i = 0;
+        // Loop through all the files in the directory
+        while ((ent = readdir(dir)) != NULL && i < (numPage) * 4) {
+            // Check if the file has the extension ".dat"
+            if (strstr(ent->d_name, extension) != NULL && i >= (numPage - 1) * 4) {
+                // Add the name of the map to the list
+                strcpy(mapListeMessage.mapInfo[i].name, ent->d_name);
+                mapListeMessage.mapInfo[i].set = true;
+                mapListeMessage.mapInfo[i].numMap = i;
+                mapListeMessage.nbMaps++;
+                i++;
+            }
+        }
+
+        // Close the directory and check for errors
+        if (closedir(dir) == -1) {
+            // Print an error message if the directory cannot be closed
+            printf("Cannot close directory: %s\n", path);
+            exit(1);
+        }
+    } else {
+        // Print an error message if the directory cannot be opened
+        printf("Cannot open directory: %s\n", path);
+        exit(1);
+    }
+
+    // Check if the number of maps is less than 4
+    if (mapListeMessage.nbMaps < 4) {
+        // Set the remaining maps to false
+        for (int i = mapListeMessage.nbMaps; i < 4; i++) {
+            mapListeMessage.mapInfo[i].set = false;
+        }
+    }
+
+    return mapListeMessage;
+}
+
 
 PartieManager partieManager_create() {
     PartieManager partieManager;
@@ -86,8 +143,3 @@ PartieManager partieManager_create() {
 
     return partieManager;
 }
-
-void listMaps() {
-
-}
-

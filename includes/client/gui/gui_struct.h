@@ -16,19 +16,12 @@ typedef struct {
 } GameInfo;
 
 typedef struct {
-    char name[36];
-    int nbPlayers;
-    int maxPlayers;
-    int status;
-
-    bool set;
+    PartieInfo info;
     WINDOW* winTAB;
 } TabPartie;
 
 typedef struct {
-    char name[36];
-
-    bool set;
+    MapInfo info;
     WINDOW* winTAB;
 } TabMap;
 
@@ -36,7 +29,7 @@ typedef struct {
     int numPage;
     int selPartie;
     int nbParties;
-    bool newPartie;
+    
     TabPartie tabPartie[4];
 } TabPartieMenu;
 
