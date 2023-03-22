@@ -87,6 +87,12 @@ void init_gui_process(NetworkSocket *netSocket) {
     }
     logs(L_INFO, "Main | Control handler stopped!");
 
+    // Deregister si en attente de connexion
+    if (gameI.inMenu && gameI.menuInfo.waitToJoin) {
+        logs(L_INFO, "GUI Process | Remove from waitlist on server...");
+        waitForPartie(&gameI);
+    }
+
     // Close graphics
     stop_gui(&gameI);
 

@@ -20,6 +20,7 @@ void menu_refresh_right_menu(GameInterface *gameI);
 void changerPagePartieMenu(GameInterface *gameI, int page);
 void changerPageCreatePartie(GameInterface *gameI, int page);
 void switchBetweenCreateAndChoose(GameInterface *gameI);
+void waitForPartie(GameInterface *gameI);
 
 #endif
 
