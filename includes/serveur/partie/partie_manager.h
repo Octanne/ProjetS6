@@ -42,7 +42,7 @@ PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, i
 PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int numPartie, bool waitState, struct sockaddr_in clientAddr);
 
 // ### TCP ###
-int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo); // TODO
+int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo);
 
 void joinPartieTCP();
 void leavePartieTCP();

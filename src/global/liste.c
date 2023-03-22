@@ -13,10 +13,12 @@
  * 
  * @return Liste : The list of pointers.
  */
-Liste liste_create() {
+Liste liste_create(bool isQueue) {
 	Liste liste;
 	liste.tete = NULL;
 	liste.taille = 0;
+	liste.queue = NULL;
+	liste.isQueue = isQueue;
 	return liste;
 }
 
@@ -27,6 +29,14 @@ Liste liste_create() {
  * @param elmt : The pointer to add.
  */
 void liste_add(Liste* liste, void* elmt, char type) {
+	if (liste->isQueue) {
+		liste_add_queue(liste, elmt, type);
+	} else {
+		liste_add_tete(liste, elmt, type);
+	}
+}
+
+void liste_add_tete(Liste* liste, void* elmt, char type) {
 	EltListe* eltListe = malloc(sizeof(EltListe));
 	if (eltListe == NULL) {
 		logs(L_DEBUG, "liste_add | ERROR malloc eltListe");
@@ -43,6 +53,28 @@ void liste_add(Liste* liste, void* elmt, char type) {
 	// Update the queue if needed.
 	if (liste->taille == 1)
 		liste->queue = eltListe;
+}
+
+void liste_add_queue(Liste* liste, void* elmt, char type) {
+	EltListe* eltListe = malloc(sizeof(EltListe));
+	if (eltListe == NULL) {
+		logs(L_DEBUG, "liste_add | ERROR malloc eltListe");
+		perror("Error while allocating memory in liste_add\n");
+		exit(EXIT_FAILURE);
+	}
+	eltListe->elmt = elmt;
+	eltListe->suivant = NULL;
+
+	// Add the element to the list.
+	if (liste->taille == 0) {
+		liste->tete = eltListe;
+	} else {
+		liste->queue->suivant = eltListe;
+	}
+	liste->taille++;
+
+	// Update the queue if needed.
+	liste->queue = eltListe;
 }
 
 /**

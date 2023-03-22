@@ -13,7 +13,7 @@
  */
 Level levelEmpty() {
     Level level;
-    level.listeObjet = liste_create();
+    level.listeObjet = liste_create(false);
     levelUpdateMatriceSprite(&level);
     return level;
 }
@@ -57,7 +57,7 @@ SpriteData creerSpriteDataS(chtype sprite, int color) {
 */
 Level levelCreer() {
     Level level;
-    level.listeObjet = liste_create();
+    level.listeObjet = liste_create(false);
 
     // Ajouter les murs de la map
     short y, x;
@@ -129,7 +129,7 @@ void levelSupprimerObjet(Level* level, Objet* objet) {
  * @return ListeObjet* : The list of objet found (can be empty)
 */
 Liste rechercherObjet(Level* level, short x, short y) {
-    Liste liste = liste_create();
+    Liste liste = liste_create(false);
     
 	// Search in the list of objet of the level
     EltListe *elt = level->listeObjet.tete;

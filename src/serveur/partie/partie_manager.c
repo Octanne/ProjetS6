@@ -44,7 +44,7 @@ Liste getMapsListe() {
     struct dirent *ent;
     char *path = "./maps/";
     char *extension = ".dat";
-    Liste mapListe = liste_create();
+    Liste mapListe = liste_create(true);
 
     // Open the directory
     if ((dir = opendir(path)) != NULL) {
@@ -148,7 +148,7 @@ PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, i
         partieInfo->nbPlayers = 1;
         partieInfo->isStart = false;
         partieInfo->pid_partie_process = -1;
-        partieInfo->playersInWait = liste_create();
+        partieInfo->playersInWait = liste_create(false);
         strcpy(partieInfo->map, mapInfo->name);
 
         if (maxPlayers == 1) {
@@ -239,7 +239,7 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 
 PartieManager partieManager_create() {
     PartieManager partieManager;
-    partieManager.partieInfoListe = liste_create();
+    partieManager.partieInfoListe = liste_create(true);
 
     return partieManager;
 }
