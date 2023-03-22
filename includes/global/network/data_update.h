@@ -50,6 +50,10 @@ typedef struct {
 typedef struct {
     int maxPlayers;
     int numMap;
+
+    bool success;
+    int numPartie;
+    int serverPortTCP;
 } PartieCreateMessage;
 
 // ######## //
@@ -58,6 +62,7 @@ typedef struct {
     int numPartie;
     bool waitState;
 
+    bool takeInAccount;
     int portTCP;
 } PartieJoinLeaveWaitMessage;
 

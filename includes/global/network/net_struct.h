@@ -8,7 +8,7 @@
 // UDP REQUESTS
 #define UDP_REQ_PARTIE_LIST      2 // Fait
 #define UDP_REQ_MAP_LIST         3 // Fait
-#define UDP_REQ_CREATE_PARTIE    6 
+#define UDP_REQ_CREATE_PARTIE    6 // Fait
 #define UDP_REQ_WAITLIST_PARTIE  7
 
 // TCP REQUESTS
@@ -55,7 +55,7 @@ typedef struct {
         PartieListeMessage partieListeMessage;
         MapListeMessage mapListMessage;
         PartieCreateMessage partieCreateMessage;
-        PartieJoinLeaveWaitMessage partieJoinMessage;
+        PartieJoinLeaveWaitMessage partieWaitListMessage;
     };
 } NetMessage;
 

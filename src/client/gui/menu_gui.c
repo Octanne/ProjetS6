@@ -162,31 +162,60 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
 void waitForPartie(GameInterface *gameI){
     if (gameI->menuInfo.waitToJoin && gameI->menuInfo.selPartieID == gameI->menuInfo.tabPartieMenu
             .tabPartie[gameI->menuInfo.tabPartieMenu.selPartie].info.numPartie) {
-        // Network call TODO
+        // Network call
+        NetMessage messageReq;
+        messageReq.type = UDP_REQ_WAITLIST_PARTIE;
+        messageReq.partieWaitListMessage.numPartie = gameI->menuInfo.selPartieID;
+        messageReq.partieWaitListMessage.waitState = false;
+        NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+        
+        if (messageUDP.partieWaitListMessage.takeInAccount) {
+            close_tcp_network(gameI);
 
-        // Si bonne reponse
-        logs(L_INFO, "Stop wainting for partie %d", gameI->menuInfo.selPartieID);
-        gameI->menuInfo.waitToJoin = false;
-        gameI->menuInfo.selPartieID = -1;
-        int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
-        // Refresh menu
-        changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
-        gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
-        refresh_main_gui(gameI);
+            // Si bonne reponse
+            logs(L_INFO, "Stop waiting for partie %d", gameI->menuInfo.selPartieID);
+            gameI->menuInfo.waitToJoin = false;
+            gameI->menuInfo.selPartieID = -1;
+            int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
+            // Refresh menu
+            changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
+            gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
+            refresh_main_gui(gameI);
+        } else {
+            // Erreur lors de la tentative de quitter la liste d'attente
+            logs(L_INFO, "Erreur lors de la tentative de quitter la liste d'attente");
+            set_text_info_gui(gameI, "Impossible de quitter la liste d'attente", 0, RED_COLOR);
+        }
     } else if (!gameI->menuInfo.waitToJoin) {
-        // Network call TODO
+        // Network call
+        NetMessage messageReq;
+        messageReq.type = UDP_REQ_WAITLIST_PARTIE;
+        messageReq.partieWaitListMessage.numPartie = gameI->menuInfo.tabPartieMenu.tabPartie[gameI->menuInfo.tabPartieMenu.selPartie].info.numPartie;
+        messageReq.partieWaitListMessage.waitState = true;
+        NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+        
+        if (messageUDP.partieWaitListMessage.takeInAccount) {
+            if (messageUDP.partieWaitListMessage.portTCP == -1) {
+                // Start TCP connection waiting
+                logs(L_INFO, "Start TCP connection waiting");
+                init_tcp_network(gameI->netSocket, gameI, -1);
+            } else {
+                // Start TCP connection with portTCP
+                logs(L_INFO, "Start TCP connection with port %d", messageUDP.partieWaitListMessage.portTCP);
+                init_tcp_network(gameI->netSocket, gameI, messageUDP.partieWaitListMessage.portTCP);
+            }
 
-        // Si bonne reponse
-        int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
-        gameI->menuInfo.waitToJoin = true;
-        gameI->menuInfo.selPartieID = gameI->menuInfo.tabPartieMenu.tabPartie[saveSel].info.numPartie;
+            int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
+            gameI->menuInfo.waitToJoin = true;
+            gameI->menuInfo.selPartieID = gameI->menuInfo.tabPartieMenu.tabPartie[saveSel].info.numPartie;
 
-        // Refresh menu
-        changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
-        gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
-        refresh_main_gui(gameI);
+            // Refresh menu
+            changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
+            gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
+            refresh_main_gui(gameI);
 
-        logs(L_INFO, "Start wainting for partie %d", gameI->menuInfo.selPartieID);
+            logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
+        }
     }
 
     set_text_info_gui(gameI, "Partie rejointe avec succes!", 0, YELLOW_COLOR);
@@ -198,11 +227,36 @@ void createPartie(GameInterface *gameI){
     PartieCreateMessage partieCreateMessage;
     partieCreateMessage.maxPlayers = gameI->menuInfo.createPartieMenu.maxPlayers;
     partieCreateMessage.numMap = gameI->menuInfo.createPartieMenu.tabMap[gameI->menuInfo.createPartieMenu.selMap].info.numMap;
+    messageReq.partieCreateMessage = partieCreateMessage;
 
     // send message
     NetMessage responseUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
 
-    // TODO
+    if (responseUDP.partieCreateMessage.success) {
+        int numPage = responseUDP.partieCreateMessage.numPartie / 4 + 1;
+        switchBetweenCreateAndChoose(gameI);
+        // Refresh menu
+        changerPagePartieMenu(gameI, numPage);
+        gameI->menuInfo.waitToJoin = true;
+        gameI->menuInfo.selPartieID = responseUDP.partieCreateMessage.numPartie;
+        // Check if partie is in the current page
+        if (gameI->menuInfo.tabPartieMenu.tabPartie[gameI->menuInfo.tabPartieMenu.selPartie].info.numPartie != gameI->menuInfo.selPartieID) {
+            for (int i = 0; i < 4; i++) {
+                if (gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie == gameI->menuInfo.selPartieID) {
+                    gameI->menuInfo.tabPartieMenu.selPartie = i;
+                    break;
+                }
+            }
+        }
+        refresh_main_gui(gameI);
+        refresh_right_menu_gui(gameI);
+        logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
+        set_text_info_gui(gameI, "Partie cree avec succes!", 1, YELLOW_COLOR);
+        
+    } else {
+        set_text_info_gui(gameI, "Erreur lors de la creation de la partie!", 1, RED_COLOR);
+    }
+
 }
 
 void switchBetweenCreateAndChoose(GameInterface *gameI){

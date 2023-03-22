@@ -158,7 +158,22 @@ bool udp_request_handler(int sockfd, PartieManager *partieManager) {
             response.type = UDP_REQ_MAP_LIST;
             status = true;
             break;
-        // TODO add other requests
+        case UDP_REQ_CREATE_PARTIE:
+            printf("Network | received create partie request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            logs(L_INFO, "Network | Received create partie request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            response.partieCreateMessage = createPartie(partieManager, request.partieCreateMessage.maxPlayers, 
+                request.partieCreateMessage.numMap, client_address);
+            response.type = UDP_REQ_CREATE_PARTIE;
+            status = true;
+            break;
+        case UDP_REQ_WAITLIST_PARTIE:
+            printf("Network | received waitlist partie request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            logs(L_INFO, "Network | Received waitlist partie request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+            response.partieWaitListMessage = waitListePartie(partieManager, request.partieWaitListMessage.numPartie, 
+                request.partieWaitListMessage.waitState, client_address);
+            response.type = UDP_REQ_WAITLIST_PARTIE;
+            status = true;
+            break;
         default:
             printf("Network | received unknown request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
             logs(L_INFO, "Network | Received unknown request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));

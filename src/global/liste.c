@@ -81,10 +81,13 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 						free(eltListe->elmt);
 						break;
 					case TYPE_PARTIE_INFO:
-						// NOTHING TO FREE
+						free(eltListe->elmt);
 						break;
 					case TYPE_MAP_INFO:
-						// NOTHING TO FREE
+						free(eltListe->elmt);
+						break;
+					case TYPE_SOCKADDR_IN:
+						free(eltListe->elmt);
 						break;
 					default: // TODO
 						logs(L_INFO, "liste_free | ERROR type inconnu");
@@ -128,10 +131,13 @@ void liste_free(Liste* liste, int freeElmt) {
 					free(eltListe->elmt);
 					break;
 				case TYPE_PARTIE_INFO:
-					// NOTHING TO FREE
+					free(eltListe->elmt);
 					break;
 				case TYPE_MAP_INFO:
-					// NOTHING TO FREE
+					free(eltListe->elmt);
+					break;
+				case TYPE_SOCKADDR_IN:
+					free(eltListe->elmt);
 					break;
 				default: // TODO
 					logs(L_INFO, "liste_free | ERROR type inconnu");

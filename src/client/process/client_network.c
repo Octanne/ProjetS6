@@ -152,6 +152,11 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
             } else {
                 logs(L_INFO, "Network | Unknown message received");
                 received = false;
+                if (nb_try >= NET_MAX_TRIES) {
+                    logs(L_INFO, "Network | Max tries reached");
+                    printf("Max tries reached, exiting...\n");
+                    exit(EXIT_FAILURE);
+                }
                 nb_try++;
             }
         }
@@ -160,10 +165,16 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     return response;
 }
 
-int init_tcp_network(NetworkSocket *netSocket, GameInterface *gameI) {
+int init_tcp_network(NetworkSocket *netSocket, GameInterface *gameI, int tcpPort) {
     // TODO
 
+    // Si tcpPort == -1 alors on écoute en UDP pour attendre le port donné par le serveur
+
     return 0;
+}
+
+void close_tcp_network(GameInterface *gameI) {
+    // TODO
 }
 
 NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
