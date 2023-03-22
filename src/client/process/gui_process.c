@@ -106,20 +106,6 @@ void update_game_gui(GameInterface *gameI, DataUpdateGame *data) {
     pthread_mutex_unlock(&gameI->mutex);
 }
 
-void update_menu_gui(GameInterface *gameI, DataUpdateMenu *data) {
-    // Lock mutex
-    pthread_mutex_lock(&gameI->mutex);
-    // Update menu data
-
-    // TODO
-
-    // Refresh menu
-    refresh_main_gui(gameI);
-    refresh_right_menu_gui(gameI);
-    // Unlock mutex
-    pthread_mutex_unlock(&gameI->mutex);
-}
-
 void write_text_info_bar(GameInterface *gameI, DataTextInfoGUI *data) {
     // Lock mutex
     pthread_mutex_lock(&gameI->mutex);

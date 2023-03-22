@@ -137,7 +137,16 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
             if (message->type == NET_REQ_PING && response.type == NET_REQ_PING) {
                 logs(L_INFO, "Network | Ping received");
                 received = true;
-            } else if (message->type == NET_REQ_PARTIE_LIST && response.type == NET_REQ_PARTIE_LIST) {
+            } else if (message->type == UDP_REQ_PARTIE_LIST && response.type == UDP_REQ_PARTIE_LIST) {
+                logs(L_INFO, "Network | Partie Liste received");
+                received = true;
+            } else if (message->type == UDP_REQ_MAP_LIST && response.type == UDP_REQ_MAP_LIST) {
+                logs(L_INFO, "Network | Partie Liste received");
+                received = true;
+            } else if (message->type == UDP_REQ_CREATE_PARTIE && response.type == UDP_REQ_CREATE_PARTIE) {
+                logs(L_INFO, "Network | Partie Liste received");
+                received = true;
+            } else if (message->type == UDP_REQ_WAITLIST_PARTIE && response.type == UDP_REQ_WAITLIST_PARTIE) {
                 logs(L_INFO, "Network | Partie Liste received");
                 received = true;
             } else {
@@ -145,9 +154,6 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
                 received = false;
                 nb_try++;
             }
-            
-            // TODO ajouter autre chose que le ping
-
         }
     }
 

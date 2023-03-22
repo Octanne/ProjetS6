@@ -2,15 +2,21 @@
 #ifndef __NET_MESSAGE_H__
 #define __NET_MESSAGE_H__
 
-#define NET_REQ_PING           1
-#define NET_REQ_PARTIE_LIST    2
-#define NET_REQ_MAP_LIST       3
-#define NET_REQ_PARTIE_JOIN    4
-#define NET_REQ_PARTIE_LEAVE   5
-#define NET_REQ_PARTIE_CREATE  6
+// GLOBAL REQUESTS
+#define NET_REQ_PING             1 // Fait
 
-#define NET_TIMEOUT 2 // in seconds
-#define NET_MAX_TRIES 3
+// UDP REQUESTS
+#define UDP_REQ_PARTIE_LIST      2 // Fait
+#define UDP_REQ_MAP_LIST         3 // Fait
+#define UDP_REQ_CREATE_PARTIE    6 
+#define UDP_REQ_WAITLIST_PARTIE  7
+
+// TCP REQUESTS
+#define TCP_REQ_PARTIE_JOIN      4
+#define TCP_REQ_PARTIE_LEAVE     5
+
+#define NET_TIMEOUT   1 // in seconds
+#define NET_MAX_TRIES 5
 
 #include "data_update.h"
 
@@ -40,12 +46,16 @@ typedef struct {
 typedef struct {
     int type;
     union {
-        DataTextInfoGUI textInfoGUI;
-        DataUpdateGame updateGame;
-        DataInputPlayer inputPlayer;
-
-        PartieListMessage partieListMessage;
+        // TCP messages
+        DataUpdateGame dataUpdateGame;
+        DataInputPlayer dataInputPlayer;
+        DataTextInfoGUI dataTextInfoGUI;
+        // TODO ADD JOIN AND LEAVE
+        // UDP messages
+        PartieListeMessage partieListeMessage;
         MapListeMessage mapListMessage;
+        PartieCreateMessage partieCreateMessage;
+        PartieJoinLeaveWaitMessage partieJoinMessage;
     };
 } NetMessage;
 

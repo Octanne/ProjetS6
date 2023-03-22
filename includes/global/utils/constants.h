@@ -40,9 +40,10 @@
 #define YELLOW_BLOCK 11
 #define DBLUE_BLOCK 12
 #define RED_BLOCK 13
+#define GRAY_BLOCK 14
 
-#define RED_BUTTON 14
-#define ARROW_BUTTON 15
+#define RED_BUTTON 15
+#define ARROW_BUTTON 16
 
 // #####################
 // #      OBJECTS      #

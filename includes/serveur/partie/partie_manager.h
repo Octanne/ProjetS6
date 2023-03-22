@@ -7,17 +7,6 @@
 #include "data_update.h"
 
 typedef struct {
-    bool isStart;
-
-    int nbPlayers;
-    int maxPlayers;
-    Liste players;
-    Liste load_level;
-
-    char map_file[255];
-} Partie;
-
-typedef struct {
     char name[255];
     int nbPlayers;
     int maxPlayers;
@@ -27,16 +16,25 @@ typedef struct {
 } PartieStatutInfo;
 
 typedef struct {
+    Liste players;
+    Liste load_level;
+
+    PartieStatutInfo *infosStatus;
+} Partie;
+
+typedef struct {
     Liste partieInfoListe;
 } PartieManager;
 
+PartieManager partieManager_create();
+
+PartieListeMessage listPartie(PartieManager *partieManager, int numPage);
+MapListeMessage listMaps(PartieManager *partieManager, int numPage);
+PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, int numMap);
+
 void joinPartie();
 void leavePartie();
-void addPartie();
 
-PartieListMessage listPartie(PartieManager *partieManager, int numPage);
-MapListeMessage listMaps(PartieManager *partieManager, int numPage);
 
-PartieManager partieManager_create();
 
 #endif

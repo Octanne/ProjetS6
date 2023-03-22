@@ -44,7 +44,10 @@ typedef struct {
 
 typedef struct {
     char player_name[255];
-    bool newPartie;
+    bool inCreateMenu;
+    
+    bool waitToJoin;
+    int selPartieID;
 
     CreatePartieMenu createPartieMenu;
     TabPartieMenu tabPartieMenu;

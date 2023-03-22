@@ -15,17 +15,19 @@ void menu_init_gui(GameInterface *gameI){
     strcpy(gameI->menuInfo.player_name, "User 1");
     gameI->menuInfo.tabPartieMenu.numPage = 1;
     gameI->menuInfo.createPartieMenu.numPage = 1;
-    gameI->menuInfo.newPartie = false;
+    gameI->menuInfo.inCreateMenu = false;
     gameI->menuInfo.tabPartieMenu.selPartie = 0;
     gameI->menuInfo.createPartieMenu.selMap = 0;
     gameI->menuInfo.createPartieMenu.maxPlayers = 2;
+    gameI->menuInfo.waitToJoin = false;
+    gameI->menuInfo.selPartieID = -1;
 
     menu_gen_main_window(gameI);
     menu_gen_right_menu(gameI);
 }
 
 void menu_stop_gui(GameInterface *gameI){
-    if (gameI->menuInfo.newPartie) {
+    if (gameI->menuInfo.inCreateMenu) {
         // Destroy TabMap window 1 to 6
         int i = 0;
         for (i = 0; i < 6; i++) {
@@ -44,7 +46,7 @@ void menu_stop_gui(GameInterface *gameI){
 
 void menu_gen_main_window(GameInterface *gameI) {
     int i = 0;
-    if (gameI->menuInfo.newPartie) {
+    if (gameI->menuInfo.inCreateMenu) {
         // Draw maps disponible on title
         wattron(gameI->gui.cwinMAIN, COLOR_PAIR(LBLUE_COLOR));
         mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Map(s) disponible(s) ");
@@ -52,13 +54,10 @@ void menu_gen_main_window(GameInterface *gameI) {
 
         // Create MapPartie window 1 to 6
         for (i = 0; i < 6; i++) {
-            // Mock data
-            strcpy(gameI->menuInfo.createPartieMenu.tabMap[i].info.name, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            gameI->menuInfo.createPartieMenu.tabMap[i].info.set = true;
-
             gameI->menuInfo.createPartieMenu.tabMap[i].winTAB = derwin(gameI->gui.winMAIN, 3, MATRICE_LEVEL_X, 1+3*i, 0);
+            // Disable all map
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.set = false;
             logs(L_INFO, "Menu | TabMap %d created!", i);
-            wrefresh(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB);
         }
         gameI->menuInfo.createPartieMenu.nbMaps = 6;
 
@@ -94,27 +93,28 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
     gameI->menuInfo.tabPartieMenu.selPartie = 0;
     
     NetMessage messageReq;
-    messageReq.type = NET_REQ_PARTIE_LIST;
-    messageReq.partieListMessage.numPage = page;
+    messageReq.type = UDP_REQ_PARTIE_LIST;
+    messageReq.partieListeMessage.numPage = page;
     NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
 
-    if (messageUDP.type == NET_REQ_PARTIE_LIST) {
+    if (messageUDP.type == UDP_REQ_PARTIE_LIST) {
         // Si pas de partie sur la page on change pas de page
-        if (messageUDP.partieListMessage.nbParties == 0) {
+        if (messageUDP.partieListeMessage.nbParties == 0) {
             return;
         }
 
-        gameI->menuInfo.tabPartieMenu.numPage = messageUDP.partieListMessage.numPage;
-        gameI->menuInfo.tabPartieMenu.nbParties = messageUDP.partieListMessage.nbParties;
+        gameI->menuInfo.tabPartieMenu.numPage = messageUDP.partieListeMessage.numPage;
+        gameI->menuInfo.tabPartieMenu.nbParties = messageUDP.partieListeMessage.nbParties;
         int i = 0;
         for (i = 0; i < 4; i++) {
             gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = false;
         }
-        for (i = 0; i < messageUDP.partieListMessage.nbParties; i++) {
-            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].info.name, messageUDP.partieListMessage.partieInfo[i].name);
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers = messageUDP.partieListMessage.partieInfo[i].nbPlayers;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers = messageUDP.partieListMessage.partieInfo[i].maxPlayers;
-            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.status = messageUDP.partieListMessage.partieInfo[i].status;
+        for (i = 0; i < messageUDP.partieListeMessage.nbParties; i++) {
+            strcpy(gameI->menuInfo.tabPartieMenu.tabPartie[i].info.name, messageUDP.partieListeMessage.partieInfo[i].name);
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers = messageUDP.partieListeMessage.partieInfo[i].nbPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers = messageUDP.partieListeMessage.partieInfo[i].maxPlayers;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.status = messageUDP.partieListeMessage.partieInfo[i].status;
+            gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie = messageUDP.partieListeMessage.partieInfo[i].numPartie;
             gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = true;
         }
     } else {
@@ -130,11 +130,11 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
     gameI->menuInfo.createPartieMenu.selMap = 0;
 
     NetMessage messageReq;
-    messageReq.type = NET_REQ_MAP_LIST;
+    messageReq.type = UDP_REQ_MAP_LIST;
     messageReq.mapListMessage.numPage = page;
     NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
 
-    if (messageUDP.type == NET_REQ_MAP_LIST) {
+    if (messageUDP.type == UDP_REQ_MAP_LIST) {
         // Si pas de map sur la page on change pas de page
         if (messageUDP.mapListMessage.nbMaps == 0) {
             return;
@@ -148,6 +148,7 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
         }
         for (i = 0; i < messageUDP.mapListMessage.nbMaps; i++) {
             strcpy(gameI->menuInfo.createPartieMenu.tabMap[i].info.name, messageUDP.mapListMessage.mapInfo[i].name);
+            gameI->menuInfo.createPartieMenu.tabMap[i].info.numMap = messageUDP.mapListMessage.mapInfo[i].numMap;
             gameI->menuInfo.createPartieMenu.tabMap[i].info.set = true;
         }
     } else {
@@ -158,21 +159,56 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
     menu_refresh_right_menu(gameI);
 }
 
-void rejoindrePartie(GameInterface *gameI){
-    // TODO Network call
+void waitForPartie(GameInterface *gameI){
+    if (gameI->menuInfo.waitToJoin && gameI->menuInfo.selPartieID == gameI->menuInfo.tabPartieMenu
+            .tabPartie[gameI->menuInfo.tabPartieMenu.selPartie].info.numPartie) {
+        // Network call TODO
+
+        // Si bonne reponse
+        logs(L_INFO, "Stop wainting for partie %d", gameI->menuInfo.selPartieID);
+        gameI->menuInfo.waitToJoin = false;
+        gameI->menuInfo.selPartieID = -1;
+        int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
+        // Refresh menu
+        changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
+        gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
+        refresh_main_gui(gameI);
+    } else if (!gameI->menuInfo.waitToJoin) {
+        // Network call TODO
+
+        // Si bonne reponse
+        int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
+        gameI->menuInfo.waitToJoin = true;
+        gameI->menuInfo.selPartieID = gameI->menuInfo.tabPartieMenu.tabPartie[saveSel].info.numPartie;
+
+        // Refresh menu
+        changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
+        gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
+        refresh_main_gui(gameI);
+
+        logs(L_INFO, "Start wainting for partie %d", gameI->menuInfo.selPartieID);
+    }
 
     set_text_info_gui(gameI, "Partie rejointe avec succes!", 0, YELLOW_COLOR);
 }
 
 void createPartie(GameInterface *gameI){
-    // TODO Network call
-    set_text_info_gui(gameI, "Partie creee avec succes!", 0, YELLOW_COLOR);
+    NetMessage messageReq;
+    messageReq.type = UDP_REQ_CREATE_PARTIE;
+    PartieCreateMessage partieCreateMessage;
+    partieCreateMessage.maxPlayers = gameI->menuInfo.createPartieMenu.maxPlayers;
+    partieCreateMessage.numMap = gameI->menuInfo.createPartieMenu.tabMap[gameI->menuInfo.createPartieMenu.selMap].info.numMap;
+
+    // send message
+    NetMessage responseUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+
+    // TODO
 }
 
 void switchBetweenCreateAndChoose(GameInterface *gameI){
     menu_stop_gui(gameI);
 
-    gameI->menuInfo.newPartie = !gameI->menuInfo.newPartie;
+    gameI->menuInfo.inCreateMenu = !gameI->menuInfo.inCreateMenu;
 
     menu_gen_main_window(gameI);
     menu_gen_right_menu(gameI);
@@ -180,12 +216,13 @@ void switchBetweenCreateAndChoose(GameInterface *gameI){
 
 void menu_mouse_main_window(GameInterface *gameI, int x, int y){
     int i = 0;
-    if (x >= 48 && x <= 58) {
+    if (x >= 48 && x <= 58 && !gameI->menuInfo.inCreateMenu) {
         for (i = 0; i < 4; i++) {
-            if (y == 4 + i*5) {
+            if (y == 4 + i*5 && gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set && (!gameI->menuInfo.waitToJoin ||
+                    gameI->menuInfo.selPartieID == gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie)) {
                 gameI->menuInfo.tabPartieMenu.selPartie = i;
                 menu_refresh_main_window(gameI);
-                rejoindrePartie(gameI);
+                waitForPartie(gameI);
                 break;
             }
         }
@@ -193,7 +230,7 @@ void menu_mouse_main_window(GameInterface *gameI, int x, int y){
 }
 
 void menu_mouse_right_menu(GameInterface *gameI, int x, int y){
-    if (gameI->menuInfo.newPartie) {
+    if (gameI->menuInfo.inCreateMenu) {
         // Control Create Partie
 
         // Minus Players
@@ -233,7 +270,7 @@ void menu_mouse_right_menu(GameInterface *gameI, int x, int y){
         // Control Join Partie
 
         // Nouvelle Partie
-        if (y == 2 && x >= 63 && x <= 73) {
+        if (y == 2 && x >= 63 && x <= 73 && !gameI->menuInfo.waitToJoin) {
             switchBetweenCreateAndChoose(gameI);
         }
 
@@ -243,11 +280,11 @@ void menu_mouse_right_menu(GameInterface *gameI, int x, int y){
         }
 
         // Page Right
-        if (y == 19 && x >= 70 && x <= 73) {
+        if (y == 19 && x >= 70 && x <= 73 && !gameI->menuInfo.waitToJoin) {
             changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage+1);
         }
         // Page Left
-        if (y == 19 && x >= 63 && x <= 66) {
+        if (y == 19 && x >= 63 && x <= 66 && !gameI->menuInfo.waitToJoin) {
             changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage-1);
         }
     }
@@ -319,6 +356,7 @@ void menu_keyboard_new_partie(GameInterface *gameI, int key){
 void menu_keyboard_choose_partie(GameInterface *gameI, int key){
     switch (key) {
         case KEY_DOWN:
+            if (gameI->menuInfo.waitToJoin) break;
             // Change selection 
             if (gameI->menuInfo.tabPartieMenu.selPartie < gameI->menuInfo.tabPartieMenu.nbParties-1) {
                 gameI->menuInfo.tabPartieMenu.selPartie++;
@@ -327,6 +365,7 @@ void menu_keyboard_choose_partie(GameInterface *gameI, int key){
         break;
 
         case KEY_UP:
+            if (gameI->menuInfo.waitToJoin) break;
             // Change selection 
             if (gameI->menuInfo.tabPartieMenu.selPartie > 0) {
                 gameI->menuInfo.tabPartieMenu.selPartie--;
@@ -336,18 +375,21 @@ void menu_keyboard_choose_partie(GameInterface *gameI, int key){
         break;
 
         case KEY_LEFT:
+            if (gameI->menuInfo.waitToJoin) break;
             // Write down the action
             changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage - 1);
         break;
 
         case KEY_RIGHT:
+            if (gameI->menuInfo.waitToJoin) break;
             // Write down the action
             changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage + 1);
         break;
 
         case KEY_VALIDATE:
+            if (gameI->menuInfo.waitToJoin) break;
             // Write down the action
-            rejoindrePartie(gameI);
+            waitForPartie(gameI);
         break;
 
         default:
@@ -386,19 +428,30 @@ void menu_choose_partie(GameInterface *gameI){
             " Joueur(s): %02i/%02i",
             gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers, gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers);
 
-        // Bande du bas
-        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_BLOCK));
+        // Bande du bas écrire le numero
+        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, 2, " %02i ", gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie);
         
-        // Bouton rejoindre
-        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(YELLOW_BLOCK));
-        mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, " Rejoindre ");
+        // Bouton rejoindre/annuler
+        if (gameI->menuInfo.waitToJoin) {
+            if (gameI->menuInfo.selPartieID == gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie) {
+                wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(RED_BLOCK));
+                mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, "  Annuler  ");
+            } else {
+                wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(GRAY_BLOCK));
+                mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, " Rejoindre ");
+            }
+        } else {
+            wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(YELLOW_BLOCK));
+            mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, MATRICE_LEVEL_X-12, " Rejoindre ");
+        }
 
         wrefresh(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB);
     }
 }
 
 void menu_keyboard_handler(GameInterface *gameI, int key){
-    if (gameI->menuInfo.newPartie) {
+    if (gameI->menuInfo.inCreateMenu) {
         menu_keyboard_new_partie(gameI, key);
     } else {
         menu_keyboard_choose_partie(gameI, key);
@@ -408,7 +461,7 @@ void menu_keyboard_handler(GameInterface *gameI, int key){
 void menu_refresh_main_window(GameInterface *gameI){
     wclear(gameI->gui.winMAIN); // Clear the main window
 
-    if (gameI->menuInfo.newPartie) {
+    if (gameI->menuInfo.inCreateMenu) {
         menu_new_partie(gameI);
     } else {
         menu_choose_partie(gameI);
@@ -426,14 +479,10 @@ void menu_refresh_right_menu(GameInterface *gameI){
     center_string(gameI->menuInfo.player_name, 11, centered_name);
     mvwprintw(gameI->gui.winTOOLS, 0, 1, "%11s", centered_name);
 
-    if (!gameI->menuInfo.newPartie) {
+    if (!gameI->menuInfo.inCreateMenu) {
         // Créer partie
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
         mvwprintw(gameI->gui.winTOOLS, 2, 1, " N. Partie ");
-
-        // Supprimer partie
-        /*wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_BLOCK));
-        mvwprintw(gameI->gui.winTOOLS, 4, 1, " Supprimer ");*/
 
         // Actualiser partie
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));

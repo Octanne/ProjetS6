@@ -8,10 +8,14 @@
 #include "player.h"
 #include "objet.h"
 
+/* UDP messages */
+
+// ######## //
+
 typedef struct {
     char name[36];
-
     int numMap;
+
     bool set;
 } MapInfo;
 
@@ -27,9 +31,9 @@ typedef struct {
     char name[36];
     int nbPlayers;
     int maxPlayers;
+    int numPartie;
     int status;
 
-    int numPartie;
     bool set;
 } PartieInfo;
 
@@ -37,13 +41,29 @@ typedef struct {
     int numPage;
     int nbParties;
     PartieInfo partieInfo[4];
-} PartieListMessage;
+} PartieListeMessage;
+
+// ######## //
 
 // ######## //
 
 typedef struct {
+    int maxPlayers;
+    int numMap;
+} PartieCreateMessage;
 
-} DataUpdateMenu;
+// ######## //
+
+typedef struct {
+    int numPartie;
+    bool waitState;
+
+    int portTCP;
+} PartieJoinLeaveWaitMessage;
+
+// ######## //
+
+/* TCP messages */
 
 typedef struct {
     Player player;
@@ -52,7 +72,7 @@ typedef struct {
 } DataUpdateGame;
 
 typedef struct {
-    char playerID[255];
+    int keyPress;
 } DataInputPlayer;
 
 typedef struct {

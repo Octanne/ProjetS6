@@ -22,30 +22,31 @@ void addPartie() {
 
 }
 
-PartieListMessage listPartie(PartieManager *partieManager, int numPage) {
+PartieListeMessage listPartie(PartieManager *partieManager, int numPage) {
     logs(L_INFO, "PartieManager | listPartie numPage = %d", numPage);
     printf("PartieManager | listPartie numPage = %d \n", numPage);
-    PartieListMessage partieListMessage;
-    partieListMessage.numPage = numPage;
-    partieListMessage.nbParties = 0;
+    PartieListeMessage partieListeMessage;
+    partieListeMessage.numPage = numPage;
+    partieListeMessage.nbParties = 0;
     for (int i = 0; i < 4; i++) {
         PartieStatutInfo *partieInfo = (PartieStatutInfo*)liste_get(&partieManager->partieInfoListe, i + (numPage-1) * 4);
         if (partieInfo != NULL) {
-            partieListMessage.partieInfo[i].maxPlayers = partieInfo->maxPlayers;
-            partieListMessage.partieInfo[i].nbPlayers = partieInfo->nbPlayers;
-            partieListMessage.partieInfo[i].status = partieInfo->isStart;
-            strcpy(partieListMessage.partieInfo[i].name, partieInfo->name);
-            partieListMessage.partieInfo[i].set = true;
-            partieListMessage.partieInfo[i].numPartie = (i + (numPage-1) * 4);
-
-            // Incremente partieListMessage.nbParties
-            partieListMessage.nbParties++;
+            int numPartie = (i + (numPage-1) * 4);
+            partieListeMessage.partieInfo[i].maxPlayers = partieInfo->maxPlayers;
+            partieListeMessage.partieInfo[i].nbPlayers = partieInfo->nbPlayers;
+            partieListeMessage.partieInfo[i].status = partieInfo->isStart;
+            strcpy(partieListeMessage.partieInfo[i].name, partieInfo->name);
+            partieListeMessage.partieInfo[i].set = true;
+            partieListeMessage.partieInfo[i].numPartie = numPartie;
+            printf("PartieManager | name = %s, num = %d\n", partieListeMessage.partieInfo[i].name, partieListeMessage.partieInfo[i].numPartie);
+            // Incremente partieListeMessage.nbParties
+            partieListeMessage.nbParties++;
         } else {
-            partieListMessage.partieInfo[i].set = false;
+            partieListeMessage.partieInfo[i].set = false;
         }
     }
 
-    return partieListMessage;
+    return partieListeMessage;
 }
 
 MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
@@ -100,6 +101,9 @@ MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
     return mapListeMessage;
 }
 
+PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, int numMap) {
+    // TODO
+}
 
 PartieManager partieManager_create() {
     PartieManager partieManager;
