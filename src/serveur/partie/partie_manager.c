@@ -247,8 +247,58 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
     return partieJoinLeaveWaitMessage;
 }
 
+/**
+ * @brief Start the partie processus
+ * - Create the socket with port 0 (listen on a random port)
+ * - 
+ * 
+ * @param partieManager	PartieManager
+ * @param partieInfo	PartieStatutInfo
+ * 
+ * @return int (0 if success, -1 if error)
+*/
 int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo) {
-    // Create the socket and process TODO
+    // Create the socket
+	int socketTCP = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (socketTCP == -1) {
+		logs(L_DEBUG, "PartieManager | startPartieProcessus | socketTCP == -1");
+		return -1;
+	}
+
+	// Create the socket address
+	struct sockaddr_in socketAddr;
+	socketAddr.sin_family = AF_INET;
+	socketAddr.sin_port = htons(0);
+	socketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	// Bind the socket
+	if (bind(socketTCP, (struct sockaddr*)&socketAddr, sizeof(socketAddr)) == -1) {
+		logs(L_DEBUG, "PartieManager | startPartieProcessus | bind == -1");
+		return -1;
+	}
+
+	// Get the port of the socket
+	struct sockaddr_in socketAddrOut;
+	socklen_t socketAddrOutSize = sizeof(socketAddrOut);
+	if (getsockname(socketTCP, (struct sockaddr*)&socketAddrOut, &socketAddrOutSize) == -1) {
+		logs(L_DEBUG, "PartieManager | startPartieProcessus | getsockname == -1");
+		return -1;
+	}
+	partieInfo->portTCP = ntohs(socketAddrOut.sin_port);
+
+	// Create the processus
+	pid_t pid = fork();
+	if (pid == 0) {
+		// Child processus (partie processus)
+		// Close the UDP socket
+		if (close() == -1) {
+			logs(L_DEBUG, "PartieManager | startPartieProcessus | close == -1");
+			return -1;
+		}
+	}
+	
+	// Parent processus (PartieManager processus)
+
     return 0;
 }
 

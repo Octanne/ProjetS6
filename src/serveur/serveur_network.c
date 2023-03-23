@@ -34,12 +34,16 @@ int init_network(int argc, char *argv[]) {
     printf("Network | Init network...\n");
     int opt;
     int port = 0;
+	char* host = NULL;
 
     while ((opt = getopt(argc, argv, "p:")) != -1) {
         switch (opt) {
             case 'p':
                 port = atoi(optarg);
                 break;
+			case 'h':
+				host = optarg;
+				break;
             default:
                 fprintf(stderr, "Usage: %s [-p port]\n", argv[0]);
                 exit(EXIT_FAILURE);
@@ -53,22 +57,28 @@ int init_network(int argc, char *argv[]) {
 
     int sockfd;
     struct sockaddr_in server_address;
+	UDPSocketData udpSocket;
+	// TODO ALEX
 
     // Create the socket
-    if((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+    if((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
         perror("Error creating socket");
         logs(L_INFO, "Network | Error creating socket");
         exit(EXIT_FAILURE);
     }
 
     // Set the server address
-    memset((char *) &server_address, 0, sizeof(server_address));
+    memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
-    server_address.sin_addr.s_addr = INADDR_ANY;
+	if (host != NULL) {
+    	server_address.sin_addr.s_addr = INADDR_ANY;
+	} else {
+		server_address.sin_addr.s_addr = inet_addr(host);
+	}
 
     // Bind socket
-    if(bind(sockfd, (struct sockaddr*)&server_address, sizeof(struct sockaddr_in)) == -1) {
+    if(bind(udpSocket.sockfd, (struct sockaddr*)&server_address, sizeof(struct sockaddr_in)) == -1) {
         perror("Error naming socket");
         logs(L_INFO, "Network | Error naming socket");
         exit(EXIT_FAILURE);
@@ -93,7 +103,7 @@ int init_network(int argc, char *argv[]) {
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
-    PartieManager partieManager = partieManager_create();
+    PartieManager partieManager = partieManager_create(UDPSocketData udp);
 
     // processus réseau
     while (network_running) {
