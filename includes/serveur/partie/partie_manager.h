@@ -30,6 +30,7 @@ typedef struct {
 
 typedef struct {
     Liste partieInfoListe;
+	UDPSocketData udpSocket;
 } PartieManager;
 
 PartieManager partieManager_create();
