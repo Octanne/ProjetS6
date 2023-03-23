@@ -36,7 +36,7 @@ int init_network(int argc, char *argv[]) {
     int port = 0;
 	char* host = NULL;
 
-    while ((opt = getopt(argc, argv, "p:")) != -1) {
+    while ((opt = getopt(argc, argv, "p:h:")) != -1) {
         switch (opt) {
             case 'p':
                 port = atoi(optarg);
@@ -45,7 +45,7 @@ int init_network(int argc, char *argv[]) {
 				host = optarg;
 				break;
             default:
-                fprintf(stderr, "Usage: %s [-p port]\n", argv[0]);
+                fprintf(stderr, "Usage: %s [-p port] [-h address]\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
@@ -55,8 +55,6 @@ int init_network(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int sockfd;
-    struct sockaddr_in server_address;
 	UDPSocketData udpSocket;
 	// TODO ALEX
 
@@ -67,26 +65,36 @@ int init_network(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    logs(L_INFO, "Network | Socket created");
+    printf("Network | Socket created\n");
+
     // Set the server address
-    memset(&server_address, 0, sizeof(server_address));
-    server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(port);
-	if (host != NULL) {
-    	server_address.sin_addr.s_addr = INADDR_ANY;
+    memset(&(udpSocket.serv_addr), 0, sizeof(udpSocket.serv_addr));
+    udpSocket.serv_addr.sin_family = AF_INET;
+    udpSocket.serv_addr.sin_port = htons(port);
+    
+    logs(L_INFO, "Network | Socket address set");
+    printf("Network | Socket address set\n");
+
+	if (host == NULL) {
+    	udpSocket.serv_addr.sin_addr.s_addr = INADDR_ANY;
 	} else {
-		server_address.sin_addr.s_addr = inet_addr(host);
+		udpSocket.serv_addr.sin_addr.s_addr = inet_addr(host);
 	}
 
+    logs(L_INFO, "Network | Socket address set");
+    printf("Network | Socket address set\n");
+
     // Bind socket
-    if(bind(udpSocket.sockfd, (struct sockaddr*)&server_address, sizeof(struct sockaddr_in)) == -1) {
+    if(bind(udpSocket.sockfd, (struct sockaddr*)&(udpSocket.serv_addr), sizeof(struct sockaddr_in)) == -1) {
         perror("Error naming socket");
         logs(L_INFO, "Network | Error naming socket");
         exit(EXIT_FAILURE);
     }
 
     // Logs the port and the host
-    logs(L_INFO, "Network | Port : %d, Host : %s", port, inet_ntoa(server_address.sin_addr));
-    printf("Network | listening on %s:%d for UDP packets ... \n", inet_ntoa(server_address.sin_addr), port);
+    logs(L_INFO, "Network | Port : %d, Host : %s", port, inet_ntoa(udpSocket.serv_addr.sin_addr));
+    printf("Network | listening on %s:%d for UDP packets ... \n", inet_ntoa(udpSocket.serv_addr.sin_addr), port);
 
     // ouverture d'un processus fils
     int pid = fork();
@@ -110,7 +118,7 @@ int init_network(int argc, char *argv[]) {
         network_running = udp_request_handler(partieManager.udpSocket.sockfd, &partieManager);
     }
 
-    close(sockfd);
+    close(partieManager.udpSocket.sockfd);
 
     printf("Network | Network processus closed\n");
     logs(L_INFO, "Network | Network processus closed");
