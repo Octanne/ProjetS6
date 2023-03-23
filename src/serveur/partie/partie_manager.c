@@ -211,6 +211,21 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
                 }
                 // Update the number of players
                 partieInfo->nbPlayers++;
+
+                // Check if the partie can start now
+                if (partieInfo->nbPlayers == partieInfo->maxPlayers) {
+                    // Start the partie
+                    if (startPartieProcessus(partieManager, partieInfo) == -1) {
+                        // If the TCPServer cannot start, we crash
+                        logs(L_INFO, "PartieManager | TCPServer not started");
+                        printf("PartieManager | TCPServer not started");
+                        exit(EXIT_FAILURE);
+                    }
+                    // Get the port of the TCPServer
+                    partieJoinLeaveWaitMessage.portTCP = partieInfo->portTCP;
+                    logs(L_INFO, "PartieManager | TCPServer started on port %d", partieInfo->portTCP);
+                    printf("PartieManager | TCPServer started on port %d\n", partieInfo->portTCP);
+                }
             }
         } else {
             // Remove the client from the wait list

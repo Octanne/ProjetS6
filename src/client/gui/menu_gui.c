@@ -215,6 +215,7 @@ void waitForPartie(GameInterface *gameI){
             refresh_main_gui(gameI);
 
             logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
+            // TODO : Start waiting for UDP answer for TCP connection
         }
     }
 
@@ -251,6 +252,7 @@ void createPartie(GameInterface *gameI){
         refresh_main_gui(gameI);
         refresh_right_menu_gui(gameI);
         logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
+
         set_text_info_gui(gameI, "Partie cree avec succes!", 1, YELLOW_COLOR);
         
     } else {
