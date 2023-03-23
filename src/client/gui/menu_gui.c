@@ -198,11 +198,11 @@ void waitForPartie(GameInterface *gameI){
             if (messageUDP.partieWaitListMessage.portTCP == -1) {
                 // Start TCP connection waiting
                 logs(L_INFO, "Start TCP connection waiting");
-                init_tcp_network(gameI->netSocket, gameI, -1);
+                wait_for_tcp_connection(gameI, -1);
             } else {
                 // Start TCP connection with portTCP
                 logs(L_INFO, "Start TCP connection with port %d", messageUDP.partieWaitListMessage.portTCP);
-                init_tcp_network(gameI->netSocket, gameI, messageUDP.partieWaitListMessage.portTCP);
+                wait_for_tcp_connection(gameI, messageUDP.partieWaitListMessage.portTCP);
             }
 
             int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
@@ -253,11 +253,11 @@ void createPartie(GameInterface *gameI){
         if (responseUDP.partieWaitListMessage.portTCP == -1) {
             // Start TCP connection waiting
             logs(L_INFO, "Start TCP connection waiting");
-            init_tcp_network(gameI->netSocket, gameI, -1);
+            wait_for_tcp_connection(gameI, -1);
         } else {
             // Start TCP connection with portTCP
             logs(L_INFO, "Start TCP connection with port %d", responseUDP.partieWaitListMessage.portTCP);
-            init_tcp_network(gameI->netSocket, gameI, responseUDP.partieWaitListMessage.portTCP);
+            wait_for_tcp_connection(gameI, responseUDP.partieWaitListMessage.portTCP);
         }
     } else {
         set_text_info_gui(gameI, "Erreur lors de la creation de la partie!", 1, RED_COLOR);

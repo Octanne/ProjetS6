@@ -165,15 +165,29 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     return response;
 }
 
-int init_tcp_network(NetworkSocket *netSocket, GameInterface *gameI, int tcpPort) {
-    // TODO
+int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
+    if (tcpPort == -1) {
+        // TODO
+    } else {
+        // TODO
+    }
+
 
     // Si tcpPort == -1 alors on écoute en UDP pour attendre le port donné par le serveur
 
     return 0;
 }
 
+int init_tcp_network(GameInterface *gameI, int port) {
+    // TODO
+    return 0;
+}
+
 void close_tcp_network(GameInterface *gameI) {
+    // TODO
+}
+
+void close_udp_network(GameInterface *gameI) {
     // TODO
 }
 
