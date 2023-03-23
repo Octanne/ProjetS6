@@ -291,7 +291,7 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 	if (pid == 0) {
 		// Child processus (partie processus)
 		// Close the UDP socket
-		if (close() == -1) {
+		if (close(partieManager->udpSocket.sockfd) == -1) {
 			logs(L_DEBUG, "PartieManager | startPartieProcessus | close == -1");
 			return -1;
 		}
@@ -302,9 +302,10 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
     return 0;
 }
 
-PartieManager partieManager_create() {
+PartieManager partieManager_create(UDPSocketData udpSocket) {
     PartieManager partieManager;
     partieManager.partieInfoListe = liste_create(true);
+    partieManager.udpSocket = udpSocket;
 
     return partieManager;
 }

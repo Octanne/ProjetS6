@@ -103,7 +103,7 @@ int init_network(int argc, char *argv[]) {
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
-    PartieManager partieManager = partieManager_create(UDPSocketData udp);
+    PartieManager partieManager = partieManager_create(udpSocket);
 
     // processus réseau
     while (network_running) {

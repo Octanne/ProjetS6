@@ -7,6 +7,7 @@
 
 #include "liste.h"
 #include "data_update.h"
+#include "net_struct.h"
 
 typedef struct {
     char map[255];
@@ -33,7 +34,7 @@ typedef struct {
 	UDPSocketData udpSocket;
 } PartieManager;
 
-PartieManager partieManager_create();
+PartieManager partieManager_create(UDPSocketData udpSocket);
 
 
 // ### UDP ###
