@@ -107,7 +107,7 @@ int init_network(int argc, char *argv[]) {
 
     // processus réseau
     while (network_running) {
-        network_running = udp_request_handler(sockfd, &partieManager);
+        network_running = udp_request_handler(partieManager.udpSocket.sockfd, &partieManager);
     }
 
     close(sockfd);
