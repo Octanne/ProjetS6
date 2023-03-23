@@ -10,6 +10,11 @@
 #include <getopt.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -165,9 +170,54 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     return response;
 }
 
+void close_tcp_sighandler(int signum) {
+    logs(L_INFO, "Network (TCP) | Network closed");
+    // TODO : Fermer proprement le réseau
+}
+
+void close_udp_sighandler(int signum) {
+    logs(L_INFO, "Network (UDP) | Network closed");
+    // TODO : Fermer proprement le réseau
+}
+
 int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
     if (tcpPort == -1) {
-        // TODO
+        // On écoute en UDP pour attendre le port donné par le serveur
+
+        int pid = fork();
+
+        if (pid == 0) {
+            // Child process
+
+            // Modifier le timeout en le supprimant
+            struct timeval tv;
+            tv.tv_sec = 0;
+            tv.tv_usec = 0;
+            if (setsockopt(gameI->netSocket->udpSocket.sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+                logs(L_INFO, "Network | Error setting timeout");
+                perror("Error setting timeout");
+                exit(EXIT_FAILURE);
+            }
+
+            // TODO : handler sigaction sur SIGINT pour fermer proprement le réseau
+
+            // Attendre le port TCP directement sur le socket UDP
+            //if(recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+            
+
+        } else if (pid > 0) {
+            // Parent process
+            
+            // Save the child pid
+            **(gameI->netSocket->pid_tcp_handler) = pid;
+
+            return pid;
+        } else {
+            // Erreur
+            perror("Error creating child process");
+            logs(L_INFO, "Network | Error creating child process");
+            exit(EXIT_FAILURE);
+        }
     } else {
         // TODO
     }
@@ -183,11 +233,11 @@ int init_tcp_network(GameInterface *gameI, int port) {
     return 0;
 }
 
-void close_tcp_network(GameInterface *gameI) {
+void close_tcp_network(TCPSocketData *tcpSocket) {
     // TODO
 }
 
-void close_udp_network(GameInterface *gameI) {
+void close_udp_network(UDPSocketData *udpSocket) {
     // TODO
 }
 

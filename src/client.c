@@ -61,6 +61,9 @@ int main(int argc, char *argv[]) {
     // Graphics updater & control handler
     init_gui_process(&netSocket); // Bloquant (wait for the gui to close) press Q to close
 
+    // Close the network
+    close_udp_network(&netSocket);
+
 	return EXIT_SUCCESS;
 }
 
