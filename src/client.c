@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     init_gui_process(&netSocket); // Bloquant (wait for the gui to close) press Q to close
 
     // Close the network
-    close_udp_network(&netSocket);
+    close_udp_network(&netSocket.udpSocket);
 
 	return EXIT_SUCCESS;
 }

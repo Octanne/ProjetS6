@@ -175,11 +175,6 @@ void close_tcp_sighandler(int signum) {
     // TODO : Fermer proprement le réseau
 }
 
-void close_udp_sighandler(int signum) {
-    logs(L_INFO, "Network (UDP) | Network closed");
-    // TODO : Fermer proprement le réseau
-}
-
 int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
     if (tcpPort == -1) {
         // On écoute en UDP pour attendre le port donné par le serveur
@@ -199,15 +194,50 @@ int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
                 exit(EXIT_FAILURE);
             }
 
-            // TODO : handler sigaction sur SIGINT pour fermer proprement le réseau
-
-            // Attendre le port TCP directement sur le socket UDP
-            //if(recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+            // sig action on SIGINT
+            struct sigaction sa;
+            sa.sa_handler = close_tcp_sighandler;
+            sigemptyset(&sa.sa_mask);
+            sa.sa_flags = 0;
+            if (sigaction(SIGINT, &sa, NULL) == -1) {
+                perror("Error setting signal handler");
+                logs(L_INFO, "Network | Error setting signal handler");
+                exit(EXIT_FAILURE);
+            }
             
+            // Attendre le port TCP directement sur le socket UDP
+            NetMessage response;
+            if(recvfrom(gameI->netSocket->udpSocket.sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+                if (errno == EINTR) {
+                    logs(L_INFO, "Network | Network closed while waiting for TCP port");
+                    exit(EXIT_SUCCESS);
+                } else {
+                    perror("Error receiving response");
+                    logs(L_INFO, "Network | Error receiving response : %s", strerror(errno));
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                logs(L_INFO, "Network | Message received");
 
+                if (response.type == UDP_REQ_WAITLIST_PARTIE) {
+                    logs(L_INFO, "Network | TCP port received");
+                    if (response.partieWaitListMessage.portTCP == -1) {
+                        logs(L_INFO, "Network | TCP port is -1");
+                        printf("TCP port is -1, exiting...\n");
+                        exit(EXIT_FAILURE);
+                    } else {
+                        logs(L_INFO, "Network | TCP port is %d", response);
+                        printf("TCP port is %d, connecting...\n", response.partieWaitListMessage.portTCP);
+                        return init_tcp_network(gameI, response.partieWaitListMessage.portTCP);
+                    }
+                } else {
+                    logs(L_INFO, "Network | Unknown message received");
+                    printf("Unknown message received, exiting...\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
         } else if (pid > 0) {
             // Parent process
-            
             // Save the child pid
             **(gameI->netSocket->pid_tcp_handler) = pid;
 
@@ -219,13 +249,37 @@ int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
             exit(EXIT_FAILURE);
         }
     } else {
-        // TODO
+        // On créer le fork pour le TCP
+        int pid = fork();
+        
+        if (pid == 0) {
+            // Child process
+            // On ajoute le sig handler pour fermer proprement le réseau
+            struct sigaction sa;
+            sa.sa_handler = close_tcp_sighandler;
+            sigemptyset(&sa.sa_mask);
+            sa.sa_flags = 0;
+            if (sigaction(SIGINT, &sa, NULL) == -1) {
+                perror("Error setting signal handler");
+                logs(L_INFO, "Network | Error setting signal handler");
+                exit(EXIT_FAILURE);
+            }
+
+            // Démarrer le serveur TCP via la fonction init_tcp_network
+            return init_tcp_network(gameI, tcpPort);
+        } else if (pid > 0) {
+            // Parent process
+            // Save the child pid
+            **(gameI->netSocket->pid_tcp_handler) = pid;
+
+            return pid;
+        } else {
+            // Erreur
+            perror("Error creating child process");
+            logs(L_INFO, "Network | Error creating child process");
+            exit(EXIT_FAILURE);
+        }
     }
-
-
-    // Si tcpPort == -1 alors on écoute en UDP pour attendre le port donné par le serveur
-
-    return 0;
 }
 
 int init_tcp_network(GameInterface *gameI, int port) {
@@ -234,11 +288,21 @@ int init_tcp_network(GameInterface *gameI, int port) {
 }
 
 void close_tcp_network(TCPSocketData *tcpSocket) {
-    // TODO
+    // Close the socket and the connection
+    if(close(tcpSocket->sockfd) == -1) {
+        perror("Error closing socket");
+        logs(L_INFO, "Network | Error closing socket");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void close_udp_network(UDPSocketData *udpSocket) {
-    // TODO
+    // Close the socket
+    if(close(udpSocket->sockfd) == -1) {
+        perror("Error closing socket");
+        logs(L_INFO, "Network | Error closing socket");
+        exit(EXIT_FAILURE);
+    }
 }
 
 NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
