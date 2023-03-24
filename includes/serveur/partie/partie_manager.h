@@ -11,15 +11,16 @@
 
 typedef struct {
     char map[255];
+    
     int isStart;
-
-    int portTCP;
     int nbPlayers;
     int maxPlayers;
 
-    Liste playersInWait;
+    int portTCP;
     bool tcpStart;
     int pid_partie_process;
+
+    Liste playersInWait;
 } PartieStatutInfo;
 
 typedef struct {

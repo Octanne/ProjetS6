@@ -220,6 +220,14 @@ int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
                 logs(L_INFO, "Network | Message received");
 
                 if (response.type == UDP_REQ_WAITLIST_PARTIE) {
+                    if (!response.partieWaitListMessage.waitState && 
+                        response.partieWaitListMessage.takeInAccount) {
+                        // Demande de retrer de la waitlist validée
+                        logs(L_INFO, "Network | Sortie de la waitlist reçue");
+                        close_tcp_network(&gameI->netSocket->tcpSocket);
+                        exit(EXIT_SUCCESS);
+                    }
+
                     logs(L_INFO, "Network | TCP port received");
                     if (response.partieWaitListMessage.portTCP == -1) {
                         logs(L_INFO, "Network | TCP port is -1");
@@ -288,12 +296,18 @@ int init_tcp_network(GameInterface *gameI, int port) {
 }
 
 void close_tcp_network(TCPSocketData *tcpSocket) {
-    // Close the socket and the connection
+    // Send signal to the child process
+
+    /*
+    
+        // Close the socket and the connection
     if(close(tcpSocket->sockfd) == -1) {
         perror("Error closing socket");
         logs(L_INFO, "Network | Error closing socket");
         exit(EXIT_FAILURE);
     }
+    
+    */
 }
 
 void close_udp_network(UDPSocketData *udpSocket) {

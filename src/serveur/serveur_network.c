@@ -126,6 +126,22 @@ int init_network(int argc, char *argv[]) {
     exit(EXIT_SUCCESS);
 }
 
+void printResponseDetails(NetMessage message) {
+    // Show the response details
+    printf("Network | =============================\n");
+    printf("Network | response type: %d\n", message.type);
+    if (message.type == UDP_REQ_CREATE_PARTIE) {
+        printf("Network | partie id: %d\n", message.partieCreateMessage.numPartie);
+        printf("Network | creation success: %s\n", message.partieCreateMessage.success ? "true" : "false");
+        printf("Network | partie port: %d\n", message.partieCreateMessage.serverPortTCP);
+    } else if (message.type == UDP_REQ_WAITLIST_PARTIE) {
+        printf("Network | partie id: %d\n", message.partieWaitListMessage.numPartie);
+        printf("Network | join success: %s\n", message.partieWaitListMessage.takeInAccount ? "true" : "false");
+        printf("Network | partie port: %d\n", message.partieWaitListMessage.portTCP);
+    }
+    printf("Network | =============================\n");
+}
+
 bool udp_request_handler(int sockfd, PartieManager *partieManager) {
     bool status = true;
     NetMessage request;
@@ -202,6 +218,8 @@ bool udp_request_handler(int sockfd, PartieManager *partieManager) {
     // Send the response
     printf("Network | sending response to %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
     logs(L_INFO, "Network | Sending response to %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+
+    printResponseDetails(response);
 
     if(sendto(sockfd, &response, sizeof(response), 0, (struct sockaddr*)&client_address, sizeof(struct sockaddr_in)) == -1) {
         perror("Error sending response");
