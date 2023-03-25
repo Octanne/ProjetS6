@@ -6,14 +6,14 @@
 #define NET_REQ_PING             1 // Fait
 
 // UDP REQUESTS
-#define UDP_REQ_PARTIE_LIST      2 // Fait
-#define UDP_REQ_MAP_LIST         3 // Fait
-#define UDP_REQ_CREATE_PARTIE    6 // Fait
-#define UDP_REQ_WAITLIST_PARTIE  7
+#define UDP_REQ_PARTIE_LIST      10 // Fait
+#define UDP_REQ_MAP_LIST         11 // Fait
+#define UDP_REQ_CREATE_PARTIE    12 // Fait
+#define UDP_REQ_WAITLIST_PARTIE  13
 
 // TCP REQUESTS
-#define TCP_REQ_PARTIE_JOIN      4
-#define TCP_REQ_PARTIE_LEAVE     5
+#define TCP_REQ_PARTIE_JOIN      20
+#define TCP_REQ_PARTIE_LEAVE     21
 
 #define NET_TIMEOUT   1 // in seconds
 #define NET_MAX_TRIES 5

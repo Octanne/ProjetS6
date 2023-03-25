@@ -4,34 +4,35 @@
 
 #include <stdbool.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
 #include "liste.h"
 #include "data_update.h"
 #include "net_struct.h"
 
 typedef struct {
-    char map[255];
-    
-    int isStart;
-    int nbPlayers;
-    int maxPlayers;
+	char map[255];
+	
+	int isStart;
+	int nbPlayers;
+	int maxPlayers;
 
-    int portTCP;
-    bool tcpStart;
-    int pid_partie_process;
+	int portTCP;
+	bool tcpStart;
+	int pid_partie_process;
 
-    Liste playersInWait;
+	Liste playersInWait;
 } PartieStatutInfo;
 
 typedef struct {
-    Liste players;
-    Liste load_level;
+	Liste players;
+	Liste load_level;
 
-    PartieStatutInfo *infosStatus;
+	PartieStatutInfo *infosStatus;
 } Partie;
 
 typedef struct {
-    Liste partieInfoListe;
+	Liste partieInfoListe;
 	UDPSocketData udpSocket;
 } PartieManager;
 
@@ -45,10 +46,28 @@ PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, i
 PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int numPartie, bool waitState, struct sockaddr_in clientAddr);
 
 // ### TCP ###
-int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo);
+#define TH_STATE_DISCONNECTED -1
 
-void joinPartieTCP();
-void leavePartieTCP();
+typedef struct {
+	pthread_mutex_t mutex;	// Pthread mutex		USELESS FOR NOW
+	pthread_cond_t cond;	// Pthread condition	USELESS FOR NOW
+	pthread_t *threads;		// List of threads
+	int *thread_states;		// Thread states (disconnected, connected, etc.)
+	int nbThreads;			// Number of threads
+} threadsSharedMemory;
+
+typedef struct {
+	int threadId;
+	int clientSocket;
+	threadsSharedMemory *sharedMemory;
+} threadTCPArgs;
+
+int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo);
+void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo);
+void* partieThreadTCP(void *thread_args);
+
+void joinPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
+void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
 
 #endif
 
