@@ -45,7 +45,7 @@ int init_network(int argc, char *argv[]) {
 				host = optarg;
 				break;
             default:
-                fprintf(stderr, "Usage: %s [-p port] [-h address]\n", argv[0]);
+                fprintf(stderr, "Usage: %s <-p port> [-h address]\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
@@ -55,8 +55,8 @@ int init_network(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+	// Socket data initialization
 	UDPSocketData udpSocket;
-	// TODO ALEX
 
     // Create the socket
     if((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
@@ -68,8 +68,8 @@ int init_network(int argc, char *argv[]) {
     logs(L_INFO, "Network | Socket created");
     printf("Network | Socket created\n");
 
-    // Set the server address
-    memset(&(udpSocket.serv_addr), 0, sizeof(udpSocket.serv_addr));
+    // Set the server address on given port
+    memset(&udpSocket.serv_addr, 0, sizeof(udpSocket.serv_addr));
     udpSocket.serv_addr.sin_family = AF_INET;
     udpSocket.serv_addr.sin_port = htons(port);
     
@@ -86,7 +86,7 @@ int init_network(int argc, char *argv[]) {
     printf("Network | Socket address set\n");
 
     // Bind socket
-    if(bind(udpSocket.sockfd, (struct sockaddr*)&(udpSocket.serv_addr), sizeof(struct sockaddr_in)) == -1) {
+    if (bind(udpSocket.sockfd, (struct sockaddr*)&(udpSocket.serv_addr), sizeof(struct sockaddr_in)) == -1) {
         perror("Error naming socket");
         logs(L_INFO, "Network | Error naming socket");
         exit(EXIT_FAILURE);

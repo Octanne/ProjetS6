@@ -36,7 +36,7 @@ NetworkSocket init_udp_network(int argc, char *argv[], int *pid_tcp_handler) {
                 host = optarg;
                 break;
             default:
-                fprintf(stderr, "Usage: %s [-p port] [-h host]\n", argv[0]);
+                fprintf(stderr, "Usage: %s <-p port> <-h host>\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
