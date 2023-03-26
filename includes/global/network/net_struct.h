@@ -53,6 +53,10 @@ typedef struct {
 
 typedef struct {
     int sockfd;
+    struct sockaddr_in serv_addr;
+
+    bool network_init;
+    bool read_running;
     // TODO ajouter les autres trucs
 } TCPSocketData;
 

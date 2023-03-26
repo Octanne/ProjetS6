@@ -73,6 +73,7 @@ typedef struct {
     GUI gui;
     NetworkSocket *netSocket;
     pthread_mutex_t mutex;
+    bool stopKeyBoardHandler;
 } GameInterface;
 
 #endif

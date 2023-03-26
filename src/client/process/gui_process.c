@@ -4,6 +4,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -11,6 +12,7 @@
 #include "client_gui.h"
 #include "menu_gui.h"
 #include "game_gui.h"
+#include "client_network.h"
 
 /**
  * @brief Function managing the mouse events
@@ -70,16 +72,36 @@ void control_handler_gui(GameInterface *gameI, int key) {
     }
 }
 
+void handler_sigint(int sig) {
+    logs(L_INFO, "GUI Process | SIGINT received! stopping keyboard handler...");
+    extern GameInterface *gameInfo;
+    gameInfo->stopKeyBoardHandler = true;
+}
+
 void init_gui_process(GameInterface *gameI) {
     logs(L_INFO, "GUI Process | Init gui process...");
     
     // Init graphics
     init_gui(gameI);
 
+    // Init mutex & bool keyboard handler
+    gameI->mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+    gameI->stopKeyBoardHandler = false;
+
+    // Sig Action for SIGINT
+    struct sigaction sa;
+    sa.sa_handler = handler_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        logs(L_DEBUG, "GUI Process | Error while setting SIGINT handler!");
+        exit(EXIT_FAILURE);
+    }
+
     // Control handler
     int ch;
     logs(L_INFO, "Main | Launching control handler...");
-    while((ch = getch()) != KEY_QUIT_GAME) {
+    while((ch = getch()) != KEY_QUIT_GAME && !gameI->stopKeyBoardHandler) {
         control_handler_gui(gameI, ch);
     }
     logs(L_INFO, "Main | Control handler stopped!");
@@ -89,6 +111,9 @@ void init_gui_process(GameInterface *gameI) {
         logs(L_INFO, "GUI Process | Remove from waitlist on server...");
         waitForPartie(gameI);
     }
+
+    // Couper le thread read tcp si actif
+    stop_read_tcp_socket(gameI);
 
     // Close graphics
     stop_gui(gameI);

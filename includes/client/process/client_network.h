@@ -32,6 +32,12 @@ void wait_tcp_connection(GameInterface *gameI, int tcpPort);
 void stop_wait_tcp_connection(GameInterface *gameI);
 
 /**
+ * @brief Stop read tcp socket thread
+ * 
+ */
+void stop_read_tcp_socket(GameInterface *gameI);
+
+/**
  * @brief Initialise la socket TCP et rentre les données dans le GameInterface
  * 
  * @param gameI 

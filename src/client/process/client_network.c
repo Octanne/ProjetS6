@@ -243,6 +243,8 @@ void *waitlist_handler(void *arg) {
 
                 // On initialise la connexion TCP
                 init_tcp_network(gameInfo, response.partieWaitListMessage.portTCP);
+                // On quitte le waitMode
+                gameInfo->menuInfo.waitToJoin = false;
                 // On kill le thread
                 pthread_exit(NULL);
             } else {
@@ -266,147 +268,92 @@ void wait_tcp_connection(GameInterface *gameI, int tcpPort) {
         gameI->netSocket->udpSocket.waitlist_running = true;
     } else {
         // On initialise la connexion TCP
+        gameI->menuInfo.waitToJoin = false;
         init_tcp_network(gameI, tcpPort);
     }
 }
 
 void stop_wait_tcp_connection(GameInterface *gameI) {
-    logs(L_INFO, "Network | Stop wait tcp connection thread");
-    pthread_kill(gameI->netSocket->pid_waitlist, SIGINT);
-    pthread_join(gameI->netSocket->pid_waitlist, NULL);
-    gameI->netSocket->udpSocket.waitlist_running = false;
-}
-
-/*
-int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
-    if (tcpPort == -1) {
-        // On écoute en UDP pour attendre le port donné par le serveur
-
-        int pid = fork();
-
-        if (pid == 0) {
-            // Child process
-
-            // Modifier le timeout en le supprimant
-            struct timeval tv;
-            tv.tv_sec = 0;
-            tv.tv_usec = 0;
-            if (setsockopt(gameI->netSocket->udpSocket.sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
-                logs(L_INFO, "Network | Error setting timeout");
-                perror("Error setting timeout");
-                exit(EXIT_FAILURE);
-            }
-
-            // sig action on SIGINT
-            struct sigaction sa;
-            sa.sa_handler = close_tcp_sighandler;
-            sigemptyset(&sa.sa_mask);
-            sa.sa_flags = 0;
-            if (sigaction(SIGINT, &sa, NULL) == -1) {
-                perror("Error setting signal handler");
-                logs(L_INFO, "Network | Error setting signal handler");
-                exit(EXIT_FAILURE);
-            }
-            
-            // Attendre le port TCP directement sur le socket UDP
-            NetMessage response;
-            if(recvfrom(gameI->netSocket->udpSocket.sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
-                if (errno == EINTR) {
-                    logs(L_INFO, "Network | Network closed while waiting for TCP port");
-                    exit(EXIT_SUCCESS);
-                } else {
-                    perror("Error receiving response");
-                    logs(L_INFO, "Network | Error receiving response : %s", strerror(errno));
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                logs(L_INFO, "Network | Message received");
-
-                if (response.type == UDP_REQ_WAITLIST_PARTIE) {
-                    if (!response.partieWaitListMessage.waitState && 
-                        response.partieWaitListMessage.takeInAccount) {
-                        // Demande de retrer de la waitlist validée
-                        logs(L_INFO, "Network | Sortie de la waitlist reçue");
-                        close_tcp_network(&gameI->netSocket->tcpSocket);
-                        exit(EXIT_SUCCESS);
-                    }
-
-                    logs(L_INFO, "Network | TCP port received");
-                    if (response.partieWaitListMessage.portTCP == -1) {
-                        logs(L_INFO, "Network | TCP port is -1");
-                        printf("TCP port is -1, exiting...\n");
-                        exit(EXIT_FAILURE);
-                    } else {
-                        logs(L_INFO, "Network | TCP port is %d", response);
-                        printf("TCP port is %d, connecting...\n", response.partieWaitListMessage.portTCP);
-                        return init_tcp_network(gameI, response.partieWaitListMessage.portTCP);
-                    }
-                } else {
-                    logs(L_INFO, "Network | Unknown message received");
-                    printf("Unknown message received, exiting...\n");
-                    exit(EXIT_FAILURE);
-                }
-            }
-        } else if (pid > 0) {
-            // Parent process
-            // Save the child pid
-            **(gameI->netSocket->pid_tcp_handler) = pid;
-
-            return pid;
-        } else {
-            // Erreur
-            perror("Error creating child process");
-            logs(L_INFO, "Network | Error creating child process");
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        // On créer le fork pour le TCP
-        int pid = fork();
-        
-        if (pid == 0) {
-            // Child process
-            // On ajoute le sig handler pour fermer proprement le réseau
-            struct sigaction sa;
-            sa.sa_handler = close_tcp_sighandler;
-            sigemptyset(&sa.sa_mask);
-            sa.sa_flags = 0;
-            if (sigaction(SIGINT, &sa, NULL) == -1) {
-                perror("Error setting signal handler");
-                logs(L_INFO, "Network | Error setting signal handler");
-                exit(EXIT_FAILURE);
-            }
-
-            // Démarrer le serveur TCP via la fonction init_tcp_network
-            return init_tcp_network(gameI, tcpPort);
-        } else if (pid > 0) {
-            // Parent process
-            // Save the child pid
-            **(gameI->netSocket->pid_tcp_handler) = pid;
-
-            return pid;
-        } else {
-            // Erreur
-            perror("Error creating child process");
-            logs(L_INFO, "Network | Error creating child process");
-            exit(EXIT_FAILURE);
-        }
+    logs(L_INFO, "Network | Stopping wait tcp connection thread...");
+    // Check if waitlist is running
+    if (gameI->netSocket->udpSocket.waitlist_running) {
+        // Kill waitlist thread
+        pthread_kill(gameI->netSocket->pid_waitlist, SIGINT);
+        pthread_join(gameI->netSocket->pid_waitlist, NULL);
+        gameI->netSocket->udpSocket.waitlist_running = false;
     }
 }
-*/
+
+void stop_read_tcp_socket(GameInterface *gameI) {
+    // Check if waitlist is running
+    if (gameI->netSocket->tcpSocket.read_running) {
+        // Kill waitlist thread
+        pthread_kill(gameI->netSocket->pid_receive_tcp, SIGINT);
+        pthread_join(gameI->netSocket->pid_receive_tcp, NULL);
+    }
+}
+
+void stop_tcp_read() {
+    logs(L_INFO, "Network | Stopping tcp read thread...");
+    extern GameInterface *gameInfo;
+    gameInfo->netSocket->tcpSocket.read_running = false;
+}
 
 void *tcp_read_handler(void *arg) {
-    // TODO
-    return NULL;
+    // Sig action sur le threads pour pouvoir le kill
+    struct sigaction sa;
+    sa.sa_handler = stop_tcp_read;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+
+    extern GameInterface *gameInfo;
+    while (gameInfo->netSocket->tcpSocket.read_running) {
+        // TODO read from socket
+        logs(L_INFO, "Network | TCP | tcp read thread running...");
+        sleep(2);
+    }
+
+    logs(L_INFO, "Network | TCP | tcp read thread stopped!");
+    pthread_exit(NULL);
 }
 
 int init_tcp_network(GameInterface *gameI, int port) {
-    // TODO
-    logs(L_INFO, "Network | Init TCP network");
+    logs(L_INFO, "Network | TCP | Init TCP network...");
+
+    // Init socket
+    if ((gameI->netSocket->tcpSocket.sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("Error creating socket");
+        logs(L_INFO, "Network | TCP | Error creating socket : %s", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Init server address
+    gameI->netSocket->tcpSocket.serv_addr.sin_family = AF_INET;
+    gameI->netSocket->tcpSocket.serv_addr.sin_port = htons(port);
+    gameI->netSocket->tcpSocket.serv_addr.sin_addr.s_addr = gameI->netSocket->udpSocket.serv_addr.sin_addr.s_addr;
+
+    // Connect to server
+    if (connect(gameI->netSocket->tcpSocket.sockfd, (struct sockaddr *)&gameI->netSocket->tcpSocket.serv_addr, sizeof(gameI->netSocket->tcpSocket.serv_addr)) == -1) {
+        perror("Error connecting to server");
+        logs(L_INFO, "Network | TCP | Error connecting to server : %s", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Create read thread
+    gameI->netSocket->tcpSocket.read_running = true;
+    if (pthread_create(&gameI->netSocket->pid_receive_tcp, NULL, tcp_read_handler, NULL) != 0) {
+        perror("Error creating read thread");
+        logs(L_INFO, "Network | TCP | Error creating read thread : %s", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    logs(L_INFO, "Network | Init TCP network done!");
     return 0;
 }
 
 NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
-    // TODO
+    // TODO sendMessage
     NetMessage response = {0};
 
     return response;
