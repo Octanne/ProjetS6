@@ -70,31 +70,28 @@ void control_handler_gui(GameInterface *gameI, int key) {
     }
 }
 
-void init_gui_process(NetworkSocket *netSocket) {
+void init_gui_process(GameInterface *gameI) {
     logs(L_INFO, "GUI Process | Init gui process...");
     
-    GameInterface gameI;
-    // Add network socket to game interface
-    gameI.netSocket = netSocket;
     // Init graphics
-    init_gui(&gameI);
+    init_gui(gameI);
 
     // Control handler
     int ch;
     logs(L_INFO, "Main | Launching control handler...");
     while((ch = getch()) != KEY_QUIT_GAME) {
-        control_handler_gui(&gameI, ch);
+        control_handler_gui(gameI, ch);
     }
     logs(L_INFO, "Main | Control handler stopped!");
 
     // Deregister si en attente de connexion
-    if (gameI.inMenu && gameI.menuInfo.waitToJoin) {
+    if (gameI->inMenu && gameI->menuInfo.waitToJoin) {
         logs(L_INFO, "GUI Process | Remove from waitlist on server...");
-        waitForPartie(&gameI);
+        waitForPartie(gameI);
     }
 
     // Close graphics
-    stop_gui(&gameI);
+    stop_gui(gameI);
 
     logs(L_INFO, "GUI Process | Gui process stopped!");
 }

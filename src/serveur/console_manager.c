@@ -10,6 +10,10 @@
 #include "utils.h"
 #include "constants.h"
 
+/**
+ * @brief Initialise la console
+ * 
+ */
 void init_console() {
     bool isRun = true;
     while(isRun) {
@@ -22,6 +26,13 @@ void init_console() {
     }
 }
 
+/**
+ * @brief Gère les commandes de la console
+ * 
+ * @param command 
+ * @return true 
+ * @return false 
+ */
 bool command_handler(char *command) {
     if (strcmp(command, "exit") == 0) {
         return false;

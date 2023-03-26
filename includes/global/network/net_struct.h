@@ -23,25 +23,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdbool.h>
-
-typedef struct {
-    int sockfd;
-    struct sockaddr_in serv_addr;
-
-    bool network_init;
-} UDPSocketData;
-
-typedef struct {
-    int sockfd;
-    // TODO ajouter les autres trucs
-} TCPSocketData;
-
-typedef struct {
-    UDPSocketData udpSocket;
-    TCPSocketData tcpSocket;
-
-    int **pid_tcp_handler;
-} NetworkSocket;
+#include <pthread.h>
 
 typedef struct {
     int type;
@@ -58,6 +40,29 @@ typedef struct {
         PartieJoinLeaveWaitMessage partieWaitListMessage;
     };
 } NetMessage;
+
+typedef struct {
+    int sockfd;
+    struct sockaddr_in serv_addr;
+
+    bool network_init;
+
+    bool waitlist_running;
+    NetMessage *waitlist_message;
+} UDPSocketData;
+
+typedef struct {
+    int sockfd;
+    // TODO ajouter les autres trucs
+} TCPSocketData;
+
+typedef struct {
+    UDPSocketData udpSocket;
+    TCPSocketData tcpSocket;
+
+    pthread_t pid_waitlist;
+    pthread_t pid_receive_tcp;
+} NetworkSocket;
 
 #endif
 

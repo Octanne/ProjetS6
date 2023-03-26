@@ -170,7 +170,7 @@ void waitForPartie(GameInterface *gameI){
         NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
         
         if (messageUDP.partieWaitListMessage.takeInAccount) {
-            close_tcp_network(&gameI->netSocket->tcpSocket);
+            stop_wait_tcp_connection(gameI);
 
             // Si bonne reponse
             logs(L_INFO, "Stop waiting for partie %d", gameI->menuInfo.selPartieID);
@@ -196,7 +196,7 @@ void waitForPartie(GameInterface *gameI){
         
         if (messageUDP.partieWaitListMessage.takeInAccount) {
             // Start TCP connection waiting
-            wait_for_tcp_connection(gameI, messageUDP.partieWaitListMessage.portTCP);
+            wait_tcp_connection(gameI, messageUDP.partieWaitListMessage.portTCP);
 
             int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
             gameI->menuInfo.waitToJoin = true;
@@ -243,7 +243,7 @@ void createPartie(GameInterface *gameI){
         refresh_right_menu_gui(gameI);
         logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
                     
-        wait_for_tcp_connection(gameI, responseUDP.partieCreateMessage.serverPortTCP);
+        wait_tcp_connection(gameI, responseUDP.partieCreateMessage.serverPortTCP);
     } else {
         set_text_info_gui(gameI, "Erreur lors de la creation de la partie!", 1, RED_COLOR);
     }

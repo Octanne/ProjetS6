@@ -19,13 +19,17 @@
 #include "utils.h"
 #include "constants.h"
 
-NetworkSocket init_udp_network(int argc, char *argv[], int *pid_tcp_handler) {
+void sig_usr(int signo) {
+    if (signo == SIGUSR1) {
+        logs(L_INFO, "Network | Message readable from waitlist");
+    }
+}
+
+NetworkSocket *init_udp_network(int argc, char *argv[]) {
     logs(L_INFO, "Network | Init network...");
     int opt;
     int port = 0;
     char *host = NULL;
-
-    *pid_tcp_handler = 0;
 
     while ((opt = getopt(argc, argv, "p:h:")) != -1) {
         switch (opt) {
@@ -39,6 +43,16 @@ NetworkSocket init_udp_network(int argc, char *argv[], int *pid_tcp_handler) {
                 fprintf(stderr, "Usage: %s <-p port> <-h host>\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
+    }
+
+    // SigAction
+    struct sigaction sa;
+    sa.sa_handler = sig_usr;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
+        logs(L_INFO, "Network | Sigaction error");
+        exit(EXIT_FAILURE);
     }
 
     if (port == 0 || host == NULL) {
@@ -79,23 +93,25 @@ NetworkSocket init_udp_network(int argc, char *argv[], int *pid_tcp_handler) {
     }
 
     // Create network socket
-    NetworkSocket networkSocket;
-    networkSocket.pid_tcp_handler = &pid_tcp_handler;
-    networkSocket.udpSocket.sockfd = sockfd;
-    networkSocket.udpSocket.serv_addr = serv_addr;
-    networkSocket.udpSocket.network_init = false;
+    NetworkSocket *networkSocket = malloc(sizeof(NetworkSocket));
+    networkSocket->pid_receive_tcp = 0;
+    networkSocket->pid_waitlist = 0;
+    networkSocket->udpSocket.waitlist_running = false;
+    networkSocket->udpSocket.sockfd = sockfd;
+    networkSocket->udpSocket.serv_addr = serv_addr;
+    networkSocket->udpSocket.network_init = false;
 
     // Faire le ping pour vérifier que le serveur est bien là
     NetMessage message;
     message.type = NET_REQ_PING;
-    if(send_udp_message(&networkSocket.udpSocket, &message).type != NET_REQ_PING) {
+    if(send_udp_message(&networkSocket->udpSocket, &message).type != NET_REQ_PING) {
         logs(L_INFO, "Network | Error the server is not responding");
         printf("Network | Error the server is not responding\n");
         exit(EXIT_FAILURE);
     }
 
     logs(L_INFO, "Network | Network initialized");
-    networkSocket.udpSocket.network_init = true;
+    networkSocket->udpSocket.network_init = true;
 
     logs(L_INFO, "Network | Return socket data info");
 
@@ -120,7 +136,7 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
         logs(L_INFO, "Network | Message sent");
 
         // Receive response
-        if(recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+        if(!udpSocket->waitlist_running && recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
             if (errno == EINTR) {
                 logs(L_INFO, "Network | Network closed while receiving response");
                 exit(EXIT_SUCCESS);
@@ -133,11 +149,28 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
                 nb_try++;
             } else {
                 perror("Error receiving response");
-                logs(L_INFO, "Network | Error receiving response");
+                logs(L_INFO, "Network | Error receiving response %d", errno);
                 exit(EXIT_FAILURE);
             }
         } else {
+            if (udpSocket->waitlist_running) {
+                logs(L_INFO, "Network | Waitlist is running, waiting for response");
+                pause();
+
+                if (udpSocket->waitlist_message == NULL) {
+                    logs(L_INFO, "Network | Error receiving response (waitlist_message is NULL)");
+                    exit(EXIT_FAILURE);
+                }
+
+                // Copy udpSocket->waitlist_message to response
+                memcpy(&response, udpSocket->waitlist_message, sizeof(NetMessage));
+                // Free udpSocket->waitlist_message
+                free(udpSocket->waitlist_message);
+            }
+
             logs(L_INFO, "Network | Message received");
+
+            logs(L_INFO, "Network | Message type : %d", message->type);
 
             if (message->type == NET_REQ_PING && response.type == NET_REQ_PING) {
                 logs(L_INFO, "Network | Ping received");
@@ -170,11 +203,81 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
     return response;
 }
 
-void close_tcp_sighandler(int signum) {
-    logs(L_INFO, "Network (TCP) | Network closed");
-    // TODO : Fermer proprement le réseau
+void stop_waitlist() {
+    logs(L_INFO, "Network | Stop waitlist thread");
+    pthread_exit(NULL);
 }
 
+void *waitlist_handler(void *arg) {
+    // Sig action sur le threads pour pouvoir le kill
+    struct sigaction sa;
+    sa.sa_handler = stop_waitlist;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    extern GameInterface *gameInfo;
+
+    while(1) {
+        // On attend la réponse du serveur
+        NetMessage response;
+        if(recvfrom(gameInfo->netSocket->udpSocket.sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
+            if (errno == EINTR) {
+                logs(L_INFO, "Network | Network closed while receiving response");
+                exit(EXIT_SUCCESS);
+            } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                logs(L_INFO, "Network | Timeout rewaiting for response");
+            } else {
+                perror("Error receiving response");
+                logs(L_INFO, "Network | Error receiving response");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            logs(L_INFO, "Network | Waitlist Message received");
+
+            if (response.type == UDP_REQ_WAITLIST_PARTIE && response.partieWaitListMessage.waitState) {
+                logs(L_INFO, "Network | Waitlist received");
+
+                if (response.partieWaitListMessage.portTCP == -1) {
+                    pthread_exit(NULL);
+                }
+
+                // On initialise la connexion TCP
+                init_tcp_network(gameInfo, response.partieWaitListMessage.portTCP);
+                // On kill le thread
+                pthread_exit(NULL);
+            } else {
+                // Enregistrement du message pour le threads principal.
+                gameInfo->netSocket->udpSocket.waitlist_message = malloc(sizeof(NetMessage));
+                memcpy(gameInfo->netSocket->udpSocket.waitlist_message, &response, sizeof(NetMessage));
+                // send signal to main thread
+                kill(getpid(), SIGUSR1);
+                logs(L_INFO, "Network | Enregistrement du message pour le threads principal"); 
+            }
+        }
+    }
+
+}
+
+void wait_tcp_connection(GameInterface *gameI, int tcpPort) {
+    if (tcpPort == -1) {
+        // On écoute en UDP pour attendre le port donné par le serveur
+        // Démarrer le thread d'écoute
+        pthread_create(&gameI->netSocket->pid_waitlist, NULL, waitlist_handler, NULL);
+        gameI->netSocket->udpSocket.waitlist_running = true;
+    } else {
+        // On initialise la connexion TCP
+        init_tcp_network(gameI, tcpPort);
+    }
+}
+
+void stop_wait_tcp_connection(GameInterface *gameI) {
+    logs(L_INFO, "Network | Stop wait tcp connection thread");
+    pthread_kill(gameI->netSocket->pid_waitlist, SIGINT);
+    pthread_join(gameI->netSocket->pid_waitlist, NULL);
+    gameI->netSocket->udpSocket.waitlist_running = false;
+}
+
+/*
 int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
     if (tcpPort == -1) {
         // On écoute en UDP pour attendre le port donné par le serveur
@@ -289,34 +392,17 @@ int wait_for_tcp_connection(GameInterface *gameI, int tcpPort) {
         }
     }
 }
+*/
+
+void *tcp_read_handler(void *arg) {
+    // TODO
+    return NULL;
+}
 
 int init_tcp_network(GameInterface *gameI, int port) {
     // TODO
+    logs(L_INFO, "Network | Init TCP network");
     return 0;
-}
-
-void close_tcp_network(TCPSocketData *tcpSocket) {
-    // Send signal to the child process
-
-    /*
-    
-        // Close the socket and the connection
-    if(close(tcpSocket->sockfd) == -1) {
-        perror("Error closing socket");
-        logs(L_INFO, "Network | Error closing socket");
-        exit(EXIT_FAILURE);
-    }
-    
-    */
-}
-
-void close_udp_network(UDPSocketData *udpSocket) {
-    // Close the socket
-    if(close(udpSocket->sockfd) == -1) {
-        perror("Error closing socket");
-        logs(L_INFO, "Network | Error closing socket");
-        exit(EXIT_FAILURE);
-    }
 }
 
 NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
