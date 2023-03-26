@@ -115,6 +115,8 @@ void init_gui_process(GameInterface *gameI) {
     // Couper le thread read tcp si actif
     stop_read_tcp_socket(gameI);
 
+    close_tcp_socket(gameI);
+
     // Close graphics
     stop_gui(gameI);
 

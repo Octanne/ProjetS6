@@ -352,6 +352,16 @@ int init_tcp_network(GameInterface *gameI, int port) {
     return 0;
 }
 
+void close_tcp_socket(GameInterface *gameI) {
+    // Close the socket
+    if(close(gameI->netSocket->tcpSocket.sockfd) == -1) {
+        perror("Error closing socket");
+        exit(EXIT_FAILURE);
+    }
+
+    logs(L_INFO, "Network | TCP | Socket closed!");
+}
+
 NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
     // TODO sendMessage
     NetMessage response = {0};
