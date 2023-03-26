@@ -29,8 +29,6 @@ void stop_game() {
 void main_exit() {
     stop_game();
 
-    // Faire les differeds des threads TODO
-
     // Close logs
     closeLogs();
 }
