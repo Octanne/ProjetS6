@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include <sys/wait.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -60,7 +61,18 @@ void killTCPServersPID() {
 		int pid = *(int*)elt->elmt;
 		kill(pid, SIGINT);
 		elt = elt->suivant;
+
+		// Wait for the child process to close
+		waitpid(pid, NULL, 0);
+
+		// Logs and print
+		logs(L_INFO, "PartieManager | TCP Server PID (%d) killed", pid);
+		printf("PartieManager | TCP Server PID (%d) killed\n", pid);
 	}
+
+	// Logs and print
+	logs(L_INFO, "PartieManager | TCP Servers PID List killed");
+	printf("PartieManager | TCP Servers PID List killed\n");
 
 	// Free the list
 	liste_free(&tcpServersPID, true);
@@ -477,7 +489,7 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 	// Register the processus in the tcpServersPID list
 	pid_t *pidCopy = malloc(sizeof(pid_t));
 	*pidCopy = pid;
-	liste_add(&tcpServersPID, pid, TYPE_PID);
+	liste_add(&tcpServersPID, pidCopy, TYPE_PID);
 
 	return 0;
 }
