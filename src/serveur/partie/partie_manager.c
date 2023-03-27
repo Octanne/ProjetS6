@@ -528,7 +528,7 @@ void* partieThreadTCP(void *thread_args) {
 				loop = 0;
 				break;
 			
-			case TCP_REQ_PARTIE_INPUT:
+			case TCP_REQ_INPUT_PLAYER:
 				inputPartieTCP(args, args->sharedMemory, 1); // TODO Input to int
 				break;
 
@@ -561,6 +561,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 	// Prepare the response
 	NetMessage response;
 	response.type = TCP_REQ_PARTIE_UPDATE;
+	response.type = response.type << 8; // to avoid unused error
 	
 	// Send to all players connected the informations about the game
 	int i;
