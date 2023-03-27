@@ -59,7 +59,7 @@ int init_network(int argc, char *argv[]) {
 	UDPSocketData udpSocket;
 
     // Create the socket
-    if((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+    if ((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
         perror("Error creating socket");
         logs(L_INFO, "Network | Error creating socket");
         exit(EXIT_FAILURE);
@@ -151,7 +151,7 @@ bool udp_request_handler(int sockfd, PartieManager *partieManager) {
     // Receive the request
     printf("Network | waiting for a request.\n");
     logs(L_INFO, "Network | Waiting for a request");
-    if(recvfrom(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&client_address, &addr_len) == -1) {
+    if (recvfrom(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&client_address, &addr_len) == -1) {
         if (errno == EINTR) {
             // SIGINT received
             status = false;
@@ -221,7 +221,7 @@ bool udp_request_handler(int sockfd, PartieManager *partieManager) {
 
     printResponseDetails(response);
 
-    if(sendto(sockfd, &response, sizeof(response), 0, (struct sockaddr*)&client_address, sizeof(struct sockaddr_in)) == -1) {
+    if (sendto(sockfd, &response, sizeof(response), 0, (struct sockaddr*)&client_address, sizeof(struct sockaddr_in)) == -1) {
         perror("Error sending response");
         logs(L_INFO, "Network | Error sending response");
         exit(EXIT_FAILURE);

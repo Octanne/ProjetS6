@@ -71,9 +71,10 @@ typedef struct {
     bool inMenu;
     
     GUI gui;
-    NetworkSocket *netSocket;
+    NetworkSocket netSocket;
     pthread_mutex_t mutex;
     bool stopKeyBoardHandler;
 } GameInterface;
 
 #endif
+

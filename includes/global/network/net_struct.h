@@ -48,7 +48,7 @@ typedef struct {
     bool network_init;
 
     bool waitlist_running;
-    NetMessage *waitlist_message;
+    NetMessage waitlist_message;
 } UDPSocketData;
 
 typedef struct {

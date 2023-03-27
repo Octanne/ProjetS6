@@ -395,8 +395,6 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
  * 
  * @param sockedTCP		Socket TCP file descriptor (binded)
  * @param partieInfo	PartieStatutInfo containing informations about the game
- * 
- * @return void
 */
 void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
@@ -464,9 +462,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 /**
  * @brief Thread that will handle the TCP connection with a client
  * 
- * @param args	threadTCPArgs structure containing the arguments
- * 
- * @return void* (NULL)
+ * @param args	threadTCPArgs structure containing the arguments* (NULL)
 */
 void* partieThreadTCP(void *thread_args) {
 	// Get the arguments in a local variable
@@ -520,8 +516,6 @@ void* partieThreadTCP(void *thread_args) {
  * 
  * @param args			threadTCPArgs structure containing the arguments
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
- * 
- * @return void
 */
 void joinPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 
@@ -544,8 +538,6 @@ void joinPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
  * 
  * @param args			threadTCPArgs structure containing the arguments
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
- * 
- * @return void
 */
 void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 

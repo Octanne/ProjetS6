@@ -344,7 +344,7 @@ void menu_new_partie(GameInterface *gameI){
         wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
 
         // Selection box
-        if(gameI->menuInfo.createPartieMenu.selMap == i) wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(GREEN_COLOR));
+        if (gameI->menuInfo.createPartieMenu.selMap == i) wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(GREEN_COLOR));
         box(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, 0, 0);
         
         wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
@@ -453,7 +453,7 @@ void menu_choose_partie(GameInterface *gameI){
         wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
 
         // Selection box
-        if(gameI->menuInfo.tabPartieMenu.selPartie == i) wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(GREEN_COLOR));
+        if (gameI->menuInfo.tabPartieMenu.selPartie == i) wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(GREEN_COLOR));
         box(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 0, 0);
         
         wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
