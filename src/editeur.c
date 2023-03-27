@@ -267,7 +267,7 @@ void mouse_event(short posX, short posY) {
     // Write down mouse position
     char text[100];
     sprintf(text, "Position : (Y, X) -> (%i, %i)", posY, posX);
-    set_text_info(text, 2, LBLUE_COLOR);
+    set_text_info(text, 2, DBLUE_COLOR);
 }
 
 /**

@@ -48,7 +48,7 @@ void menu_gen_main_window(GameInterface *gameI) {
     int i = 0;
     if (gameI->menuInfo.inCreateMenu) {
         // Draw maps disponible on title
-        wattron(gameI->gui.cwinMAIN, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Map(s) disponible(s) ");
         wrefresh(gameI->gui.cwinINFOS);
 
@@ -65,7 +65,7 @@ void menu_gen_main_window(GameInterface *gameI) {
         changerPageCreatePartie(gameI, 1);
     } else {
         // Draw parties disponible on title
-        wattron(gameI->gui.cwinMAIN, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Partie(s) disponible(s) ");
         wrefresh(gameI->gui.cwinINFOS);
 
@@ -342,13 +342,13 @@ void menu_new_partie(GameInterface *gameI){
     for (i = 0; i < 6; i++) {
         if (!gameI->menuInfo.createPartieMenu.tabMap[i].info.set) continue;
         wclear(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB);
-        wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(DBLUE_COLOR));
 
         // Selection box
         if (gameI->menuInfo.createPartieMenu.selMap == i) wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(GREEN_COLOR));
         box(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, 0, 0);
         
-        wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, COLOR_PAIR(DBLUE_COLOR));
         // Information partie
         mvwprintw(gameI->menuInfo.createPartieMenu.tabMap[i].winTAB, 1, 2, 
             " Nom de la map: %38s ", 
@@ -451,13 +451,13 @@ void menu_choose_partie(GameInterface *gameI){
     for (i = 0; i < 4; i++) {
         if (!gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set) continue;
         wclear(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB);
-        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(DBLUE_COLOR));
 
         // Selection box
         if (gameI->menuInfo.tabPartieMenu.selPartie == i) wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(GREEN_COLOR));
         box(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 0, 0);
         
-        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(DBLUE_COLOR));
         // Information partie
         mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 1, 2, 
             " Nom de la partie: %36s ", 
@@ -475,7 +475,7 @@ void menu_choose_partie(GameInterface *gameI){
             gameI->menuInfo.tabPartieMenu.tabPartie[i].info.nbPlayers, gameI->menuInfo.tabPartieMenu.tabPartie[i].info.maxPlayers);
 
         // Bande du bas écrire le numero
-        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(LBLUE_COLOR));
+        wattron(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, COLOR_PAIR(DBLUE_COLOR));
         mvwprintw(gameI->menuInfo.tabPartieMenu.tabPartie[i].winTAB, 4, 2, " %02i ", gameI->menuInfo.tabPartieMenu.tabPartie[i].info.numPartie);
         
         // Bouton rejoindre/annuler
