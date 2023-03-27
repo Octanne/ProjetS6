@@ -37,6 +37,7 @@ void switch_gui(GameInterface *gameI) {
         gameI->inMenu = false;
         menu_stop_gui(gameI);
         game_init_gui(gameI);
+        set_text_info_gui(gameI, "Vous venez de rejoindre la partie", 1, GREEN_COLOR);
     } else {
         gameI->inMenu = true;
         game_stop_gui(gameI);

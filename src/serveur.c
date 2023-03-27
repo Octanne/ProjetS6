@@ -50,6 +50,11 @@ int main(int argc, char *argv[]) {
 
     // init network
     pid_udp_processus = init_network(argc, argv);
+    if (pid_udp_processus == -1) {
+        logs(L_INFO, "Network | Network init failed");
+        printf("Network | Network init failed\n");
+        return EXIT_FAILURE;
+    }
     logs(L_INFO, "Network | Network init done PID : %d", pid_udp_processus);
 
     // Register exit function

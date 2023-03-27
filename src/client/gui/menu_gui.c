@@ -213,9 +213,6 @@ void waitForPartie(GameInterface *gameI){
         NetMessage messageUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
         
         if (messageUDP.partieWaitListMessage.takeInAccount) {
-            // Start TCP connection waiting
-            wait_tcp_connection(gameI, messageUDP.partieWaitListMessage.portTCP);
-
             int saveSel = gameI->menuInfo.tabPartieMenu.selPartie;
             gameI->menuInfo.waitToJoin = true;
             gameI->menuInfo.selPartieID = gameI->menuInfo.tabPartieMenu.tabPartie[saveSel].info.numPartie;
@@ -227,6 +224,9 @@ void waitForPartie(GameInterface *gameI){
 
             logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
             set_text_info_gui(gameI, "Vous venez de rejoindre la liste d'attente", 1, GREEN_COLOR);
+            
+            // Start TCP connection waiting
+            wait_tcp_connection(gameI, messageUDP.partieWaitListMessage.portTCP);
         } else {
             // Erreur lors de la tentative de rejoindre la liste d'attente
             logs(L_INFO, "Erreur lors de la tentative de rejoindre la liste d'attente");

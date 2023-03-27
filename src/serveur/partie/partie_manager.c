@@ -358,15 +358,14 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 
 			// Get the port of the TCPServer
 			partieJoinLeaveWaitMessage.portTCP = partieInfo->portTCP;
+			partieJoinLeaveWaitMessage.takeInAccount = true;
 			logs(L_INFO, "PartieManager | TCPServer started on port %d", partieInfo->portTCP);
 			printf("PartieManager | TCPServer started on port %d\n", partieInfo->portTCP);
 
-			// Add other informations to the message
-			partieJoinLeaveWaitMessage.numPartie = numPartie;
-			partieJoinLeaveWaitMessage.waitState = true;
-			partieJoinLeaveWaitMessage.takeInAccount = true;
-
 			// Send the port to the clients in the wait list
+			NetMessage netMessage;
+			netMessage.type = UDP_REQ_WAITLIST_PARTIE;
+			netMessage.partieWaitListMessage = partieJoinLeaveWaitMessage;
 			EltListe *elt = partieInfo->playersInWait.tete;
 			while (elt != NULL) {
 				
@@ -376,12 +375,14 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 				// Logs and print
 				logs(L_INFO, "PartieManager | Sending TCP Port to the client : %s:%d", inet_ntoa(clientAddrInListe->sin_addr), ntohs(clientAddrInListe->sin_port));
 				printf("PartieManager | Sending TCP Port to the client : %s:%d\n", inet_ntoa(clientAddrInListe->sin_addr), ntohs(clientAddrInListe->sin_port));
-				
+
 				// Send the message to the client
-				if (sendto(partieManager->udpSocket.sockfd, &partieJoinLeaveWaitMessage, sizeof(PartieJoinLeaveWaitMessage), 0, (struct sockaddr*)clientAddrInListe, sizeof(struct sockaddr_in)) == -1) {
+				if (sendto(partieManager->udpSocket.sockfd, &netMessage, sizeof(NetMessage), 0, (struct sockaddr*)clientAddrInListe, sizeof(struct sockaddr_in)) == -1) {
 					logs(L_DEBUG, "PartieManager | Error while sending the port to the client");
 					printf("PartieManager | Error while sending the port to the client\n");
 				}
+				// Go to the next client
+				elt = elt->suivant;
 			}
 
 			// Add last client to the wait list (the client who send the request)
