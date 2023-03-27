@@ -176,11 +176,11 @@ void game_stop_gui(GameInterface *gameI) {
 }
 
 void game_mouse_level_window(GameInterface *gameI, int x, int y) {
-    // TODO if we want to use the mouse
+    // if we want to use the mouse
 }
 
 void game_mouse_player_menu(GameInterface *gameI, int x, int y) {
-    // TODO if we want to use the mouse
+    // if we want to use the mouse
 }
 
 void game_keyboard_handler(GameInterface *gameI, int key) {

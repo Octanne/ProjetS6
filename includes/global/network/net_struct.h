@@ -9,12 +9,14 @@
 #define UDP_REQ_PARTIE_LIST      10 // Fait
 #define UDP_REQ_MAP_LIST         11 // Fait
 #define UDP_REQ_CREATE_PARTIE    12 // Fait
-#define UDP_REQ_WAITLIST_PARTIE  13
+#define UDP_REQ_WAITLIST_PARTIE  13 // Fait
 
 // TCP REQUESTS
-#define TCP_REQ_PARTIE_JOIN      20
+#define TCP_REQ_PARTIE_UPDATE    20
 #define TCP_REQ_PARTIE_LEAVE     21
-#define TCP_REQ_PARTIE_INPUT	 22
+#define TCP_REQ_INPUT_PLAYER     22 
+#define TCP_REQ_GAME_UPDATE      23 // Fait
+#define TCP_REQ_TEXT_INFO_GUI    24 // Fait
 
 #define NET_TIMEOUT   1 // in seconds
 #define NET_MAX_TRIES 5
@@ -33,7 +35,6 @@ typedef struct {
         DataUpdateGame dataUpdateGame;
         DataInputPlayer dataInputPlayer;
         DataTextInfoGUI dataTextInfoGUI;
-        // TODO ADD JOIN AND LEAVE
         // UDP messages
         PartieListeMessage partieListeMessage;
         MapListeMessage mapListMessage;
@@ -58,7 +59,6 @@ typedef struct {
 
     bool network_init;
     bool read_running;
-    // TODO ajouter les autres trucs
 } TCPSocketData;
 
 typedef struct {

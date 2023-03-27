@@ -18,6 +18,7 @@
 
 #include "utils.h"
 #include "constants.h"
+#include "gui_process.h"
 
 /**
  * @brief Signal handler
@@ -386,14 +387,42 @@ void* tcp_read_handler(void *arg) {
 
 	// While the thread is running
 	while (gameInfo->netSocket.tcpSocket.read_running) {
-		// TODO read from socket
-		logs(L_INFO, "Network | TCP | tcp read thread running...");
-		sleep(2);
+		logs(L_INFO, "Network | TCP | Waiting for an update message of the server...");
+		
+		// On attend la réponse du serveur TCP
+		NetMessage response;
+		if (recv(gameInfo->netSocket.tcpSocket.sockfd, &response, sizeof(response), 0) == -1) {
+
+			// Error handling
+			if (errno == EINTR) {
+				logs(L_INFO, "Network | TCP | Network closed while receiving response");
+				exit(EXIT_SUCCESS);
+			} else if (errno == EAGAIN || errno == EWOULDBLOCK) {
+				logs(L_INFO, "Network | TCP | Timeout rewaiting for response");
+			} else {
+				perror("Error receiving response");
+				logs(L_INFO, "Network | TCP | Error receiving response");
+				exit(EXIT_FAILURE);
+			}
+		} else  {
+			logs(L_INFO, "Network | TCP | Message received");
+			if (response.type == TCP_REQ_GAME_UPDATE) {
+				logs(L_INFO, "Network | TCP | Update message received");
+				update_game_gui(gameInfo, &response.dataUpdateGame);
+				logs(L_INFO, "Network | TCP | Update message processed");
+			} else if (response.type == TCP_REQ_TEXT_INFO_GUI) {
+				logs(L_INFO, "Network | TCP | Message to display received");
+				write_text_info_bar(gameInfo, &response.dataTextInfoGUI);
+				logs(L_INFO, "Network | TCP | Message to display processed");
+			} else {
+				logs(L_INFO, "Network | TCP | Unknown message received");
+			}
+		}
 	}
 
 	// Logs and exit
 	logs(L_INFO, "Network | TCP | tcp read thread stopped!");
-	return NULL;
+	pthread_exit(NULL);
 }
 
 /**
@@ -461,12 +490,13 @@ void close_tcp_socket(GameInterface *gameI) {
  * @param tcpSocket		TCPSocketData
  * @param message		NetMessage to send
  * 
- * @return NetMessage 
  */
-NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
-	// TODO sendMessage
-	NetMessage response = {0};
-
-	return response;
+void send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
+	// Send message
+	if (send(tcpSocket->sockfd, message, sizeof(NetMessage), 0) == -1) {
+		perror("Error sending message");
+		logs(L_INFO, "Network | TCP | Error sending message : %s", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
 }
 
