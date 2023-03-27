@@ -73,7 +73,7 @@ typedef struct {
 typedef struct {
     Player player;
     size_t sizeLevel;
-    char levelBytes[sizeof(Objet)*(MATRICE_LEVEL_SIZE+MAX_PLAYERS)];
+    char levelBytes[sizeof(Objet) * (MATRICE_LEVEL_SIZE + MAX_PLAYERS)];
 } DataUpdateGame;
 
 typedef struct {

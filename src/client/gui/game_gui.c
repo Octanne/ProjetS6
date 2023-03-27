@@ -27,7 +27,7 @@ void clear_level(GameInterface *gameI) {
 /**
  * @brief Function to load a level.
  */
-void load_level(GameInterface *gameI, Level * newLevel) {
+void load_level(GameInterface *gameI, Level *newLevel) {
     level_free(gameI->gameInfo.level);
     gameI->gameInfo.level = newLevel;
 

@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     // Register exit function
     atexit(main_exit);
 
-    // Network init
+    // Network initialization
     gameInfo.netSocket = init_udp_network(argc, argv); // Non bloquant
 
     // Graphics updater & control handler
