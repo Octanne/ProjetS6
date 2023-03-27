@@ -18,7 +18,7 @@ void init_console() {
     bool isRun = true;
     while(isRun) {
         char command[2048];
-        if (scanf("%2048s", command) == -1) {
+        if (scanf("%2047s", command) == -1) {
             isRun = false;
             break;
         }

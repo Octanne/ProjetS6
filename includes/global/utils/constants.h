@@ -77,6 +77,7 @@
 #define TYPE_PARTIE_INFO 3
 #define TYPE_MAP_INFO 4
 #define TYPE_SOCKADDR_IN 5
+#define TYPE_PID 6
 
 // #####################
 // #       Level       #

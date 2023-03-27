@@ -110,15 +110,10 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 						player_free(eltListe->elmt);
 						break;
 					case TYPE_NET_MESSAGE:
-						free(eltListe->elmt);
-						break;
 					case TYPE_PARTIE_INFO:
-						free(eltListe->elmt);
-						break;
 					case TYPE_MAP_INFO:
-						free(eltListe->elmt);
-						break;
 					case TYPE_SOCKADDR_IN:
+					case TYPE_PID:
 						free(eltListe->elmt);
 						break;
 					default: // TODO
@@ -160,15 +155,10 @@ void liste_free(Liste* liste, int freeElmt) {
 					player_free(eltListe->elmt);
 					break;
 				case TYPE_NET_MESSAGE:
-					free(eltListe->elmt);
-					break;
 				case TYPE_PARTIE_INFO:
-					free(eltListe->elmt);
-					break;
 				case TYPE_MAP_INFO:
-					free(eltListe->elmt);
-					break;
 				case TYPE_SOCKADDR_IN:
+				case TYPE_PID:
 					free(eltListe->elmt);
 					break;
 				default: // TODO

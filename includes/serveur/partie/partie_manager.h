@@ -37,6 +37,8 @@ typedef struct {
 } PartieManager;
 
 PartieManager partieManager_create(UDPSocketData udpSocket);
+void initTCPServersPIDList();
+void killTCPServersPID();
 
 
 // ### UDP ###

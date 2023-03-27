@@ -9,11 +9,19 @@
 #include <pthread.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "constants.h"
 
 #define NUM_PARTIES_PAR_PAGE 4
+
+/**
+ * @brief Function handling the SIGINT signal for TCP servers
+*/
+void sigintHandler(int sig_num) {
+	exit(EXIT_SUCCESS);
+}
 
 /**
  * @brief Create a Partie Manager object linked to the udp socket
@@ -28,6 +36,36 @@ PartieManager partieManager_create(UDPSocketData udpSocket) {
 	partieManager.udpSocket = udpSocket;
 	return partieManager;
 }
+
+Liste tcpServersPID;
+/**
+ * @brief Initialize the list of TCP servers PID to kill them when the server is closed
+*/
+void initTCPServersPIDList() {
+	tcpServersPID = liste_create(true);
+	logs(L_INFO, "PartieManager | Init TCP Servers PID List");
+	printf("PartieManager | Init TCP Servers PID List\n");
+}
+
+/**
+ * @brief Send a Kill signal to all the TCP servers PID
+*/
+void killTCPServersPID() {
+	logs(L_INFO, "PartieManager | Kill TCP Servers PID List");
+	printf("PartieManager | Kill TCP Servers PID List\n");
+
+	// Loop through the list of TCP servers PID
+	EltListe *elt = tcpServersPID.tete;
+	while (elt != NULL) {
+		int pid = *(int*)elt->elmt;
+		kill(pid, SIGINT);
+		elt = elt->suivant;
+	}
+
+	// Free the list
+	liste_free(&tcpServersPID, true);
+}
+
 
 
 // ### UDP ###
@@ -362,7 +400,7 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 }
 
 /**
- * @brief Start the partie processus
+ * @brief Start the partie processus and register it
  * - Create the socket with port 0 (listen on a random port)
  * - Fills the PartieStatutInfo with the port that will be send to clients by another function
  * 
@@ -406,9 +444,21 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 	pid_t pid = fork();
 	if (pid == 0) {
 		// Child processus (partie processus)
+		// Register SIGINT handler
+		struct sigaction sa;
+		sa.sa_handler = sigintHandler;
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		if (sigaction(SIGINT, &sa, NULL) == -1) {
+			logs(L_DEBUG, "PartieManager | startPartieProcessus | sigaction == -1");
+			printf("PartieManager | startPartieProcessus | Error while registering the SIGINT handler");
+			return -1;
+		}
+
 		// Close the UDP socket
 		if (close(partieManager->udpSocket.sockfd) == -1) {
 			logs(L_DEBUG, "PartieManager | startPartieProcessus | close == -1");
+			printf("PartieManager | startPartieProcessus | Error while closing the UDP socket");
 			return -1;
 		}
 
@@ -420,8 +470,14 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 	// Close the TCP socket (the child processus will handle it)
 	if (close(socketTCP) == -1) {
 		logs(L_DEBUG, "PartieManager | startPartieProcessus | close == -1");
+		printf("PartieManager | startPartieProcessus | Error while closing the TCP socket");
 		return -1;
 	}
+
+	// Register the processus in the tcpServersPID list
+	pid_t *pidCopy = malloc(sizeof(pid_t));
+	*pidCopy = pid;
+	liste_add(&tcpServersPID, pid, TYPE_PID);
 
 	return 0;
 }

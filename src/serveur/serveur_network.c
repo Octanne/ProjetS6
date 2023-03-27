@@ -30,6 +30,9 @@ void close_network() {
 	logs(L_INFO, "Network | Closing network...");
 	printf("Network | Closing network...\n");
 	network_running = false;
+
+	// Close the TCP servers
+	killTCPServersPID();
 }
 
 /**
@@ -122,6 +125,9 @@ int init_network(int argc, char *argv[]) {
 
 	// Create the partie manager
 	PartieManager partieManager = partieManager_create(udpSocket);
+
+	// Init TCP Servers PID list
+	initTCPServersPIDList();
 
 	// Network process : handle requests
 	while (network_running)
