@@ -164,9 +164,11 @@ MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
  * @param numMap		Number of the map
  * @param clientAddr	Address of the client
  * 
- * @return PartieCreateMessage
+ * @return PartieCreateMessage to send to the client
 */
 PartieCreateMessage createPartie(PartieManager *partieManager, int maxPlayers, int numMap, struct sockaddr_in clientAddr) {
+
+	// Initialize the structure
 	PartieCreateMessage partieCreateMessage;
 	partieCreateMessage.maxPlayers = maxPlayers;
 	partieCreateMessage.numMap = numMap;
