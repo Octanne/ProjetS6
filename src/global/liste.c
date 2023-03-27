@@ -44,6 +44,7 @@ void liste_add_tete(Liste* liste, void* elmt, char type) {
 		exit(EXIT_FAILURE);
 	}
 	eltListe->elmt = elmt;
+	eltListe->type = type;
 	eltListe->suivant = liste->tete;
 
 	// Add the element to the list.
@@ -63,6 +64,7 @@ void liste_add_queue(Liste* liste, void* elmt, char type) {
 		exit(EXIT_FAILURE);
 	}
 	eltListe->elmt = elmt;
+	eltListe->type = type;
 	eltListe->suivant = NULL;
 
 	// Add the element to the list.

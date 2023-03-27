@@ -9,6 +9,7 @@
 #include "constants.h"
 
 #include "client_gui.h"
+#include "client_network.h"
 
 /**
  * @brief Function to clear the level and generate a new one
@@ -43,6 +44,8 @@ void load_level(GameInterface *gameI, Level *newLevel) {
  * @brief Refresh the level window from scratch.
  */
 void refresh_level(GameInterface *gameI) {
+    // Clear window
+    werase(gameI->gui.winMAIN);
     // Update level matrice
     levelUpdateMatriceSprite(gameI->gameInfo.level);
 	// Draw level from matrice
@@ -73,6 +76,8 @@ void refresh_level(GameInterface *gameI) {
  * @brief Refresh the tools menu from scratch.
  */
 void refresh_player_menu(GameInterface *gameI) {
+    // Clear window
+    werase(gameI->gui.winTOOLS);
 	// Draw player infos
     // Draw Keys
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
@@ -134,6 +139,10 @@ void refresh_player_menu(GameInterface *gameI) {
  * @brief Generate the game editor window
  */
 void gen_game_window(GameInterface *gameI) {
+    // Clear window
+    werase(gameI->gui.cwinMAIN);
+    // Draw border
+    box(gameI->gui.cwinMAIN, 0, 0);
     // Afficher le titre de la main window
     wmove(gameI->gui.cwinMAIN, 0, 0);
     wprintw(gameI->gui.cwinMAIN, " Level ");
@@ -166,7 +175,8 @@ void game_init_gui(GameInterface *gameI) {
     // Init level
     gameI->gameInfo.level = malloc(sizeof(Level));
     *gameI->gameInfo.level = levelCreer();
-    load_level(gameI, gameI->gameInfo.level);
+    logs(L_INFO, "Main | Empty Level created!");
+    refresh_level(gameI);
 }
 
 void game_stop_gui(GameInterface *gameI) {
@@ -183,36 +193,45 @@ void game_mouse_player_menu(GameInterface *gameI, int x, int y) {
     // if we want to use the mouse
 }
 
+void send_input_to_server(GameInterface *gameI, int key) {
+    // Send the key to the server
+    NetMessage msg;
+    msg.type = TCP_REQ_INPUT_PLAYER;
+    msg.dataInputPlayer.keyPress = key;
+
+    send_tcp_message(&gameI->netSocket.tcpSocket, &msg);
+}
+
 void game_keyboard_handler(GameInterface *gameI, int key) {
     switch (key) {
         case KEY_UP:
-            // Write down the action
             set_text_info_gui(gameI, "Action: UP", 1, GREEN_COLOR);
+            send_input_to_server(gameI, key);
         break;
         
         case KEY_DOWN:
-            // Write down the action
             set_text_info_gui(gameI, "Action: DOWN", 1, GREEN_COLOR);
+            send_input_to_server(gameI, key);
         break;
 
         case KEY_LEFT:
-            // Write down the action
             set_text_info_gui(gameI, "Action: LEFT", 1, GREEN_COLOR);
+            send_input_to_server(gameI, key);
         break;
 
         case KEY_RIGHT:
-            // Write down the action
             set_text_info_gui(gameI, "Action: RIGHT", 1, GREEN_COLOR);
+            send_input_to_server(gameI, key);
         break;
 
         case KEY_VALIDATE:
-            // Write down the action
             set_text_info_gui(gameI, "Action: VALIDATE", 1, GREEN_COLOR);
+            send_input_to_server(gameI, key);
         break;
 
         default:
-            // Write down the action
             set_text_info_gui(gameI, "Action: UNKNOWN", 1, RED_COLOR);
+            send_input_to_server(gameI, key);
         break;
     }
 }

@@ -29,6 +29,8 @@ void stop_game() {
 void main_exit() {
     stop_game();
 
+    // Close network if not closed
+
     // Close logs
     closeLogs();
 }

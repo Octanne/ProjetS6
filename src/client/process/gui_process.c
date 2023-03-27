@@ -86,6 +86,29 @@ void handler_sigint(int sig) {
 	gameInfo.stopKeyBoardHandler = true;
 }
 
+void at_exit_gui_process() {
+	extern GameInterface gameInfo;
+	logs(L_INFO, "GUI Process | Stopping gui process...");
+	
+	// Unregister si en attente de connexion
+	if (gameInfo.inMenu && gameInfo.menuInfo.waitToJoin) {
+		logs(L_INFO, "GUI Process | Remove from waitlist on server...");
+		waitForPartie(&gameInfo);
+	}
+
+	// Couper le thread read tcp si actif
+	stop_read_tcp_socket(&gameInfo);
+
+	// Close socket
+	close_tcp_socket(&gameInfo);
+
+	// Close graphics
+	stop_gui(&gameInfo);
+
+	// Logs
+	logs(L_INFO, "GUI Process | Gui process stopped!");
+}
+
 /**
  * @brief Init the GUI process waiting for user input
  * 
@@ -93,6 +116,12 @@ void handler_sigint(int sig) {
  */
 void init_gui_process(GameInterface *gameI) {
 	
+	// Register exit function for the gui process
+	if (atexit(at_exit_gui_process) != 0) {
+		logs(L_DEBUG, "GUI Process | Error while registering exit function!");
+		exit(EXIT_FAILURE);
+	}
+
 	// Init graphics
 	logs(L_INFO, "GUI Process | Init gui process...");
 	init_gui(gameI);
@@ -117,24 +146,6 @@ void init_gui_process(GameInterface *gameI) {
 	while((ch = getch()) != KEY_QUIT_GAME && !gameI->stopKeyBoardHandler)
 		control_handler_gui(gameI, ch);
 	logs(L_INFO, "Main | Control handler stopped!");
-
-	// Unregister si en attente de connexion
-	if (gameI->inMenu && gameI->menuInfo.waitToJoin) {
-		logs(L_INFO, "GUI Process | Remove from waitlist on server...");
-		waitForPartie(gameI);
-	}
-
-	// Couper le thread read tcp si actif
-	stop_read_tcp_socket(gameI);
-
-	// Close socket
-	close_tcp_socket(gameI);
-
-	// Close graphics
-	stop_gui(gameI);
-
-	// Logs
-	logs(L_INFO, "GUI Process | Gui process stopped!");
 }
 
 /**

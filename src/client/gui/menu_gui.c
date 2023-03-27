@@ -50,6 +50,7 @@ void menu_gen_main_window(GameInterface *gameI) {
         // Draw maps disponible on title
         wattron(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Map(s) disponible(s) ");
+        wattroff(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         wrefresh(gameI->gui.cwinINFOS);
 
         // Create MapPartie window 1 to 6
@@ -67,6 +68,7 @@ void menu_gen_main_window(GameInterface *gameI) {
         // Draw parties disponible on title
         wattron(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         mvwprintw(gameI->gui.cwinMAIN, 0, 0, " Partie(s) disponible(s) ");
+        wattroff(gameI->gui.cwinMAIN, COLOR_PAIR(DBLUE_COLOR));
         wrefresh(gameI->gui.cwinINFOS);
 
         // Create TabPartie window 1 to 4

@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "constants.h"
 #include "gui_process.h"
+#include "client_gui.h"
 
 /**
  * @brief Signal handler
@@ -374,6 +375,7 @@ void stop_read_tcp_socket(GameInterface *gameI) {
 		// Kill waitlist thread
 		pthread_kill(gameI->netSocket.pid_receive_tcp, SIGINT);
 		pthread_join(gameI->netSocket.pid_receive_tcp, NULL);
+		logs(L_INFO, "Network | read tcp socket thread joined");
 	}
 }
 
@@ -396,7 +398,6 @@ void* tcp_read_handler(void *arg) {
 			// Error handling
 			if (errno == EINTR) {
 				logs(L_INFO, "Network | TCP | Network closed while receiving response");
-				exit(EXIT_SUCCESS);
 			} else if (errno == EAGAIN || errno == EWOULDBLOCK) {
 				logs(L_INFO, "Network | TCP | Timeout rewaiting for response");
 			} else {
@@ -465,6 +466,9 @@ int init_tcp_network(GameInterface *gameI, int port) {
 
 	// Logs and return
 	logs(L_INFO, "Network | Init TCP network done!");
+
+	// Switch to Game GUI
+	switch_gui(gameI);
 	return 0;
 }
 
