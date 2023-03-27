@@ -99,8 +99,16 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
 
     if (messageUDP.type == UDP_REQ_PARTIE_LIST) {
         // Si pas de partie sur la page on change pas de page
-        if (messageUDP.partieListeMessage.nbParties == 0) {
+        if (messageUDP.partieListeMessage.nbParties == 0 && page < 1) {
+            set_text_info_gui(gameI, "Vous êtes déjà sur la première page !", 1, RED_COLOR);
             return;
+        } else if (messageUDP.partieListeMessage.nbParties == 0 && page != 1) {
+            set_text_info_gui(gameI, "Vous êtes déjà sur la dernière page !", 1, RED_COLOR);
+            return;
+        } else if (messageUDP.partieListeMessage.nbParties == 0 && page == 1){
+            set_text_info_gui(gameI, "Aucune partie disponible !", 1, RED_COLOR);
+        } else {
+            set_text_info_gui(gameI, "Page chargée avec succès !", 1, GREEN_COLOR);
         }
 
         gameI->menuInfo.tabPartieMenu.numPage = messageUDP.partieListeMessage.numPage;
@@ -118,7 +126,7 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
             gameI->menuInfo.tabPartieMenu.tabPartie[i].info.set = true;
         }
     } else {
-        set_text_info_gui(gameI, "Erreur lors du changement de page!", 0, RED_COLOR);
+        set_text_info_gui(gameI, "Erreur lors du changement de page!", 1, RED_COLOR);
     }
 
     menu_refresh_main_window(gameI);
@@ -136,9 +144,15 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
 
     if (messageUDP.type == UDP_REQ_MAP_LIST) {
         // Si pas de map sur la page on change pas de page
-        if (messageUDP.mapListMessage.nbMaps == 0) {
-			set_text_info_gui(gameI, "Pas de map disponible !", 0, RED_COLOR);
+        if (messageUDP.partieListeMessage.nbParties == 0 && page < 1) {
+            set_text_info_gui(gameI, "Vous êtes déjà sur la première page !", 1, RED_COLOR);
+            return;
+        } else if (messageUDP.mapListMessage.nbMaps == 0 && page != 1) {
+			set_text_info_gui(gameI, "Vous êtes déjà sur la dernière page !", 1, RED_COLOR);
 			return;
+        } else if (messageUDP.mapListMessage.nbMaps == 0 && page == 1) {
+            set_text_info_gui(gameI, "Aucune map disponible !", 1, RED_COLOR);
+            return;
         }
 
         gameI->menuInfo.createPartieMenu.numPage = messageUDP.mapListMessage.numPage;
@@ -153,7 +167,7 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
             gameI->menuInfo.createPartieMenu.tabMap[i].info.set = true;
         }
     } else {
-        set_text_info_gui(gameI, "Erreur lors du changement de page!", 0, RED_COLOR);
+        set_text_info_gui(gameI, "Erreur lors du changement de page!", 1, RED_COLOR);
     }
 
     menu_refresh_main_window(gameI);
@@ -182,10 +196,11 @@ void waitForPartie(GameInterface *gameI){
             changerPagePartieMenu(gameI, gameI->menuInfo.tabPartieMenu.numPage);
             gameI->menuInfo.tabPartieMenu.selPartie = saveSel;
             refresh_main_gui(gameI);
+            set_text_info_gui(gameI, "Vous avez quitté la liste d'attente", 1, GREEN_COLOR);
         } else {
             // Erreur lors de la tentative de quitter la liste d'attente
             logs(L_INFO, "Erreur lors de la tentative de quitter la liste d'attente");
-            set_text_info_gui(gameI, "Impossible de quitter la liste d'attente", 0, RED_COLOR);
+            set_text_info_gui(gameI, "Impossible de quitter la liste d'attente", 1, RED_COLOR);
         }
     } else if (!gameI->menuInfo.waitToJoin) { // Si on attend pas deja la partie
         // Network call
@@ -209,6 +224,11 @@ void waitForPartie(GameInterface *gameI){
             refresh_main_gui(gameI);
 
             logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
+            set_text_info_gui(gameI, "Vous venez de rejoindre la liste d'attente", 1, GREEN_COLOR);
+        } else {
+            // Erreur lors de la tentative de rejoindre la liste d'attente
+            logs(L_INFO, "Erreur lors de la tentative de rejoindre la liste d'attente");
+            set_text_info_gui(gameI, "Impossible de rejoindre la liste d'attente", 1, RED_COLOR);
         }
     }
 }
@@ -245,6 +265,7 @@ void createPartie(GameInterface *gameI){
         logs(L_INFO, "Start waiting for partie %d", gameI->menuInfo.selPartieID);
                     
         wait_tcp_connection(gameI, responseUDP.partieCreateMessage.serverPortTCP);
+        set_text_info_gui(gameI, "Partie créée avec succès!", 1, GREEN_COLOR);
     } else {
         set_text_info_gui(gameI, "Erreur lors de la creation de la partie!", 1, RED_COLOR);
     }
@@ -391,11 +412,6 @@ void menu_keyboard_new_partie(GameInterface *gameI, int key){
             // Write down the action
             createPartie(gameI);
         break;
-
-        default:
-            // Write down the action
-            set_text_info_gui(gameI, "Action: UNKNOWN", 1, RED_COLOR);
-        break;
     }
 }
 
@@ -436,11 +452,6 @@ void menu_keyboard_choose_partie(GameInterface *gameI, int key){
             if (gameI->menuInfo.waitToJoin) break;
             // Write down the action
             waitForPartie(gameI);
-        break;
-
-        default:
-            // Write down the action
-            set_text_info_gui(gameI, "Action: UNKNOWN", 1, RED_COLOR);
         break;
     }
 }

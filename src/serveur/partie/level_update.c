@@ -18,7 +18,6 @@
  * 
  * @return int : 1 if the position is free, 0 otherwise.
  * 
- * @c TODO2 revoir hitbox semble pas fonctionner correctement
  */
 int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
 

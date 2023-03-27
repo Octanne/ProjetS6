@@ -306,6 +306,8 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 			partieJoinLeaveWaitMessage.portTCP = partieInfo->portTCP;
 			logs(L_INFO, "PartieManager | TCPServer started on port %d", partieInfo->portTCP);
 			printf("PartieManager | TCPServer started on port %d\n", partieInfo->portTCP);
+
+			// Send the port to the clients in the wait list
 		}
 	} else {
 		// Remove the client from the wait list

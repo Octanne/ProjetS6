@@ -17,7 +17,7 @@ void stop_read_tcp_socket(GameInterface *gameI);
 void close_tcp_socket(GameInterface *gameI);
 
 NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message); // Bloquant le temps de la reception
-NetMessage send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message); // Bloquant le temps de la reception
+void send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message);
 
 #endif
 
