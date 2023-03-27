@@ -7,7 +7,7 @@
 #include "partie_manager.h"
 
 int init_network(int argc, char *argv[]);
-bool udp_request_handler(int sockfd, PartieManager *partieManager); // return true if handler should continue
+int udp_request_handler(int sockfd, PartieManager *partieManager);
 int init_tcp_connection(); 
 
 #endif

@@ -23,213 +23,243 @@
 
 int network_running = true;
 
+/**
+ * @brief Function closing the network (change the network_running variable)
+*/
 void close_network() {
-    logs(L_INFO, "Network | Closing network...");
-    printf("Network | Closing network...\n");
-    network_running = false;
+	logs(L_INFO, "Network | Closing network...");
+	printf("Network | Closing network...\n");
+	network_running = false;
 }
 
+/**
+ * @brief Function initializing the network
+ * 
+ * @param argc	Number of arguments
+ * @param argv	Arguments
+ * 
+ * @return int (0 if success, -1 if error)
+*/
 int init_network(int argc, char *argv[]) {
-    logs(L_INFO, "Network | Init network...");
-    printf("Network | Init network...\n");
-    int opt;
-    int port = 0;
+
+	// Logs and Init
+	logs(L_INFO, "Network | Init network...");
+	printf("Network | Init network...\n");
+	int opt;
+	int port = 0;
 	char* host = NULL;
 
-    while ((opt = getopt(argc, argv, "p:h:")) != -1) {
-        switch (opt) {
-            case 'p':
-                port = atoi(optarg);
-                break;
+	// Switch case to get the port and the host (host is optional)
+	while ((opt = getopt(argc, argv, "p:h:")) != -1) {
+		switch (opt) {
+			case 'p':
+				port = atoi(optarg);
+				break;
 			case 'h':
 				host = optarg;
 				break;
-            default:
-                fprintf(stderr, "Usage: %s <-p port> [-h address]\n", argv[0]);
-                exit(EXIT_FAILURE);
-        }
-    }
-
-    if (port == 0) {
-        fprintf(stderr, "Les deux options -p et -h sont obligatoires\n");
-        exit(EXIT_FAILURE);
-    }
-
-	// Socket data initialization
-	UDPSocketData udpSocket;
-
-    // Create the socket
-    if ((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
-        perror("Error creating socket");
-        logs(L_INFO, "Network | Error creating socket");
-        exit(EXIT_FAILURE);
-    }
-
-    logs(L_INFO, "Network | Socket created");
-    printf("Network | Socket created\n");
-
-    // Set the server address on given port
-    memset(&udpSocket.serv_addr, 0, sizeof(udpSocket.serv_addr));
-    udpSocket.serv_addr.sin_family = AF_INET;
-    udpSocket.serv_addr.sin_port = htons(port);
-    
-    logs(L_INFO, "Network | Socket address set");
-    printf("Network | Socket address set\n");
-
-	if (host == NULL) {
-    	udpSocket.serv_addr.sin_addr.s_addr = INADDR_ANY;
-	} else {
-		udpSocket.serv_addr.sin_addr.s_addr = inet_addr(host);
+			default:
+				fprintf(stderr, "Usage: %s <-p port> [<-h address>]\n", argv[0]);
+				return -1;
+		}
 	}
 
-    logs(L_INFO, "Network | Socket address set");
-    printf("Network | Socket address set\n");
+	// Check if the port is set
+	if (port == 0) {
+		fprintf(stderr, "L'option -p est obligatoire pour indiquer le port\n");
+		return -1;
+	}
 
-    // Bind socket
-    if (bind(udpSocket.sockfd, (struct sockaddr*)&(udpSocket.serv_addr), sizeof(struct sockaddr_in)) == -1) {
-        perror("Error naming socket");
-        logs(L_INFO, "Network | Error naming socket");
-        exit(EXIT_FAILURE);
-    }
+	// Create the socket
+	UDPSocketData udpSocket;
+	if ((udpSocket.sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+		perror("Error creating socket");
+		logs(L_INFO, "Network | Error creating socket");
+		return -1;
+	}
 
-    // Logs the port and the host
-    logs(L_INFO, "Network | Port : %d, Host : %s", port, inet_ntoa(udpSocket.serv_addr.sin_addr));
-    printf("Network | listening on %s:%d for UDP packets ... \n", inet_ntoa(udpSocket.serv_addr.sin_addr), port);
+	// Logs
+	logs(L_INFO, "Network | Socket created");
+	printf("Network | Socket created\n");
 
-    // ouverture d'un processus fils
-    int pid = fork();
+	// Set the server address on given port
+	memset(&udpSocket.serv_addr, 0, sizeof(udpSocket.serv_addr));
+	udpSocket.serv_addr.sin_family = AF_INET;	// IPv4
+	udpSocket.serv_addr.sin_port = htons(port);	// Port
+	
+	// Logs
+	logs(L_INFO, "Network | Socket address set");
+	printf("Network | Socket address set\n");
 
-    if (pid != 0) {
-        // processus père
-        return pid;
-    }
+	// Set the host (if not set, set to INADDR_ANY)
+	udpSocket.serv_addr.sin_addr.s_addr = host == NULL ? INADDR_ANY : inet_addr(host);
+	logs(L_INFO, "Network | Socket address set");
+	printf("Network | Socket address set\n");
 
-    // register close_network as the handler for SIGINT with sigaction
-    struct sigaction sa;
-    sa.sa_handler = close_network;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
+	// Bind socket
+	if (bind(udpSocket.sockfd, (struct sockaddr*)&udpSocket.serv_addr, sizeof(struct sockaddr_in)) == -1) {
+		perror("Error naming socket");
+		logs(L_INFO, "Network | Error naming socket");
+		return -1;
+	}
 
-    PartieManager partieManager = partieManager_create(udpSocket);
+	// Logs the port and the host
+	logs(L_INFO, "Network | Port : %d, Host : %s", port, inet_ntoa(udpSocket.serv_addr.sin_addr));
+	printf("Network | listening on %s:%d for UDP packets ... \n", inet_ntoa(udpSocket.serv_addr.sin_addr), port);
 
-    // processus réseau
-    while (network_running) {
-        network_running = udp_request_handler(partieManager.udpSocket.sockfd, &partieManager);
-    }
+	// Create a child process to handle the network requests
+	// The parent process quit the function with the pid of the child process
+	int pid = fork();
+	if (pid != 0)
+		return pid;
 
-    close(partieManager.udpSocket.sockfd);
+	// Register close_network as the handler for SIGINT with sigaction
+	struct sigaction sa;
+	sa.sa_handler = close_network;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
 
-    printf("Network | Network processus closed\n");
-    logs(L_INFO, "Network | Network processus closed");
+	// Create the partie manager
+	PartieManager partieManager = partieManager_create(udpSocket);
 
-    exit(EXIT_SUCCESS);
+	// Network process : handle requests
+	while (network_running)
+		network_running = udp_request_handler(partieManager.udpSocket.sockfd, &partieManager);
+
+	// Close the socket
+	close(partieManager.udpSocket.sockfd);
+
+	// Logs and exit the child process
+	printf("Network | Network processus closed\n");
+	logs(L_INFO, "Network | Network processus closed");
+	exit(EXIT_SUCCESS);
 }
 
+/**
+ * @brief Function that print the response details in the server console
+ * 
+ * @param message	NetMessage to print
+*/
 void printResponseDetails(NetMessage message) {
-    // Show the response details
-    printf("Network | =============================\n");
-    printf("Network | response type: %d\n", message.type);
-    if (message.type == UDP_REQ_CREATE_PARTIE) {
-        printf("Network | partie id: %d\n", message.partieCreateMessage.numPartie);
-        printf("Network | creation success: %s\n", message.partieCreateMessage.success ? "true" : "false");
-        printf("Network | partie port: %d\n", message.partieCreateMessage.serverPortTCP);
-    } else if (message.type == UDP_REQ_WAITLIST_PARTIE) {
-        printf("Network | partie id: %d\n", message.partieWaitListMessage.numPartie);
-        printf("Network | join success: %s\n", message.partieWaitListMessage.takeInAccount ? "true" : "false");
-        printf("Network | partie port: %d\n", message.partieWaitListMessage.portTCP);
-    }
-    printf("Network | =============================\n");
+
+	// Show the response details
+	printf("Network | =============================\n");
+	printf("Network | response type: %d\n", message.type);
+
+	// Switch case on the response type
+	switch (message.type) {
+
+		case UDP_REQ_CREATE_PARTIE:
+			printf("Network | partie id: %d\n", message.partieCreateMessage.numPartie);
+			printf("Network | creation success: %s\n", message.partieCreateMessage.success ? "true" : "false");
+			printf("Network | partie port: %d\n", message.partieCreateMessage.serverPortTCP);
+			break;
+		
+		case UDP_REQ_WAITLIST_PARTIE:
+			printf("Network | partie id: %d\n", message.partieWaitListMessage.numPartie);
+			printf("Network | join success: %s\n", message.partieWaitListMessage.takeInAccount ? "true" : "false");
+			printf("Network | partie port: %d\n", message.partieWaitListMessage.portTCP);
+			break;
+	}
+	printf("Network | =============================\n");
 }
 
-bool udp_request_handler(int sockfd, PartieManager *partieManager) {
-    bool status = true;
-    NetMessage request;
-    socklen_t addr_len = sizeof(struct sockaddr_in);
-    struct sockaddr_in client_address;
+/**
+ * @brief Function that handle UDP requests
+ * 
+ * @param sockfd		Socket file descriptor
+ * @param partieManager	PartieManager pointer
+ * 
+ * @return 1 if the network processus need to continue, 0 if it need to stop
+ */
+int udp_request_handler(int sockfd, PartieManager *partieManager) {
 
-    // Receive the request
-    printf("Network | waiting for a request.\n");
-    logs(L_INFO, "Network | Waiting for a request");
-    if (recvfrom(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&client_address, &addr_len) == -1) {
-        if (errno == EINTR) {
-            // SIGINT received
-            status = false;
-            return status;
-        }
+	// Variables initialization
+	NetMessage request;
+	socklen_t addr_len = sizeof(struct sockaddr_in);
+	struct sockaddr_in client_address;
 
-        perror("Error receiving message");
-        logs(L_INFO, "Network | Error receiving message");
-        exit(EXIT_FAILURE);
-    }
+	// Receive the request
+	printf("Network | waiting for a request.\n");
+	logs(L_INFO, "Network | Waiting for a request");
+	if (recvfrom(sockfd, &request, sizeof(request), 0, (struct sockaddr*)&client_address, &addr_len) == -1) {
 
-    // Handle the request
-    printf("Network | received request %d from %s:%d\n", request.type, 
-    inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-    logs(L_INFO, "Network | Received request %d from %s:%d", request.type, 
-    inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+		// Check if the error is due to a SIGINT
+		if (errno == EINTR)
+			return false;
 
-    NetMessage response;
+		// Else, print the error
+		perror("Error receiving message");
+		logs(L_INFO, "Network | Error receiving message");
+		exit(EXIT_FAILURE);
+	}
 
-    switch (request.type) {
-        case NET_REQ_PING:
-            printf("Network | received ping request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received ping request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            response.type = NET_REQ_PING;
-            status = true;
-            break;
-        case UDP_REQ_PARTIE_LIST:
-            printf("Network | received partie list request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received partie list request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            response.partieListeMessage = listPartie(partieManager, request.partieListeMessage.numPage);
-            response.type = UDP_REQ_PARTIE_LIST;
-            status = true;
-            break;
-        case UDP_REQ_MAP_LIST:
-            printf("Network | received map list request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received map list request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            response.mapListMessage = listMaps(partieManager, request.mapListMessage.numPage);
-            response.type = UDP_REQ_MAP_LIST;
-            status = true;
-            break;
-        case UDP_REQ_CREATE_PARTIE:
-            printf("Network | received create partie request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received create partie request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            response.partieCreateMessage = createPartie(partieManager, request.partieCreateMessage.maxPlayers, 
-                request.partieCreateMessage.numMap, client_address);
-            response.type = UDP_REQ_CREATE_PARTIE;
-            status = true;
-            break;
-        case UDP_REQ_WAITLIST_PARTIE:
-            printf("Network | received waitlist partie request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received waitlist partie request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            response.partieWaitListMessage = waitListePartie(partieManager, request.partieWaitListMessage.numPartie, 
-                request.partieWaitListMessage.waitState, client_address);
-            response.type = UDP_REQ_WAITLIST_PARTIE;
-            status = true;
-            break;
-        default:
-            printf("Network | received unknown request from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            logs(L_INFO, "Network | Received unknown request from %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-            status = true;
-            break;
-    }
-    
-    // Send the response
-    printf("Network | sending response to %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-    logs(L_INFO, "Network | Sending response to %s:%d", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+	// Convert the request's host to a string and port for better code readability
+	char* host = inet_ntoa(client_address.sin_addr);
+	int port = ntohs(client_address.sin_port);
 
-    printResponseDetails(response);
+	// Handle the request
+	printf("Network | received request %d from %s:%d\n", request.type, host, port);
+	logs(L_INFO, "Network | Received request %d from %s:%d", request.type, host, port);
 
-    if (sendto(sockfd, &response, sizeof(response), 0, (struct sockaddr*)&client_address, sizeof(struct sockaddr_in)) == -1) {
-        perror("Error sending response");
-        logs(L_INFO, "Network | Error sending response");
-        exit(EXIT_FAILURE);
-    }
+	// Switch case on the request type and prepare the response
+	NetMessage response;
+	response.type = request.type;
+	switch (request.type) {
 
-    logs(L_INFO, "Network | Response sent");
-    printf("Network | response sent.\n");
+		case NET_REQ_PING:
+			printf("Network | received ping request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received ping request from %s:%d", host, port);
+			break;
 
-    return status;
+		case UDP_REQ_PARTIE_LIST:
+			printf("Network | received partie list request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received partie list request from %s:%d", host, port);
+			response.partieListeMessage = listPartie(partieManager, request.partieListeMessage.numPage);
+			break;
+
+		case UDP_REQ_MAP_LIST:
+			printf("Network | received map list request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received map list request from %s:%d", host, port);
+			response.mapListMessage = listMaps(partieManager, request.mapListMessage.numPage);
+			break;
+
+		case UDP_REQ_CREATE_PARTIE:
+			printf("Network | received create partie request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received create partie request from %s:%d", host, port);
+			response.partieCreateMessage = createPartie(partieManager, request.partieCreateMessage.maxPlayers, 
+				request.partieCreateMessage.numMap, client_address);
+			break;
+
+		case UDP_REQ_WAITLIST_PARTIE:
+			printf("Network | received waitlist partie request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received waitlist partie request from %s:%d", host, port);
+			response.partieWaitListMessage = waitListePartie(partieManager, request.partieWaitListMessage.numPartie, 
+				request.partieWaitListMessage.waitState, client_address);
+			break;
+
+		default:
+			printf("Network | received unknown request from %s:%d\n", host, port);
+			logs(L_INFO, "Network | Received unknown request from %s:%d", host, port);
+			break;
+	}
+	
+	// Print the response details
+	printResponseDetails(response);
+
+	// Send the response
+	printf("Network | sending response to %s:%d\n", host, port);
+	logs(L_INFO, "Network | Sending response to %s:%d", host, port);
+	if (sendto(sockfd, &response, sizeof(response), 0, (struct sockaddr*)&client_address, sizeof(struct sockaddr_in)) == -1) {
+		perror("Error sending response");
+		logs(L_INFO, "Network | Error sending response");
+		exit(EXIT_FAILURE);
+	}
+
+	// Logs and return
+	logs(L_INFO, "Network | Response sent");
+	printf("Network | response sent.\n");
+	return true;
 }
 
