@@ -95,7 +95,7 @@ void changerPagePartieMenu(GameInterface *gameI, int page){
     NetMessage messageReq;
     messageReq.type = UDP_REQ_PARTIE_LIST;
     messageReq.partieListeMessage.numPage = page;
-    NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+    NetMessage messageUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
 
     if (messageUDP.type == UDP_REQ_PARTIE_LIST) {
         // Si pas de partie sur la page on change pas de page
@@ -132,7 +132,7 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
     NetMessage messageReq;
     messageReq.type = UDP_REQ_MAP_LIST;
     messageReq.mapListMessage.numPage = page;
-    NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+    NetMessage messageUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
 
     if (messageUDP.type == UDP_REQ_MAP_LIST) {
         // Si pas de map sur la page on change pas de page
@@ -167,7 +167,7 @@ void waitForPartie(GameInterface *gameI){
         messageReq.type = UDP_REQ_WAITLIST_PARTIE;
         messageReq.partieWaitListMessage.numPartie = gameI->menuInfo.selPartieID;
         messageReq.partieWaitListMessage.waitState = false;
-        NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+        NetMessage messageUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
         
         if (messageUDP.partieWaitListMessage.takeInAccount) {
             stop_wait_tcp_connection(gameI);
@@ -192,7 +192,7 @@ void waitForPartie(GameInterface *gameI){
         messageReq.type = UDP_REQ_WAITLIST_PARTIE;
         messageReq.partieWaitListMessage.numPartie = gameI->menuInfo.tabPartieMenu.tabPartie[gameI->menuInfo.tabPartieMenu.selPartie].info.numPartie;
         messageReq.partieWaitListMessage.waitState = true;
-        NetMessage messageUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+        NetMessage messageUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
         
         if (messageUDP.partieWaitListMessage.takeInAccount) {
             // Start TCP connection waiting
@@ -221,7 +221,7 @@ void createPartie(GameInterface *gameI){
     messageReq.partieCreateMessage = partieCreateMessage;
 
     // send message
-    NetMessage responseUDP = send_udp_message(&gameI->netSocket->udpSocket, &messageReq);
+    NetMessage responseUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
 
     if (responseUDP.partieCreateMessage.success) {
         int numPage = responseUDP.partieCreateMessage.numPartie / 4 + 1;

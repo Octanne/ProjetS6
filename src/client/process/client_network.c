@@ -328,7 +328,7 @@ void wait_tcp_connection(GameInterface *gameI, int tcpPort) {
 		// On écoute en UDP pour attendre le port donné par le serveur
 		// Démarrer le thread d'écoute
 		gameI->netSocket.udpSocket.waitlist_running = true;
-		pthread_create(gameI->netSocket.pid_waitlist, NULL, waitlist_handler, gameI);
+		pthread_create(&gameI->netSocket.pid_waitlist, NULL, waitlist_handler, gameI);
 	}
 	else {
 		// On initialise la connexion TCP
