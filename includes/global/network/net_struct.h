@@ -12,6 +12,8 @@
 #define UDP_REQ_WAITLIST_PARTIE  13 // Fait
 
 // TCP REQUESTS
+#define TCP_REQ_PARTIE_UPDATE    20
+#define TCP_REQ_PARTIE_LEAVE     21
 #define TCP_REQ_INPUT_PLAYER     22 
 #define TCP_REQ_GAME_UPDATE      23 // Fait
 #define TCP_REQ_TEXT_INFO_GUI    24 // Fait

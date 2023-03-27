@@ -66,8 +66,9 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo);
 void* partieThreadTCP(void *thread_args);
 
-void joinPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
+void updatePartieTCP(threadsSharedMemory *sharedMemory);
 void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
+void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input);
 
 #endif
 
