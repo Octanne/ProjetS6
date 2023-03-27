@@ -13,7 +13,7 @@
 
 // https://gitlab-mi.univ-reims.fr/rabat01/info0601/-/blob/main/Cours/01_curses/CM_01.pdf
 
-GameInterface *gameInfo;
+GameInterface gameInfo;
 
 /**
  * @brief Function runned when the game is stopped
@@ -38,17 +38,15 @@ void main_exit() {
  * @return EXIT_SUCCESS if the program exit correctly
  */
 int main(int argc, char *argv[]) {
-    // Init pid pointer for the network
-    gameInfo = malloc(sizeof(GameInterface));
 
     // Register exit function
     atexit(main_exit);
 
     // Network init
-    gameInfo->netSocket = init_udp_network(argc, argv); // Non bloquant
+    gameInfo.netSocket = init_udp_network(argc, argv); // Non bloquant
 
     // Graphics updater & control handler
-    init_gui_process(gameInfo); // Bloquant (wait for the gui to close) press Q to close
+    init_gui_process(&gameInfo); // Bloquant (wait for the gui to close) press Q to close
 
 	return EXIT_SUCCESS;
 }
