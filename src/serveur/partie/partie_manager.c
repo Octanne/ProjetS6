@@ -49,7 +49,7 @@ PartieListeMessage listPartie(PartieManager *partieManager, int numPage) {
 	for (int i = 0; i < NUM_PARTIES_PAR_PAGE; i++) {
 
 		// Get the game
-		int numPartie = i + (numPage-1) * NUM_PARTIES_PAR_PAGE;
+		int numPartie = i + (numPage - 1) * NUM_PARTIES_PAR_PAGE;
 		PartieStatutInfo *partieInfo = (PartieStatutInfo*)liste_get(&partieManager->partieInfoListe, numPartie);
 
 		// If the game exists, add it to the list
@@ -60,14 +60,15 @@ PartieListeMessage listPartie(PartieManager *partieManager, int numPage) {
 			partieListeMessage.partieInfo[i].nbPlayers = partieInfo->nbPlayers;
 			partieListeMessage.partieInfo[i].status = partieInfo->isStart;
 			strcpy(partieListeMessage.partieInfo[i].name, partieInfo->map);
+
+			// Print the game
 			printf("PartieManager | Map = %s, numPartie = %d, MaxPlayers = %d, Players = %d\n", partieListeMessage.partieInfo[i].name, 
 				partieListeMessage.partieInfo[i].numPartie, partieListeMessage.partieInfo[i].maxPlayers, partieListeMessage.partieInfo[i].nbPlayers);
 			partieListeMessage.nbParties++;
-		} else {
-			partieListeMessage.partieInfo[i].set = false;
 		}
+		else
+			partieListeMessage.partieInfo[i].set = false;
 	}
-
 	return partieListeMessage;
 }
 
@@ -77,6 +78,7 @@ PartieListeMessage listPartie(PartieManager *partieManager, int numPage) {
  * @return Liste
 */
 Liste getMapsListe() {
+
 	// Reads the file of a folder of relative paths "maps"
 	DIR *dir;
 	struct dirent *ent;
@@ -87,8 +89,10 @@ Liste getMapsListe() {
 	// Open the directory
 	if ((dir = opendir(path)) != NULL) {
 		int i = 0;
+
 		// Loop through all the files in the directory
 		while ((ent = readdir(dir)) != NULL) {
+
 			// Check if the file has the extension ".dat"
 			if (strstr(ent->d_name, extension) != NULL) {
 				MapInfo *mapInfo = malloc(sizeof(MapInfo));
@@ -116,7 +120,7 @@ Liste getMapsListe() {
 }
 
 /**
- * @brief Create a list of maps on the game depending on the page number
+ * @brief Create a list of maps on the game depending on the page number to send to client
  * 
  * @param partieManager	Pointer to the game manager
  * @param numPage		Page number
@@ -134,7 +138,7 @@ MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
 	for (int i = 0; i < 4; i++) {
 
 		// Get the map info
-		int numMap = i + (numPage-1) * 4;
+		int numMap = i + (numPage - 1) * 4;
 		MapInfo *mapInfo = (MapInfo*)liste_get(&mapListe, numMap);
 
 		// If the map exists, add it to the list
@@ -143,13 +147,12 @@ MapListeMessage listMaps(PartieManager *partieManager, int numPage) {
 			mapListeMessage.mapInfo[i].set = true;
 			strcpy(mapListeMessage.mapInfo[i].name, mapInfo->name);
 			mapListeMessage.nbMaps++;
-		} else {
+		} else
 			mapListeMessage.mapInfo[i].set = false;
-		}
 	}
 
+	// Free the map list and return the list of maps
 	liste_free(&mapListe, TYPE_MAP_INFO);
-
 	return mapListeMessage;
 }
 

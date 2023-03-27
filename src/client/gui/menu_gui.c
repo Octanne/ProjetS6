@@ -137,7 +137,8 @@ void changerPageCreatePartie(GameInterface *gameI, int page){
     if (messageUDP.type == UDP_REQ_MAP_LIST) {
         // Si pas de map sur la page on change pas de page
         if (messageUDP.mapListMessage.nbMaps == 0) {
-            return;
+			set_text_info_gui(gameI, "Pas de map disponible !", 0, RED_COLOR);
+			return;
         }
 
         gameI->menuInfo.createPartieMenu.numPage = messageUDP.mapListMessage.numPage;

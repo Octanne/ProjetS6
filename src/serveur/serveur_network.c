@@ -223,6 +223,12 @@ int udp_request_handler(int sockfd, PartieManager *partieManager) {
 			printf("Network | received map list request from %s:%d\n", host, port);
 			logs(L_INFO, "Network | Received map list request from %s:%d", host, port);
 			response.mapListMessage = listMaps(partieManager, request.mapListMessage.numPage);
+
+			// Print error if the map list is empty
+			if (response.mapListMessage.nbMaps == 0) {
+				printf("Network | map list is empty\n");
+				logs(L_INFO, "Network | Map list is empty");
+			}
 			break;
 
 		case UDP_REQ_CREATE_PARTIE:
