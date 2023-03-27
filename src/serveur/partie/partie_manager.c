@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <pthread.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -308,8 +310,39 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 			partieJoinLeaveWaitMessage.portTCP = partieInfo->portTCP;
 			logs(L_INFO, "PartieManager | TCPServer started on port %d", partieInfo->portTCP);
 			printf("PartieManager | TCPServer started on port %d\n", partieInfo->portTCP);
+
+			// Add other informations to the message
+			partieJoinLeaveWaitMessage.numPartie = numPartie;
+			partieJoinLeaveWaitMessage.waitState = true;
+			partieJoinLeaveWaitMessage.takeInAccount = true;
+
+			// Send the port to the clients in the wait list
+			EltListe *elt = partieInfo->playersInWait.tete;
+			while (elt != NULL) {
+				
+				// Get the client address
+				struct sockaddr_in *clientAddrInListe = (struct sockaddr_in*)elt->elmt;
+
+				// Logs and print
+				logs(L_INFO, "PartieManager | Sending TCP Port to the client : %s:%d", inet_ntoa(clientAddrInListe->sin_addr), ntohs(clientAddrInListe->sin_port));
+				printf("PartieManager | Sending TCP Port to the client : %s:%d\n", inet_ntoa(clientAddrInListe->sin_addr), ntohs(clientAddrInListe->sin_port));
+				
+				// Send the message to the client
+				if (sendto(partieManager->udpSocket.sockfd, &partieJoinLeaveWaitMessage, sizeof(PartieJoinLeaveWaitMessage), 0, (struct sockaddr*)clientAddrInListe, sizeof(struct sockaddr_in)) == -1) {
+					logs(L_DEBUG, "PartieManager | Error while sending the port to the client");
+					printf("PartieManager | Error while sending the port to the client\n");
+				}
+			}
+
+			// Add last client to the wait list (the client who send the request)
+			struct sockaddr_in *clientAddrCopy = malloc(sizeof(struct sockaddr_in));
+			memcpy(clientAddrCopy, &clientAddr, sizeof(struct sockaddr_in));
+			liste_add(&partieInfo->playersInWait, clientAddrCopy, TYPE_SOCKADDR_IN);
+			logs(L_INFO, "PartieManager | Last client added to the wait list");
+			printf("PartieManager | Last client added to the wait list\n");
 		}
-	} else {
+	}
+	else {
 		// Remove the client from the wait list
 		// Search the client in the wait list
 		for (int i = 0; i < partieInfo->playersInWait.taille; i++) {
@@ -476,9 +509,6 @@ void* partieThreadTCP(void *thread_args) {
 	// Print messages that the thread is running
 	logs(L_DEBUG, "PartieManager | partieThreadTCP | Thread %d started", args->threadId);
 
-	// Make the client join the game
-	joinPartieTCP(args, args->sharedMemory);
-
 	// Wait for client requests until the client leaves the game
 	int8_t loop = 1;
 	while (loop) {
@@ -496,6 +526,10 @@ void* partieThreadTCP(void *thread_args) {
 			case TCP_REQ_PARTIE_LEAVE:
 				leavePartieTCP(args, args->sharedMemory);
 				loop = 0;
+				break;
+			
+			case TCP_REQ_PARTIE_INPUT:
+				inputPartieTCP(args, args->sharedMemory, 1); // TODO Input to int
 				break;
 
 			default:
@@ -517,24 +551,23 @@ void* partieThreadTCP(void *thread_args) {
 }
 
 /**
- * @brief Make the client join the game by sending informations about the game
+ * @brief Sending informations about the game to the client to update their game
  * 
  * @param args			threadTCPArgs structure containing the arguments
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
 */
-void joinPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
+void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 
-	// Send informations about the game to the client
+	// Prepare the response
 	NetMessage response;
-	response.type = TCP_REQ_PARTIE_JOIN;
+	response.type = TCP_REQ_PARTIE_UPDATE;
 	
-	// Fill the response
-	// TODO
-
-	// Send the response
-	if (sendto(args->clientSocket, &response, sizeof(NetMessage), 0, NULL, 0) == -1) {
-		logs(L_DEBUG, "PartieManager | joinPartieTCP | sendto == -1");
-		exit(EXIT_FAILURE);
+	// Send to all players connected the informations about the game
+	int i;
+	for (i = 0; i < sharedMemory->nbThreads; i++) {
+		if (sharedMemory->thread_states[i] != TH_STATE_DISCONNECTED) {
+			// TODO
+		}
 	}
 }
 
@@ -550,6 +583,17 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 	sharedMemory->thread_states[args->threadId] = TH_STATE_DISCONNECTED;
 
 	// Delete the client from the game
+	// TODO
+}
+
+/**
+ * @brief Handle the input of the client
+ * 
+ * @param args			threadTCPArgs structure containing the arguments
+ * @param sharedMemory	threadsSharedMemory structure containing the shared memory
+ * @param input			Input of the client (0 = left, 1 = right, 2 = up, 3 = down)
+*/
+void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input) {
 	// TODO
 }
 

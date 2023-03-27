@@ -14,6 +14,7 @@
 // TCP REQUESTS
 #define TCP_REQ_PARTIE_JOIN      20
 #define TCP_REQ_PARTIE_LEAVE     21
+#define TCP_REQ_PARTIE_INPUT	 22
 
 #define NET_TIMEOUT   1 // in seconds
 #define NET_MAX_TRIES 5
