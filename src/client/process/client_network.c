@@ -369,7 +369,7 @@ void stop_read_tcp_socket(GameInterface *gameI) {
 
 	// Check if waitlist is running
 	if (gameI->netSocket.tcpSocket.read_running) {
-
+		gameI->netSocket.tcpSocket.read_running = false;
 		// Kill waitlist thread
 		pthread_kill(gameI->netSocket.pid_receive_tcp, SIGINT);
 		pthread_join(gameI->netSocket.pid_receive_tcp, NULL);
