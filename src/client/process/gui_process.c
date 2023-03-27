@@ -17,11 +17,13 @@
 /**
  * @brief Function managing the mouse events
  * 
- * @param posX : mouse position on X axis
- * @param posY : mouse position on Y axis
+ * @param gameI	GameInterface pointer
+ * @param posX	mouse position on X axis
+ * @param posY	mouse position on Y axis
  */
 void mouse_event(GameInterface *gameI, short posX, short posY) {
-	// convert to window level coordinates
+
+	// Convert to window level coordinates
 	posX -= 1;
 	posY -= 1;
 
@@ -52,36 +54,42 @@ void mouse_event(GameInterface *gameI, short posX, short posY) {
 /**
  * @brief Function managing the keyboard events
  * 
- * @param key : character typed
+ * @param gameI	GameInterface pointer
+ * @param key	Character typed
  */
 void control_handler_gui(GameInterface *gameI, int key) {
-	int posX, posY;
+	short posX, posY;
 	switch (key) {
-		case KEY_MOUSE:
-			// Mouse event handler
+
+		case KEY_MOUSE:	// Mouse event handler
 			if (mouse_getpos(&posX, &posY) == OK)
-				mouse_event(gameI, (short)posX, (short)posY);
+				mouse_event(gameI, posX, posY);
 		break;
-		default: 
-			if (gameI->inMenu == true) {
+
+		default:
+			if (gameI->inMenu == true)
 				menu_keyboard_handler(gameI, key);
-			} else {
+			else
 				game_keyboard_handler(gameI, key);
-			}
 		break;
 	}
 }
 
+/**
+ * @brief Handler for SIGINT
+ * 
+ * @param sig Signal number
+ */
 void handler_sigint(int sig) {
 	logs(L_INFO, "GUI Process | SIGINT received! stopping keyboard handler...");
-	extern GameInterface *gameInfo;
-	gameInfo->stopKeyBoardHandler = true;
+	extern GameInterface gameInfo;
+	gameInfo.stopKeyBoardHandler = true;
 }
 
 /**
  * @brief Init the GUI process waiting for user input
  * 
- * @param gameI GameInterface 
+ * @param gameI GameInterface pointer
  */
 void init_gui_process(GameInterface *gameI) {
 	
@@ -106,12 +114,11 @@ void init_gui_process(GameInterface *gameI) {
 	// Control handler
 	int ch;
 	logs(L_INFO, "Main | Launching control handler...");
-	while((ch = getch()) != KEY_QUIT_GAME && !gameI->stopKeyBoardHandler) {
+	while((ch = getch()) != KEY_QUIT_GAME && !gameI->stopKeyBoardHandler)
 		control_handler_gui(gameI, ch);
-	}
 	logs(L_INFO, "Main | Control handler stopped!");
 
-	// Deregister si en attente de connexion
+	// Unregister si en attente de connexion
 	if (gameI->inMenu && gameI->menuInfo.waitToJoin) {
 		logs(L_INFO, "GUI Process | Remove from waitlist on server...");
 		waitForPartie(gameI);
@@ -120,11 +127,13 @@ void init_gui_process(GameInterface *gameI) {
 	// Couper le thread read tcp si actif
 	stop_read_tcp_socket(gameI);
 
+	// Close socket
 	close_tcp_socket(gameI);
 
 	// Close graphics
 	stop_gui(gameI);
 
+	// Logs
 	logs(L_INFO, "GUI Process | Gui process stopped!");
 }
 

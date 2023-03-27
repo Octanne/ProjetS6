@@ -276,7 +276,7 @@ void mouse_event(short posX, short posY) {
  */
 void control_handler() {
     int ch;
-	int posX, posY;
+	short posX, posY;
     while((ch = getch()) != KEY_QUIT_GAME) {
         switch (ch) {
 
@@ -354,7 +354,7 @@ void control_handler() {
             case KEY_MOUSE:
 				// Mouse event handler
                 if (mouse_getpos(&posX, &posY) == OK)
-                    mouse_event((short)posX, (short)posY);
+                    mouse_event(posX, posY);
             break;
         }
     }

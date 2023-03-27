@@ -62,17 +62,17 @@ void ncurses_init_mouse() {
 /**
  * @brief Get the mouse position.
  * 
- * @param x : mouse position on X axis
- * @param y : mouse position on Y axis
+ * @param x mouse position on X axis
+ * @param y mouse position on Y axis
  * 
  * @return error code (OK or ERR)
  */
-int mouse_getpos(int *x, int *y) {
+int mouse_getpos(short *x, short *y) {
 	MEVENT event;
 	int result = getmouse(&event);
 	if (result == OK) {
-		*x = event.x;
-		*y = event.y;
+		*x = (short)event.x;
+		*y = (short)event.y;
 	}
 	return result;
 }
