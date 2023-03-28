@@ -53,7 +53,6 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 
 typedef struct {
 	pthread_mutex_t mutex;	// Pthread mutex		Used to lock the shared memory
-	pthread_cond_t cond;	// Pthread condition	USELESS FOR NOW
 	pthread_t *threads;		// List of threads
 	int *thread_states;		// Thread states (disconnected, connected, etc.)
 	int *thread_sockets;	// Thread sockets
@@ -69,7 +68,6 @@ typedef struct {
 typedef struct {
 	int threadId;
 	int clientSocket;
-	threadsSharedMemory *sharedMemory;
 } threadTCPArgs;
 
 int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieInfo);

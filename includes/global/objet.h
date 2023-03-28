@@ -19,7 +19,6 @@ typedef struct {} Probe_obj;
 typedef struct {} Heart_obj;
 typedef struct {} Bomb_obj;
 typedef struct {
-    int8_t life;
     int8_t color;
     int8_t orientation;
 } Player_obj;

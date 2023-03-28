@@ -3,6 +3,7 @@
 #define __PLAYER__
 
 #include <stdbool.h>
+#include "objet.h"
 
 typedef struct {
 	char name[255];
@@ -21,6 +22,8 @@ typedef struct {
 	short posX;
 	short posY;
 	int level;
+
+	Objet *obj;
 } Player;
 
 void player_free(Player *player);

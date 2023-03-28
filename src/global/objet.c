@@ -63,7 +63,6 @@ Objet* creerDoor(short x, short y, int8_t numdoor) {
 
 Objet* creerPlayer(short x, short y) {
     Objet* objet = initObjet(x, y, PLAYER_ID);
-    objet->player.life = 3;
     objet->player.orientation = RIGHT_ORIENTATION;
     objet->player.color = LBLUE_COLOR;
     return objet;

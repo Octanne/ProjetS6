@@ -25,7 +25,7 @@ int poserStart(Level* level, short x, short y);
 int poserProbe(Level* level, short x, short y);
 int poserRobot(Level* level, short x, short y);
 int poserLadder(Level* level, short x, short y);
-int poserPlayer(Level* level, short x, short y);
+Objet* poserPlayer(Level* level, short x, short y);
 
 #endif
 

@@ -36,8 +36,13 @@ int checkHitBox(Level* level, short x, short y, short xSize, short ySize) {
 			
 			// If the list is not empty, there is a collision
 			if (objs.tete != NULL) {
-				logs(L_DEBUG, "read => x: %d, y: %d (collision avec %d)", i, j, ((Objet*)objs.tete->elmt)->type);
-				return 0;
+
+				// Collision only with block, robot, probe
+				Objet* obj = (Objet*)objs.tete->elmt;
+				if (obj->isActive && (obj->type == BLOCK_ID || obj->type == ROBOT_ID || obj->type == PROBE_ID)) {
+					logs(L_DEBUG, "read => x: %d, y: %d (collision avec %d)", i, j, ((Objet*)objs.tete->elmt)->type);
+					return 0;
+				}
 			}
 			else
 				logs(L_DEBUG, "read => x: %d, y: %d (pas de collision)", i, j);
@@ -330,21 +335,22 @@ int poserLadder(Level* level, short x, short y) {
 }
 
 /**
- * @brief Create a wall at a position.
+ * @brief Place a player at a position and returns it.
  * 
  * @param level : The level.
  * @param x : The x position.
  * @param y : The y position.
  * 
- * @return 1 if a wall was created, 0 otherwise.
+ * @return The player if it was created, NULL otherwise.
  */
-int poserPlayer(Level* level, short x, short y) {
+Objet* poserPlayer(Level* level, short x, short y) {
 
 	// If the hitbox is free, create objet
 	if (checkHitBox(level, x, y, 3, 3)) {
-		levelAjouterObjet(level, creerPlayer(x, y));
-		return 1;
+		Objet* player = creerPlayer(x, y);
+		levelAjouterObjet(level, player);
+		return player;
 	}
-	return 0;
+	return NULL;
 }
 

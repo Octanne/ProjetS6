@@ -16,13 +16,55 @@
 #include "utils.h"
 #include "constants.h"
 #include "system_save.h"
+#include "level_update.h"
 
 #define NUM_PARTIES_PAR_PAGE 4
+
+threadsSharedMemory th_shared_memory;
 
 /**
  * @brief Function handling the SIGINT signal for TCP servers
 */
 void sigintHandler(int sig_num) {
+	// Logs and print
+	logs(L_INFO, "PartieManager | TCP Server | SIGINT signal received");
+	printf("PartieManager | TCP Server | SIGINT signal received\n");
+
+	// Mutex lock
+	pthread_mutex_lock(&th_shared_memory.mutex);
+
+	// Send to all players a leave message
+	NetMessage message;
+	message.type = TCP_REQ_PARTIE_LEAVE;
+	int i;
+	for (i = 0; i < th_shared_memory.nbThreads; i++) {
+		if (th_shared_memory.thread_states[i] != TH_STATE_DISCONNECTED) {
+
+			// Send the leave message
+			if (write(th_shared_memory.thread_sockets[i], &message, sizeof(NetMessage)) == -1) {
+				perror("PartieManager | TCP Server | Send leave message");
+			}
+
+			// Logs and print
+			logs(L_INFO, "PartieManager | TCP Server | Send leave message to player %d", i);
+			printf("PartieManager | TCP Server | Send leave message to player %d\n", i);
+
+			// Close the socket
+			if (close(th_shared_memory.thread_sockets[i]) == -1) {
+				perror("PartieManager | TCP Server | Close socket");
+			}
+
+			// Set the thread state to disconnected
+			th_shared_memory.thread_states[i] = TH_STATE_DISCONNECTED;
+		}
+	}
+
+	// Unlock mutex
+	pthread_mutex_unlock(&th_shared_memory.mutex);
+
+	// Exit the process
+	logs(L_INFO, "PartieManager | TCP Server | Exit process");
+	printf("PartieManager | TCP Server | Exit process\n");
 	exit(EXIT_SUCCESS);
 }
 
@@ -516,7 +558,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	int i;
 
 	// Create threadsSharedMemory and create thread list depending on the number of players
-	threadsSharedMemory th_shared_memory;
+	memset(&th_shared_memory, 0, sizeof(threadsSharedMemory));
 	th_shared_memory.threads = malloc(sizeof(pthread_t) * partieInfo.nbPlayers);
 	th_shared_memory.thread_states = malloc(sizeof(int) * partieInfo.nbPlayers);
 	th_shared_memory.thread_sockets = malloc(sizeof(int) * partieInfo.nbPlayers);
@@ -573,7 +615,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		char name[255];
 		sprintf(name, "Player %d", i);
 		strcpy(p.name, name);
-		p.life = 3;
+		p.life = 5;
 		p.nbBombs = 0;
 		p.isAlive = true;
 		p.isFreeze = false;
@@ -585,6 +627,16 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		p.posX = enterX;
 		p.posY = enterY;
 		p.level = 1;
+		p.obj = poserPlayer(level, enterX, enterY);
+		if (p.obj == NULL) {
+			logs(L_DEBUG, "PartieManager | partieProcessusManager | poserPlayer == NULL");
+			printf("PartieManager | partieProcessusManager | Error while placing the player on the map\n");
+			exit(EXIT_FAILURE);
+		}
+		p.obj->player.color = i % 4;
+		p.obj->player.orientation = RIGHT_ORIENTATION;
+
+		// Save the player in the shared memory
 		th_shared_memory.players[i] = p;
 	}
 
@@ -612,7 +664,6 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		// Link arguments to the thread
 		th_args_list[i].threadId = i;
 		th_args_list[i].clientSocket = th_shared_memory.thread_sockets[i] = clientSocket;
-		th_args_list[i].sharedMemory = &th_shared_memory;
 		logs(L_DEBUG, "PartieManager | partieProcessusManager | Thread %d linked to clientSocket %d", i, clientSocket);
 		printf("PartieManager | partieProcessusManager | Thread %d linked to clientSocket %d\n", i, clientSocket);
 
@@ -638,7 +689,15 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 		// Send an update to all clients and wait for an update
 		updatePartieTCP(&th_shared_memory);
-		pthread_cond_wait(&th_shared_memory.cond, &th_shared_memory.mutex);
+		pthread_cond_wait(&th_shared_memory.update_cond, &th_shared_memory.mutex);
+
+		// Check if there is remaining players
+		int remainingPlayers = 0;
+		for (i = 0; i < partieInfo.nbPlayers; i++)
+			if (th_shared_memory.thread_states[i] != TH_STATE_DISCONNECTED)
+				remainingPlayers++;
+		if (remainingPlayers == 0)
+			th_shared_memory.game_state = 2;
 	}
 
 	// Unlock mutex
@@ -686,9 +745,13 @@ void* partieThreadTCP(void *thread_args) {
 		
 		// Read the request
 		NetMessage request;
-		if (read(args->clientSocket, &request, sizeof(NetMessage)) == -1) {
-
-			// Check if the client has closed the connection or if there is an error
+		int readBytes = read(args->clientSocket, &request, sizeof(NetMessage));
+		if (readBytes == -1) {
+			logs(L_DEBUG, "PartieManager | partieThreadTCP | read == -1, ernno = %s", strerror(errno));
+			printf("PartieManager | partieThreadTCP | Error while reading the request from client %d, errno = %s\n", args->threadId, strerror(errno));
+			request.type = TCP_REQ_PARTIE_LEAVE;
+		}
+		else if (readBytes == 0) {
 			logs(L_DEBUG, "PartieManager | partieThreadTCP | Client %d has closed the connection", args->threadId);
 			printf("PartieManager | partieThreadTCP | Client %d has closed the connection\n", args->threadId);
 			request.type = TCP_REQ_PARTIE_LEAVE;
@@ -698,12 +761,12 @@ void* partieThreadTCP(void *thread_args) {
 		switch (request.type) {
 
 			case TCP_REQ_PARTIE_LEAVE:
-				leavePartieTCP(args, args->sharedMemory);
+				leavePartieTCP(args, &th_shared_memory);
 				loop = 0;
 				break;
 			
 			case TCP_REQ_INPUT_PLAYER:
-				inputPartieTCP(args, args->sharedMemory, request.dataInputPlayer.keyPress);
+				inputPartieTCP(args, &th_shared_memory, request.dataInputPlayer.keyPress);
 				break;
 
 			default:
@@ -796,11 +859,25 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 */
 void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 
+	// Lock the mutex
+	pthread_mutex_lock(&sharedMemory->mutex);
+
 	// Remove the thread from the list
 	sharedMemory->thread_states[args->threadId] = TH_STATE_DISCONNECTED;
 
 	// Delete the client from the game
-	// TODO
+	sharedMemory->players[args->threadId].isAlive = false;
+
+	// Remove the player from the level
+	Objet* player = sharedMemory->players[args->threadId].obj;
+	Level* lvl = liste_get(&sharedMemory->levels, sharedMemory->players[args->threadId].level);
+	levelSupprimerObjet(lvl, player);
+
+	// Signal condition variable
+	pthread_cond_broadcast(&sharedMemory->update_cond);
+
+	// Unlock the mutex
+	pthread_mutex_unlock(&sharedMemory->mutex);
 }
 
 /**
@@ -811,16 +888,154 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
  * @param input			Input of the client (key pressed)
 */
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input) {
-	// TODO
-
-	// Signal condition variable
-	pthread_mutex_lock(&sharedMemory->mutex);
-	pthread_cond_signal(&sharedMemory->update_cond);
-	pthread_mutex_unlock(&sharedMemory->mutex);
 
 	// For debug
 	logs(L_DEBUG, "PartieManager | inputPartieTCP | Thread %d input %d", args->threadId, input);
 	printf("PartieManager | inputPartieTCP | Thread %d input %d\n", args->threadId, input);
+
+	// Lock the mutex
+	pthread_mutex_lock(&sharedMemory->mutex);
+
+	// TODO : Handle the input
+	Player* player = &sharedMemory->players[args->threadId];
+	Level *lvl = liste_get(&sharedMemory->levels, player->level);
+	short x = player->obj->x;
+	short y = player->obj->y;
+	switch (input) {
+
+		case KEY_RIGHT:
+		case KEY_LEFT:
+		case KEY_UP:
+		case KEY_DOWN:
+
+			// Get future position
+			switch (input) {
+				case KEY_RIGHT: x++; player->obj->player.orientation = RIGHT_ORIENTATION; break;
+				case KEY_LEFT: x--; player->obj->player.orientation = LEFT_ORIENTATION; break;
+				case KEY_UP: y--; break;
+				case KEY_DOWN: y++; break;
+			}
+
+			// Check if there is a collision
+			Liste collision = rechercherObjet(lvl, x, y);
+			if (collision.tete == NULL) {
+
+				// No collision, move the player
+				player->obj->x = x;
+				player->obj->y = y;
+			}
+
+			// Else, conditions on type
+			else {
+				Objet* obj = (Objet*)collision.tete->elmt;
+				switch (obj->type) {
+
+					case BLOCK_ID:
+						// Do nothing
+						break;
+					
+					case LADDER_ID:
+					case START_ID:
+					case PLAYER_ID:
+					case ROBOT_ID:	// ROBOT thread will attack the player
+					case PROBE_ID:	// PROBE thread will attack the player
+						// Move the player
+						player->obj->x = x;
+						player->obj->y = y;
+						break;
+					
+					case TRAP_ID:
+						// Kill the player if trap is activated and player not invincible
+						if (obj->isActive && !sharedMemory->players[args->threadId].isInvincible) {
+							sharedMemory->players[args->threadId].isAlive = false;
+						}
+						else {
+							// Move the player
+							player->obj->x = x;
+							player->obj->y = y;
+						}
+						break;
+					
+					case GATE_ID:
+						switch (obj->gate.numgate) {
+							case 1:
+								if (player->key1) {
+									// Teleport the player to the other gate
+									// TODO Find the other gate 
+								}
+								break;
+							case 2:
+								if (player->key2) {
+									// Teleport the player to the other gate
+									// TODO Find the other gate 
+								}
+								break;
+							case 3:
+								if (player->key3) {
+									// Teleport the player to the other gate
+									// TODO Find the other gate 
+								}
+								break;
+							case 4:
+								if (player->key4) {
+									// Teleport the player to the other gate
+									// TODO Find the other gate 
+								}
+								break;
+						}
+						break;
+					
+					case KEY_ID:
+						// Give the key to the player
+						switch (obj->key.numkey) {
+							case 1: player->key1 = true; break;
+							case 2: player->key2 = true; break;
+							case 3: player->key3 = true; break;
+							case 4: player->key4 = true; break;
+						}
+						// Move the player
+						player->obj->x = x;
+						player->obj->y = y;
+						break;
+					
+					case DOOR_ID:
+						// Teleport the player to the other door
+						// TODO Find the other door
+						break;
+
+					case EXIT_ID:
+						// Win the game
+						// TODO
+						break;
+					
+					case HEART_ID:
+						// Give the heart to the player
+						player->life++;
+						if (player->life > 5)
+							player->life = 5;
+						break;
+					
+					case BOMB_ID:
+						// Give the bomb to the player
+						player->nbBombs++;
+						if (player->nbBombs > 3)
+							player->nbBombs = 3;
+						break;
+				}
+			}
+			break;
+		
+		case KEY_VALIDATE:
+			// Drop a bomb at the player position
+			if (player->nbBombs > 0) {
+				// TODO
+			}
+			break;
+	}
+
+	// Signal condition variable
+	pthread_cond_broadcast(&sharedMemory->update_cond);
+	pthread_mutex_unlock(&sharedMemory->mutex);
 
 	// Send text info to the client
 	NetMessage response;

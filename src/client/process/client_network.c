@@ -407,9 +407,11 @@ void* tcp_read_handler(void *arg) {
 		
 		// On attend la réponse du serveur TCP
 		NetMessage response;
-		if (read(gameInfo->netSocket.tcpSocket.sockfd, &response, sizeof(NetMessage)) == -1) {
+		memset(&response, 0, sizeof(NetMessage));
+		int readBytes = read(gameInfo->netSocket.tcpSocket.sockfd, &response, sizeof(NetMessage));
 
-			// Error handling
+		// Error handling
+		if (readBytes == -1) {
 			if (errno == EINTR) {
 				logs(L_INFO, "Network | TCP | Network closed while receiving response");
 			} else if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -419,18 +421,38 @@ void* tcp_read_handler(void *arg) {
 				logs(L_INFO, "Network | TCP | Error receiving response : %s", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-		} else  {
+		}
+		else if (readBytes == 0) {
+			logs(L_INFO, "Network | TCP | Server closed connection");
+			exit(EXIT_SUCCESS);
+		}
+
+		// Message received
+		else {
 			logs(L_INFO, "Network | TCP | Message received");
-			if (response.type == TCP_REQ_GAME_UPDATE) {
-				logs(L_INFO, "Network | TCP | Update message received");
-				update_game_gui(gameInfo, &response.dataUpdateGame);
-				logs(L_INFO, "Network | TCP | Update message processed");
-			} else if (response.type == TCP_REQ_TEXT_INFO_GUI) {
-				logs(L_INFO, "Network | TCP | Message to display received");
-				write_text_info_bar(gameInfo, &response.dataTextInfoGUI);
-				logs(L_INFO, "Network | TCP | Message to display processed");
-			} else {
-				logs(L_INFO, "Network | TCP | Unknown message received");
+
+			// On traite le message
+			switch (response.type) {
+
+				case TCP_REQ_GAME_UPDATE:
+					logs(L_INFO, "Network | TCP | Update message received");
+					update_game_gui(gameInfo, &response.dataUpdateGame);
+					logs(L_INFO, "Network | TCP | Update message processed");
+					break;
+
+				case TCP_REQ_TEXT_INFO_GUI:
+					logs(L_INFO, "Network | TCP | Message to display received");
+					write_text_info_bar(gameInfo, &response.dataTextInfoGUI);
+					logs(L_INFO, "Network | TCP | Message to display processed");
+					break;
+
+				case TCP_REQ_PARTIE_LEAVE:
+					logs(L_INFO, "Network | TCP | Leave message received");
+					exit(EXIT_SUCCESS);
+					break;
+
+				default:
+					logs(L_INFO, "Network | TCP | Unknown message received");
 			}
 		}
 	}
@@ -518,7 +540,6 @@ void close_tcp_socket(GameInterface *gameI) {
  * 
  * @param tcpSocket		TCPSocketData
  * @param message		NetMessage to send
- * 
  */
 void send_tcp_message(TCPSocketData *tcpSocket, NetMessage message) {
 	// Send message
