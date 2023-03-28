@@ -43,7 +43,7 @@ void sig_usr(int signo) {
 NetworkSocket init_udp_network(int argc, char *argv[]) {
 
 	// Logs and variables init
-	logs(L_INFO, "Network | Init network...");
+	logs(L_INFO, "Network | UDP | Init network...");
 	int opt;
 	int port = 0;
 	char *host = NULL;
@@ -69,7 +69,7 @@ NetworkSocket init_udp_network(int argc, char *argv[]) {
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 	if (sigaction(SIGUSR1, &sa, NULL) < 0) {
-		logs(L_INFO, "Network | Sigaction error");
+		logs(L_INFO, "Network | UDP | Sigaction error");
 		exit(EXIT_FAILURE);
 	}
 
@@ -80,13 +80,13 @@ NetworkSocket init_udp_network(int argc, char *argv[]) {
 	}
 
 	// Logs the port and the host
-	logs(L_INFO, "Network | Port : %d, Host : %s", port, host);
+	logs(L_INFO, "Network | UDP | Port : %d, Host : %s", port, host);
 	
 
 	// Création de la socket avec vérification
 	int sockfd;
 	if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		logs(L_INFO, "Network | Socket creation error");
+		logs(L_INFO, "Network | UDP | Socket creation error");
 		exit(EXIT_FAILURE);
 	}
 
@@ -96,7 +96,7 @@ NetworkSocket init_udp_network(int argc, char *argv[]) {
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(port);
 	if (inet_pton(AF_INET, host, &serv_addr.sin_addr) != 1) {
-		logs(L_INFO, "Network | Error converting address");
+		logs(L_INFO, "Network | UDP | Error converting address");
 		perror("Error converting address");
 		exit(EXIT_FAILURE);
 	}
@@ -106,7 +106,7 @@ NetworkSocket init_udp_network(int argc, char *argv[]) {
 	tv.tv_sec = NET_TIMEOUT;
 	tv.tv_usec = 0;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
-		logs(L_INFO, "Network | Error setting timeout");
+		logs(L_INFO, "Network | UDP | Error setting timeout");
 		perror("Error setting timeout");
 		exit(EXIT_FAILURE);
 	}
@@ -124,15 +124,15 @@ NetworkSocket init_udp_network(int argc, char *argv[]) {
 	NetMessage message;
 	message.type = NET_REQ_PING;
 	if (send_udp_message(&networkSocket.udpSocket, &message).type != NET_REQ_PING) {
-		logs(L_INFO, "Network | Error the server is not responding");
-		printf("Network | Error the server is not responding\n");
+		logs(L_INFO, "Network | UDP | Error the server is not responding");
+		printf("Network | UDP | Error the server is not responding\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// Logs and return
-	logs(L_INFO, "Network | Network initialized");
+	logs(L_INFO, "Network | UDP | Network initialized");
 	networkSocket.udpSocket.network_init = true;
-	logs(L_INFO, "Network | Return socket data info");
+	logs(L_INFO, "Network | UDP | Return socket data info");
 	return networkSocket;
 }
 
@@ -157,24 +157,24 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
 		// Send message
 		if (sendto(udpSocket->sockfd, message, sizeof(NetMessage), 0, (struct sockaddr*)&udpSocket->serv_addr, sizeof(struct sockaddr_in)) == -1) {
 			if (errno == EINTR) {
-				logs(L_INFO, "Network | Network closed while sending message");
+				logs(L_INFO, "Network | UDP | Network closed while sending message");
 				exit(EXIT_SUCCESS);
 			}
 			perror("Error sending message");
-			logs(L_INFO, "Network | Error sending message");
+			logs(L_INFO, "Network | UDP | Error sending message");
 			exit(EXIT_FAILURE);
 		}
-		logs(L_INFO, "Network | Message sent");
+		logs(L_INFO, "Network | UDP | Message sent type = %d", message->type);
 
 		// Receive response
 		if (!udpSocket->waitlist_running && recvfrom(udpSocket->sockfd, &response, sizeof(response), 0, NULL, 0) == -1) {
 
 			// Error handling
 			if (errno == EINTR) {
-				logs(L_INFO, "Network | Network closed while receiving response");
+				logs(L_INFO, "Network | UDP | Network closed while receiving response");
 				exit(EXIT_SUCCESS);
 			} else if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				logs(L_INFO, "Network | Timeout");
+				logs(L_INFO, "Network | UDP | Timeout");
 				if (!udpSocket->network_init) {
 					printf("Timeout, try %d/%d...\r", 1 + nb_try, NET_MAX_TRIES);
 					fflush(stdout);
@@ -182,7 +182,7 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
 				nb_try++;
 			} else {
 				perror("Error receiving response");
-				logs(L_INFO, "Network | Error receiving response %d", errno);
+				logs(L_INFO, "Network | UDP | Error receiving response %d", errno);
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -190,14 +190,14 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
 		else {
 			// If the waitlist is running
 			if (udpSocket->waitlist_running) {
-				logs(L_INFO, "Network | Waitlist is running, waiting for response");
+				logs(L_INFO, "Network | UDP | Waitlist is running, waiting for response");
 
 				// Wait for the response (a thread will set udpSocket->waitlist_message and wake up this thread)
 				pause();
 
 				// Check if the response is NULL
 				if (udpSocket->waitlist_message.type == -1) {
-					logs(L_INFO, "Network | Error receiving response (waitlist_message is NULL (type = -1))");
+					logs(L_INFO, "Network | UDP | Error receiving response (waitlist_message is NULL (type = -1))");
 					exit(EXIT_FAILURE);
 				}
 
@@ -206,8 +206,8 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
 			}
 
 			// Logs
-			logs(L_INFO, "Network | Message received");
-			logs(L_INFO, "Network | Message type : %d", message->type);
+			logs(L_INFO, "Network | UDP | Message received");
+			logs(L_INFO, "Network | UDP | Message type : %d", message->type);
 
 			// Check if the response is the expected one
 			if (message->type == response.type) {
@@ -215,16 +215,16 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
 			
 				// If elses for each message type
 				if (message->type == NET_REQ_PING)
-					logs(L_INFO, "Network | Ping received");
+					logs(L_INFO, "Network | UDP | Ping received");
 				else if (message->type >= UDP_REQ_PARTIE_LIST && message->type <= UDP_REQ_WAITLIST_PARTIE)
-					logs(L_INFO, "Network | Partie Liste received");
+					logs(L_INFO, "Network | UDP | Partie Liste received");
 			}
 			// Else, the message is not the expected one
 			else {
-				logs(L_INFO, "Network | Unknown message received");
+				logs(L_INFO, "Network | UDP | Unknown message received");
 				received = false;
 				if (nb_try++ >= NET_MAX_TRIES) {
-					logs(L_INFO, "Network | Max tries reached");
+					logs(L_INFO, "Network | UDP | Max tries reached");
 					printf("Max tries reached, exiting...\n");
 					exit(EXIT_FAILURE);
 				}
@@ -239,7 +239,7 @@ NetMessage send_udp_message(UDPSocketData *udpSocket, NetMessage *message) {
  * @brief Stop waitlist thread by exiting it
  */
 void stop_waitlist() {
-	logs(L_INFO, "Network | Stop waitlist thread");
+	logs(L_INFO, "Network | UDP | Stop waitlist thread");
 	pthread_exit(NULL);
 }
 
@@ -269,23 +269,23 @@ void* waitlist_handler(void *arg) {
 
 			// Error handling
 			if (errno == EINTR) {
-				logs(L_INFO, "Network | Network closed while receiving response");
+				logs(L_INFO, "Network | UDP | Network closed while receiving response");
 				exit(EXIT_SUCCESS);
 			} else if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				logs(L_INFO, "Network | Timeout rewaiting for response");
+				logs(L_INFO, "Network | UDP | Timeout rewaiting for response");
 			} else {
 				perror("Error receiving response");
-				logs(L_INFO, "Network | Error receiving response");
+				logs(L_INFO, "Network | UDP | Error receiving response");
 				exit(EXIT_FAILURE);
 			}
 		}
 		// On a reçu une réponse
 		else {
-			logs(L_INFO, "Network | Waitlist Message received");
+			logs(L_INFO, "Network | UDP | Waitlist Message received");
 
 			// If the response is a waitlist message and the waitState is true
 			if (response.type == UDP_REQ_WAITLIST_PARTIE && response.partieWaitListMessage.waitState) {
-				logs(L_INFO, "Network | Waitlist received");
+				logs(L_INFO, "Network | UDP | Waitlist received");
 
 				// If the port is -1, exit the thread
 				if (response.partieWaitListMessage.portTCP == -1) {
@@ -294,7 +294,7 @@ void* waitlist_handler(void *arg) {
 
 				// On initialise la connexion TCP
 				if (init_tcp_network(gameInfo, response.partieWaitListMessage.portTCP) == -1) {
-					logs(L_INFO, "Network | Error initializing TCP network");
+					logs(L_INFO, "Network | UDP | Error initializing TCP network");
 					exit(EXIT_FAILURE);
 				}
 
@@ -310,7 +310,7 @@ void* waitlist_handler(void *arg) {
 
 				// Send signal to main thread
 				kill(getpid(), SIGUSR1);
-				logs(L_INFO, "Network | Enregistrement du message pour le threads principal"); 
+				logs(L_INFO, "Network | UDP | Enregistrement du message pour le threads principal"); 
 			}
 		}
 	}
@@ -336,7 +336,7 @@ void wait_tcp_connection(GameInterface *gameI, int tcpPort) {
 		// On initialise la connexion TCP
 		gameI->menuInfo.waitToJoin = false;
 		if (init_tcp_network(gameI, tcpPort) == -1) {
-			logs(L_INFO, "Network | Error initializing TCP network");
+			logs(L_INFO, "Network | TCP | Error initializing TCP network");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -350,7 +350,7 @@ void wait_tcp_connection(GameInterface *gameI, int tcpPort) {
 void stop_wait_tcp_connection(GameInterface *gameI) {
 
 	// Logs
-	logs(L_INFO, "Network | Stopping wait tcp connection thread...");
+	logs(L_INFO, "Network | TCP | Stopping wait tcp connection thread...");
 
 	// Check if waitlist is running
 	if (gameI->netSocket.udpSocket.waitlist_running) {
@@ -375,12 +375,12 @@ void stop_read_tcp_socket(GameInterface *gameI) {
 		// Kill waitlist thread
 		pthread_kill(gameI->netSocket.pid_receive_tcp, SIGINT);
 		pthread_join(gameI->netSocket.pid_receive_tcp, NULL);
-		logs(L_INFO, "Network | read tcp socket thread joined");
+		logs(L_INFO, "Network | TCP | read tcp socket thread joined");
 	}
 }
 
 void stop_read_tcp_handler(int sig) {
-	logs(L_INFO, "Network | Stopping read tcp socket thread...");
+	logs(L_INFO, "Network | TCP | Stopping read tcp socket thread...");
 }
 
 /**
@@ -479,7 +479,7 @@ int init_tcp_network(GameInterface *gameI, int port) {
 	}
 
 	// Logs and return
-	logs(L_INFO, "Network | Init TCP network done!");
+	logs(L_INFO, "Network | TCP | Init TCP network done!");
 
 	// Switch to Game GUI
 	switch_gui(gameI);
@@ -511,10 +511,12 @@ void close_tcp_socket(GameInterface *gameI) {
  */
 void send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
 	// Send message
+	logs(L_INFO, "Network | TCP | Sending message to server... (type= %d)", message->type);
 	if (send(tcpSocket->sockfd, message, sizeof(NetMessage), 0) == -1) {
 		perror("Error sending message");
 		logs(L_INFO, "Network | TCP | Error sending message : %s", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
+	logs(L_INFO, "Network | TCP | Message sent! (type= %d)", message->type);
 }
 
