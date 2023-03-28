@@ -452,6 +452,13 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 		return -1;
 	}
 
+	// Listen on the socket
+	logs(L_DEBUG, "PartieManager | startPartieProcessus | Listen on the socket");
+	if (listen(socketTCP, 10) == -1) {
+		logs(L_DEBUG, "PartieManager | startPartieProcessus | listen == -1");
+		exit(EXIT_FAILURE);
+	}
+
 	// Fill the PartieStatutInfo
 	partieInfo->portTCP = ntohs(socketAddrOut.sin_port);
 
@@ -507,13 +514,6 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 */
 void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	int i;
-
-	// Listen on the socket
-	logs(L_DEBUG, "PartieManager | partieProcessusManager | Listen on the socket");
-	if (listen(sockedTCP, 10) == -1) {
-		logs(L_DEBUG, "PartieManager | partieProcessusManager | listen == -1");
-		exit(EXIT_FAILURE);
-	}
 
 	// Create threadsSharedMemory and create thread list depending on the number of players
 	threadsSharedMemory th_shared_memory;
@@ -656,7 +656,7 @@ void* partieThreadTCP(void *thread_args) {
 		
 		// Read the request
 		NetMessage request;
-		if (recvfrom(args->clientSocket, &request, sizeof(NetMessage), 0, NULL, NULL) == -1) {
+		if (read(args->clientSocket, &request, sizeof(NetMessage)) == -1) {
 
 			// Check if the client has closed the connection or if there is an error
 			logs(L_DEBUG, "PartieManager | partieThreadTCP | Client %d has closed the connection", args->threadId);
@@ -732,7 +732,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 					free(levelBytes);
 
 					// Send the response
-					if (send(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage), 0) == -1) {
+					if (write(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage)) == -1) {
 						logs(L_DEBUG, "PartieManager | updatePartieTCP | send == -1");
 						printf("PartieManager | updatePartieTCP | Error while sending the response to the client %d\n", i);
 					}
@@ -781,7 +781,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	response.dataTextInfoGUI.line = 1;
 
 	// Send the response
-	if (sendto(args->clientSocket, &response, sizeof(NetMessage), 0, NULL, 0) == -1) {
+	if (write(args->clientSocket, &response, sizeof(NetMessage)) == -1) {
 		logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
 		exit(EXIT_FAILURE);
 	}

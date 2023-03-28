@@ -407,7 +407,7 @@ void* tcp_read_handler(void *arg) {
 		
 		// On attend la réponse du serveur TCP
 		NetMessage response;
-		if (recv(gameInfo->netSocket.tcpSocket.sockfd, &response, sizeof(response), 0) == -1) {
+		if (read(gameInfo->netSocket.tcpSocket.sockfd, &response, sizeof(NetMessage)) == -1) {
 
 			// Error handling
 			if (errno == EINTR) {
@@ -469,7 +469,7 @@ int init_tcp_network(GameInterface *gameI, int port) {
 	logs(L_INFO, "Network | TCP | Server address : %s:%d", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
 
 	// Connect to server
-	if (connect(gameI->netSocket.tcpSocket.sockfd, (struct sockaddr *)&gameI->netSocket.tcpSocket.serv_addr, sizeof(gameI->netSocket.tcpSocket.serv_addr)) == -1) {
+	if (connect(gameI->netSocket.tcpSocket.sockfd, (struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
 		perror("Error connecting to server");
 		logs(L_INFO, "Network | TCP | Error connecting to server : %s", strerror(errno));
 		return -1;
@@ -517,7 +517,7 @@ void close_tcp_socket(GameInterface *gameI) {
 void send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
 	// Send message
 	logs(L_INFO, "Network | TCP | Sending message to server... (type= %d)", message->type);
-	if (send(tcpSocket->sockfd, message, sizeof(NetMessage), 0) == -1) {
+	if (write(tcpSocket->sockfd, message, sizeof(NetMessage)) == -1) {
 		perror("Error sending message");
 		logs(L_INFO, "Network | TCP | Error sending message : %s", strerror(errno));
 		exit(EXIT_FAILURE);
