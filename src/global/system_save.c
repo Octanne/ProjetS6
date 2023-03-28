@@ -1195,18 +1195,6 @@ int get_level(file_t file, int numLevel, Level* level) {
 			return -1;
 		}
 
-		// Search start block of the level
-		level->enterX = level->enterY = 0;
-		EltListe* elt;
-		for (elt = level->listeObjet.tete; elt != NULL; elt = elt->suivant) {
-			Objet* obj = (Objet*) elt->elmt;
-			if (obj->type == START_ID) {
-				level->enterX = obj->x;
-				level->enterY = obj->y;
-				elt = NULL;
-			}
-		}
-
 		// Logs and return (success)
         logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, level->listeObjet.taille);
         return 0;

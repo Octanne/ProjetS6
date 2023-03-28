@@ -20,8 +20,6 @@ typedef struct {
     Liste listeObjet;
     SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
     Objet* matriceCollide[MATRICE_LEVEL_SIZE];
-
-	short enterX, enterY;	// Position de l'entrée du niveau
 } Level;
 
 SpriteData creerSpriteData(char sprite, int color);

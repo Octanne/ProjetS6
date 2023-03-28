@@ -163,8 +163,9 @@ void update_game_gui(GameInterface *gameI, DataUpdateGame *data) {
 	refresh_player_menu(gameI);
 
 	// Update level game data
-	Level level = convert_bytes_to_level(data->levelBytes, data->sizeLevel);
-	load_level(gameI, &level);
+	Level *level = malloc(sizeof(Level));
+	*level = convert_bytes_to_level(data->levelBytes, data->sizeLevel);
+	load_level(gameI, level);
 
 	// Unlock mutex
 	pthread_mutex_unlock(&gameI->mutex);

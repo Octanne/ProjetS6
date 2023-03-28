@@ -498,6 +498,11 @@ int init_tcp_network(GameInterface *gameI, int port) {
  */
 void close_tcp_socket(GameInterface *gameI) {
 
+	// Send TCP message to server to close the connection
+	NetMessage message;
+	message.type = TCP_REQ_PARTIE_LEAVE;
+	send_tcp_message(&gameI->netSocket.tcpSocket, message);
+
 	// Error handling
 	if (close(gameI->netSocket.tcpSocket.sockfd) == -1) {
 		perror("Error closing socket");
@@ -514,14 +519,14 @@ void close_tcp_socket(GameInterface *gameI) {
  * @param message		NetMessage to send
  * 
  */
-void send_tcp_message(TCPSocketData *tcpSocket, NetMessage *message) {
+void send_tcp_message(TCPSocketData *tcpSocket, NetMessage message) {
 	// Send message
-	logs(L_INFO, "Network | TCP | Sending message to server... (type= %d)", message->type);
-	if (write(tcpSocket->sockfd, message, sizeof(NetMessage)) == -1) {
+	logs(L_INFO, "Network | TCP | Sending message to server... (type= %d)", message.type);
+	if (write(tcpSocket->sockfd, &message, sizeof(NetMessage)) == -1) {
 		perror("Error sending message");
 		logs(L_INFO, "Network | TCP | Error sending message : %s", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	logs(L_INFO, "Network | TCP | Message sent! (type= %d)", message->type);
+	logs(L_INFO, "Network | TCP | Message sent! (type= %d)", message.type);
 }
 

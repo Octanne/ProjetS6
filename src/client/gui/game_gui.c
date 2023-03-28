@@ -199,7 +199,7 @@ void send_input_to_server(GameInterface *gameI, int key) {
     msg.type = TCP_REQ_INPUT_PLAYER;
     msg.dataInputPlayer.keyPress = key;
 
-    send_tcp_message(&gameI->netSocket.tcpSocket, &msg);
+    send_tcp_message(&gameI->netSocket.tcpSocket, msg);
 }
 
 void game_keyboard_handler(GameInterface *gameI, int key) {
