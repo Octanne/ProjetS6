@@ -59,7 +59,7 @@ void game_keyboard_handler(GameInterface *gameI, int key);
  * 
  * @param gameI 
  */
-void load_level(GameInterface *gameI, Level * newLevel);
+void load_level(GameInterface *gameI, Level newLevel);
 /**
  * @brief Rafraichit le GUI du jeu, le Niveau
  * 

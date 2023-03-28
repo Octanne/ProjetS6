@@ -28,13 +28,11 @@ void clear_level(GameInterface *gameI) {
 /**
  * @brief Function to load a level.
  */
-void load_level(GameInterface *gameI, Level *newLevel) {
-    level_free(gameI->gameInfo.level);
-    gameI->gameInfo.level = newLevel;
+void load_level(GameInterface *gameI, Level newLevel) {
+    *gameI->gameInfo.level = newLevel;
 
     // Logs and refresh level
-    logs(L_INFO, "Main | New level load : %d", newLevel);
-    logs(L_INFO, "Main | Level %d : %d items loaded", newLevel, gameI->gameInfo.level->listeObjet.taille);
+    logs(L_INFO, "Main | Level %d : %d items loaded", gameI->gameInfo.player.level, gameI->gameInfo.level->listeObjet.taille);
     set_text_info_gui(gameI, "Level loaded", 1, GREEN_COLOR);
 
     refresh_level(gameI);
