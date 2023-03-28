@@ -9,6 +9,7 @@
 #include "liste.h"
 #include "data_update.h"
 #include "net_struct.h"
+#include "player.h"
 
 typedef struct {
 	char map[255];
@@ -24,12 +25,12 @@ typedef struct {
 	Liste playersInWait;
 } PartieStatutInfo;
 
-typedef struct {
+/**typedef struct {
 	Liste players;
 	Liste load_level;
 
 	PartieStatutInfo *infosStatus;
-} Partie;
+} Partie;**/
 
 typedef struct {
 	Liste partieInfoListe;
@@ -51,11 +52,18 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 #define TH_STATE_DISCONNECTED -1
 
 typedef struct {
-	pthread_mutex_t mutex;	// Pthread mutex		USELESS FOR NOW
+	pthread_mutex_t mutex;	// Pthread mutex		Used to lock the shared memory
 	pthread_cond_t cond;	// Pthread condition	USELESS FOR NOW
 	pthread_t *threads;		// List of threads
 	int *thread_states;		// Thread states (disconnected, connected, etc.)
+	int *thread_sockets;	// Thread sockets
 	int nbThreads;			// Number of threads
+
+	// Game data
+	int game_state;				// Game state (0 = waiting, 1 = playing, 2 = end)
+	pthread_cond_t update_cond;	// Pthread condition	Used to wait for an update
+	Player *players;			// Store players to send efficiently to clients
+	Liste levels;				// Store levels in a list
 } threadsSharedMemory;
 
 typedef struct {

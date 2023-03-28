@@ -1114,7 +1114,7 @@ int remove_level(file_t file, int numLevel) {
  * @param numLevel the level number
  * @param level the level pointer
  * 
- * @return 1 if success, -1 if error
+ * @return 0 if success, -1 if error
  */
 int get_level(file_t file, int numLevel, Level* level) {
 
@@ -1194,8 +1194,22 @@ int get_level(file_t file, int numLevel, Level* level) {
 			perror("Error while closing file in get_level\n");
 			return -1;
 		}
+
+		// Search start block of the level
+		level->enterX = level->enterY = 0;
+		EltListe* elt;
+		for (elt = level->listeObjet.tete; elt != NULL; elt = elt->suivant) {
+			Objet* obj = (Objet*) elt->elmt;
+			if (obj->type == START_ID) {
+				level->enterX = obj->x;
+				level->enterY = obj->y;
+				elt = NULL;
+			}
+		}
+
+		// Logs and return (success)
         logs(L_DEBUG, "Get_level | level : %d, success! %d items loaded!", numLevel, level->listeObjet.taille);
-        return 1;
+        return 0;
     }
 
     // Close file

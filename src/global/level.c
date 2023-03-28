@@ -163,7 +163,8 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     logs(L_INFO, "Level Converter | Convert level to bytes: %d items.", level.listeObjet.taille);
 
 	// Calculate size
-    *size = level.listeObjet.taille * sizeof(Objet);
+	if (size != NULL)
+		*size = level.listeObjet.taille * sizeof(Objet);
 
 	// Memory allocation
     char* buffer = malloc(*size);
@@ -184,7 +185,8 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     }
 
 	// Logs and return
-    logs(L_INFO, "Level Converter | Convert level to bytes: Success! %d bytes.", *size);
+	if (size != NULL)
+		logs(L_INFO, "Level Converter | Convert level to bytes: Success! %d bytes.", *size);
     return buffer;
 }
 

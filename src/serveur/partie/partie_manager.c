@@ -15,6 +15,7 @@
 
 #include "utils.h"
 #include "constants.h"
+#include "system_save.h"
 
 #define NUM_PARTIES_PAR_PAGE 4
 
@@ -505,8 +506,10 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
  * @param partieInfo	PartieStatutInfo containing informations about the game
 */
 void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
+	int i;
 
 	// Listen on the socket
+	logs(L_DEBUG, "PartieManager | partieProcessusManager | Listen on the socket");
 	if (listen(sockedTCP, 10) == -1) {
 		logs(L_DEBUG, "PartieManager | partieProcessusManager | listen == -1");
 		exit(EXIT_FAILURE);
@@ -519,11 +522,55 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	th_shared_memory.nbThreads = partieInfo.nbPlayers;
 	memset(th_shared_memory.thread_states, 0, sizeof(int) * partieInfo.nbPlayers);
 
+	// Define game part
+	th_shared_memory.game_state = 0;
+	pthread_cond_init(&th_shared_memory.update_cond, NULL);
+	th_shared_memory.players = malloc(sizeof(Player) * partieInfo.nbPlayers);
+
+	// Load all the levels in the server
+	th_shared_memory.levels = liste_create(true);
+	file_t level_file = load_file(partieInfo.map);
+	int loop = 0;
+	i = 0;
+	while (loop == 0) {
+
+		// Try to load the level
+		Level *level = malloc(sizeof(Level));
+		loop = get_level(level_file, i++, level);
+
+		// Add the level to the list if it was loaded, else free the memory
+		if (loop == 0)
+			liste_add(&th_shared_memory.levels, level, TYPE_LEVEL);
+		else
+			free(level);
+	}
+
+	// Place the players on the map
+	Level* level = th_shared_memory.levels.tete->elmt;
+	for (i = 0; i < partieInfo.nbPlayers; i++) {
+		Player p;
+		char* name = malloc(sizeof(p.name));
+		sprintf(name, "Player %d", i);
+		strcpy(p.name, name);
+		p.life = 3;
+		p.nbBombs = 0;
+		p.isAlive = true;
+		p.isFreeze = false;
+		p.isInvincible = false;
+		p.key1 = false;
+		p.key2 = false;
+		p.key3 = false;
+		p.key4 = false;
+		p.posX = level->enterX;
+		p.posY = level->enterY;
+		p.level = 1;
+		th_shared_memory.players[i] = p;
+	}
+
 	// Create threadTCPArgs list to pass arguments to threads
 	threadTCPArgs *th_args_list = malloc(sizeof(threadTCPArgs) * partieInfo.nbPlayers);
 
 	// Wait for clients to connect
-	int i;
 	for (i = 0; i < partieInfo.nbPlayers; i++) {
 
 		// Accept a client
@@ -537,7 +584,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 		// Link arguments to the thread
 		th_args_list[i].threadId = i;
-		th_args_list[i].clientSocket = clientSocket;
+		th_args_list[i].clientSocket = th_shared_memory.thread_sockets[i] = clientSocket;
 		th_args_list[i].sharedMemory = &th_shared_memory;
 
 		// Create the thread
@@ -546,7 +593,26 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_create != 0");
 			exit(EXIT_FAILURE);
 		}
+
+		// Logs
+		logs(L_DEBUG, "PartieManager | partieProcessusManager | Thread %d created", i);
+		printf("PartieManager | partieProcessusManager | Thread %d created\n", i);
 	}
+
+	// Lock mutex and set game_state to 1
+	pthread_mutex_lock(&th_shared_memory.mutex);
+	th_shared_memory.game_state = 1;
+
+	// While the game is not finished,
+	while (th_shared_memory.game_state == 1) {
+
+		// Send an update to all clients and wait for an update
+		updatePartieTCP(&th_shared_memory);
+		pthread_cond_wait(&th_shared_memory.cond, &th_shared_memory.mutex);
+	}
+
+	// Unlock mutex
+	pthread_mutex_unlock(&th_shared_memory.mutex);
 
 	// Wait for all threads to finish
 	for (i = 0; i < partieInfo.nbPlayers; i++) {
@@ -560,10 +626,15 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	}
 
 	// Free the memory
+	liste_free(&th_shared_memory.levels, true);
 	free(th_shared_memory.threads);
 	free(th_args_list);
+	free(th_shared_memory.thread_states);
+	free(th_shared_memory.players);
 
-	// Exit the processus
+	// Exit the processus with success
+	logs(L_DEBUG, "PartieManager | partieProcessusManager | Processus %d ended", getpid());
+	printf("PartieManager | partieProcessusManager | Processus %d ended\n", getpid());
 	exit(EXIT_SUCCESS);
 }
 
@@ -586,11 +657,11 @@ void* partieThreadTCP(void *thread_args) {
 		// Read the request
 		NetMessage request;
 		if (recvfrom(args->clientSocket, &request, sizeof(NetMessage), 0, NULL, NULL) == -1) {
+
 			// Check if the client has closed the connection or if there is an error
 			logs(L_DEBUG, "PartieManager | partieThreadTCP | Client %d has closed the connection", args->threadId);
-			leavePartieTCP(args, args->sharedMemory);
-			loop = 0;
-			continue;
+			printf("PartieManager | partieThreadTCP | Client %d has closed the connection\n", args->threadId);
+			request.type = TCP_REQ_PARTIE_LEAVE;
 		}
 
 		// Handle the request
@@ -625,6 +696,7 @@ void* partieThreadTCP(void *thread_args) {
 
 /**
  * @brief Sending informations about the game to the client to update their game
+ * mutex is locked before calling this function, no worries
  * 
  * @param args			threadTCPArgs structure containing the arguments
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
@@ -634,13 +706,41 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 	// Prepare the response
 	NetMessage response;
 	response.type = TCP_REQ_PARTIE_UPDATE;
-	response.type = response.type << 8; // to avoid unused error
 	
-	// Send to all players connected the informations about the game
-	int i;
+	// Send to all connected players the informations about the game
+	int i, j;
+	EltListe* elt = NULL;
 	for (i = 0; i < sharedMemory->nbThreads; i++) {
 		if (sharedMemory->thread_states[i] != TH_STATE_DISCONNECTED) {
-			// TODO
+
+			// Get head of the level list
+			elt = sharedMemory->levels.tete;
+			
+			// Depending on the room of the player, send the informations about the game
+			for (j = 1; j <= sharedMemory->levels.taille; j++) {
+
+				// If the player is in the room
+				if (sharedMemory->players[i].level == j) {
+
+					// Get the level
+					Level* lvl = (Level*)elt->elmt;
+					
+					// Fill the response
+					response.dataUpdateGame.player = sharedMemory->players[i];
+					char* levelBytes = convert_level_to_bytes(*lvl, &response.dataUpdateGame.sizeLevel);
+					strcpy(response.dataUpdateGame.levelBytes, levelBytes);
+					free(levelBytes);
+
+					// Send the response
+					if (send(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage), 0) == -1) {
+						logs(L_DEBUG, "PartieManager | updatePartieTCP | send == -1");
+						printf("PartieManager | updatePartieTCP | Error while sending the response to the client %d\n", i);
+					}
+				}
+
+				// Go to the next room
+				elt = elt->suivant;
+			}
 		}
 	}
 }
@@ -665,13 +765,14 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
  * 
  * @param args			threadTCPArgs structure containing the arguments
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
- * @param input			Input of the client (0 = left, 1 = right, 2 = up, 3 = down)
+ * @param input			Input of the client (key pressed)
 */
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input) {
 	// TODO
 
 	// For debug
 	logs(L_DEBUG, "PartieManager | inputPartieTCP | Thread %d input %d", args->threadId, input);
+
 	// Send text info to the client
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;

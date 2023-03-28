@@ -416,7 +416,7 @@ void* tcp_read_handler(void *arg) {
 				logs(L_INFO, "Network | TCP | Timeout rewaiting for response");
 			} else {
 				perror("Error receiving response");
-				logs(L_INFO, "Network | TCP | Error receiving response");
+				logs(L_INFO, "Network | TCP | Error receiving response : %s", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 		} else  {
@@ -451,7 +451,7 @@ void* tcp_read_handler(void *arg) {
 int init_tcp_network(GameInterface *gameI, int port) {
 
 	// Init socket
-	logs(L_INFO, "Network | TCP | Init TCP network...");
+	logs(L_INFO, "Network | TCP | Init TCP network on port %d...", port);
 	if ((gameI->netSocket.tcpSocket.sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
 		perror("Error creating socket");
 		logs(L_INFO, "Network | TCP | Error creating socket : %s", strerror(errno));
@@ -459,9 +459,14 @@ int init_tcp_network(GameInterface *gameI, int port) {
 	}
 
 	// Init server address
-	gameI->netSocket.tcpSocket.serv_addr.sin_family = AF_INET;
-	gameI->netSocket.tcpSocket.serv_addr.sin_port = htons(port);
-	gameI->netSocket.tcpSocket.serv_addr.sin_addr.s_addr = gameI->netSocket.udpSocket.serv_addr.sin_addr.s_addr;
+	struct sockaddr_in serv_addr;
+	memset(&serv_addr, 0, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_port = htons(port);
+	serv_addr.sin_addr.s_addr = gameI->netSocket.udpSocket.serv_addr.sin_addr.s_addr;
+
+	// Logs and print server address and port
+	logs(L_INFO, "Network | TCP | Server address : %s:%d", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
 
 	// Connect to server
 	if (connect(gameI->netSocket.tcpSocket.sockfd, (struct sockaddr *)&gameI->netSocket.tcpSocket.serv_addr, sizeof(gameI->netSocket.tcpSocket.serv_addr)) == -1) {

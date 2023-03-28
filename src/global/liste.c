@@ -116,6 +116,7 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 					case TYPE_MAP_INFO:
 					case TYPE_SOCKADDR_IN:
 					case TYPE_PID:
+					case TYPE_LEVEL:
 						free(eltListe->elmt);
 						break;
 					default: // TODO
@@ -161,6 +162,7 @@ void liste_free(Liste* liste, int freeElmt) {
 				case TYPE_MAP_INFO:
 				case TYPE_SOCKADDR_IN:
 				case TYPE_PID:
+				case TYPE_LEVEL:
 					free(eltListe->elmt);
 					break;
 				default: // TODO

@@ -244,6 +244,7 @@ void createPartie(GameInterface *gameI){
     messageReq.partieCreateMessage = partieCreateMessage;
 
     // send message
+	logs(L_INFO, "Sending UDP message to create partie");
     NetMessage responseUDP = send_udp_message(&gameI->netSocket.udpSocket, &messageReq);
 
     if (responseUDP.partieCreateMessage.success) {
@@ -268,6 +269,7 @@ void createPartie(GameInterface *gameI){
                     
         wait_tcp_connection(gameI, responseUDP.partieCreateMessage.serverPortTCP);
         set_text_info_gui(gameI, "Partie créée avec succès!", 1, GREEN_COLOR);
+		logs(L_INFO, "Partie créée avec succès!");
     } else {
         set_text_info_gui(gameI, "Erreur lors de la creation de la partie!", 1, RED_COLOR);
     }
