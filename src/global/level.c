@@ -178,7 +178,6 @@ char* convert_level_to_bytes(Level level, size_t* size) {
     int i = 0;
     EltListe* obj = level.listeObjet.tete;
     while (obj != NULL) {
-
 		// Copy object bytes to buffer at the right position & go to next object
         memcpy(buffer + (i++ * sizeof(Objet)), obj->elmt, sizeof(Objet));
         obj = obj->suivant;

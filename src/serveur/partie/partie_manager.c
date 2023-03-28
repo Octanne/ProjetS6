@@ -766,7 +766,8 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 					// Fill the response
 					response.dataUpdateGame.player = sharedMemory->players[i];
 					char* levelBytes = convert_level_to_bytes(*lvl, &response.dataUpdateGame.sizeLevel);
-					strcpy(response.dataUpdateGame.levelBytes, levelBytes);
+					// copy levelBytes to response.dataUpdateGame.level (char[response.dataUpdateGame.sizeLevel])
+					memcpy(&response.dataUpdateGame.levelBytes, levelBytes, response.dataUpdateGame.sizeLevel);
 					free(levelBytes);
 
 					// Send the response

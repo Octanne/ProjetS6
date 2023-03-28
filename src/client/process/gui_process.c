@@ -164,6 +164,7 @@ void update_game_gui(GameInterface *gameI, DataUpdateGame *data) {
 
 	// Update level game data
 	Level level = convert_bytes_to_level(data->levelBytes, data->sizeLevel);
+	logs(L_DEBUG, "GUI Process | Level received : nb Objets : %d", level.listeObjet.taille);
 	load_level(gameI, level);
 
 	// Unlock mutex
