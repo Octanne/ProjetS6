@@ -379,6 +379,10 @@ void stop_read_tcp_socket(GameInterface *gameI) {
 	}
 }
 
+void stop_read_tcp_handler(int sig) {
+	logs(L_INFO, "Network | Stopping read tcp socket thread...");
+}
+
 /**
  * @brief TCP read thread
  * 
@@ -386,6 +390,16 @@ void stop_read_tcp_socket(GameInterface *gameI) {
  */
 void* tcp_read_handler(void *arg) {
 	GameInterface *gameInfo = (GameInterface*)arg;
+
+	// sigaction for SIGINT in order to stop the thread
+	struct sigaction sa;
+	sa.sa_handler = stop_read_tcp_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	if (sigaction(SIGINT, &sa, NULL) == -1) {
+		perror("Error setting SIGINT handler");
+		exit(EXIT_FAILURE);
+	}
 
 	// While the thread is running
 	while (gameInfo->netSocket.tcpSocket.read_running) {

@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -585,8 +586,11 @@ void* partieThreadTCP(void *thread_args) {
 		// Read the request
 		NetMessage request;
 		if (recvfrom(args->clientSocket, &request, sizeof(NetMessage), 0, NULL, NULL) == -1) {
-			logs(L_DEBUG, "PartieManager | partieThreadTCP | recvfrom == -1");
-			exit(EXIT_FAILURE);
+			// Check if the client has closed the connection or if there is an error
+			logs(L_DEBUG, "PartieManager | partieThreadTCP | Client %d has closed the connection", args->threadId);
+			leavePartieTCP(args, args->sharedMemory);
+			loop = 0;
+			continue;
 		}
 
 		// Handle the request
@@ -598,7 +602,7 @@ void* partieThreadTCP(void *thread_args) {
 				break;
 			
 			case TCP_REQ_INPUT_PLAYER:
-				inputPartieTCP(args, args->sharedMemory, 1); // TODO Input to int
+				inputPartieTCP(args, args->sharedMemory, request.dataInputPlayer.keyPress);
 				break;
 
 			default:
@@ -665,5 +669,20 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 */
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input) {
 	// TODO
+
+	// For debug
+	logs(L_DEBUG, "PartieManager | inputPartieTCP | Thread %d input %d", args->threadId, input);
+	// Send text info to the client
+	NetMessage response;
+	response.type = TCP_REQ_TEXT_INFO_GUI;
+	sprintf(response.dataTextInfoGUI.text, "Input received %d !", input);
+	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.line = 1;
+
+	// Send the response
+	if (sendto(args->clientSocket, &response, sizeof(NetMessage), 0, NULL, 0) == -1) {
+		logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
+		exit(EXIT_FAILURE);
+	}
 }
 
