@@ -475,6 +475,9 @@ int init_tcp_network(GameInterface *gameI, int port) {
 		return -1;
 	}
 
+	// Switch to Game GUI
+	switch_gui(gameI);
+
 	// Create read thread for TCP socket
 	gameI->netSocket.tcpSocket.read_running = true;
 	if (pthread_create(&gameI->netSocket.pid_receive_tcp, NULL, tcp_read_handler, gameI) != 0) {
@@ -486,8 +489,6 @@ int init_tcp_network(GameInterface *gameI, int port) {
 	// Logs and return
 	logs(L_INFO, "Network | TCP | Init TCP network done!");
 
-	// Switch to Game GUI
-	switch_gui(gameI);
 	return 0;
 }
 
