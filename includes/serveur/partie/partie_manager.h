@@ -106,7 +106,7 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input);
 
 void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line);
-void privateMessage(threadTCPArgs *args, threadsSharedMemory *sharedMemory, char* message , int color, int line);
+void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* message , int color, int line);
 
 #endif
 

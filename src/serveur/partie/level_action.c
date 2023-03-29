@@ -76,31 +76,57 @@ void *bomb_routine(void *arg) {
     pthread_mutex_lock(&sharedMemory->mutex);
     
     // Prendre les joueurs et mobs dans la zone d'explosion (5blocks)
-    Liste players = mobsAndPlayersInHitBox(lvl, obj->x-2, obj->y+2, 5, 5);
-    // Pour chaque joueur et mob dans la zone d'explosion
-    EltListe *e = players.tete;
+    Liste mobs = mobsInHitBox(lvl, obj->x-2, obj->y+2, 5, 5);
+    // Pour chaque mob dans la zone d'explosion
+    EltListe *e = mobs.tete;
     while (e != NULL) {
         // Recuperer l'objet
         Objet *objTarget = (Objet*)e->elmt;
-
-        // Check la distance
-        int distance = abs(obj->x - objTarget->x) + abs(obj->y - objTarget->y);
-        // Si la distance est plus grande que 5, on ne fait rien
-        if (distance > 5) {
-            e = e->suivant;
-            continue;
-        }
-
-        // Si c'est un joueur
-        // TODO faire -1 vie au joueur et paralyser le joueur pendant 5 secondes (pensé a le tuer si il n'a plus de vie)
-        // Problème : Il faut trouver comment récuperer le joueur depuis sont obj
-        // Solution : Faire un parcourt des joueurs dans la sharedMemory et comparer l'objet du joueur avec l'objet du joueur dans la liste
+        // Pour empeche le unused variable
+        objTarget = objTarget;
 
         // Si c'est un mob
         // TODO paralisé le mob pendant 5 secondes (ajouté une valeur dans la structure ThreadMob pour le paralyser)
 
         // Next element
         e = e->suivant;
+    }
+    // Pour chaque joueur dans la zone d'explosion
+    Player *players = sharedMemory->players;
+    for (int i = 0; i < sharedMemory->nbThreads; i++) {
+        Player *player = &players[i];
+        // TODO Check la distance depuis tous les points de la hitbox du joueur (3*4) actuellement ne prend que l'origine (en bas gauche)
+        // Si la distance est plus grande que 5, on ne fait rien
+        int distance = abs(obj->x - player->obj->x) + abs(obj->y - player->obj->y);
+        if (distance > 8 || lvl->levelNumber != player->level-1 || player->isInvincible) {
+            continue;
+        } else {
+            if (player->isFreeze) {
+                // On retire une vie au joueur car juste freeze mais pas invincible
+                if (player->life > 0) {
+                    player->life--;
+                } else {
+                    // On tue le joueur
+                    player->isAlive = false;
+                    // TODO Faire quelque pour le joueur mort
+                }
+            } else {
+                // On freeze le joueur
+                player->isFreeze = true;
+                // On retire une vie au joueur
+                if (player->life > 0) {
+                    player->life--;
+                    // On lance un thread pour le défreeze
+                    launch_unfreeze_player_routine(sharedMemory, player, i);
+                    // Envoie message au client
+                    privateMessage(i, sharedMemory, "Vous êtes gelé !", RED_COLOR, 1);
+                } else {
+                    // On tue le joueur
+                    player->isAlive = false;
+                    // TODO Faire quelque pour le joueur mort
+                }
+            }
+        }
     }
 
     // Supprimer la bombe
@@ -112,6 +138,43 @@ void *bomb_routine(void *arg) {
     // Free the arguments
     free(args);
     return NULL;
+}
+
+void *unfreeze_player_routine(void *arg) {
+    // Recuperer les arguments
+    void **args = (void**)arg;
+    threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
+    Player *player = (Player*)args[1];
+    int* threadId = (int*)args[2];
+    // Wait 5 seconds
+    sleep(5);
+    // Lock the mutex
+    pthread_mutex_lock(&sharedMemory->mutex);
+    // Unfreeze the player
+    player->isFreeze = false;
+    // Envoie message au client
+    privateMessage(*threadId, sharedMemory, "Vous n'êtes plus gelé !", YELLOW_COLOR, 1);
+    // Signal condition variable
+    pthread_cond_broadcast(&sharedMemory->update_cond);
+    pthread_mutex_unlock(&sharedMemory->mutex);
+    // Free the arguments
+    free(args);
+    return NULL;
+}
+
+void launch_unfreeze_player_routine(threadsSharedMemory *sharedMemory, Player *player, int threadId) {
+    // Create the thread
+    pthread_t thread;
+    // Create the arguments
+    void **args = malloc(3 * sizeof(void*));
+    args[0] = sharedMemory;
+    args[1] = player;
+    args[2] = (void*)&threadId;
+    // Create the thread
+    if (pthread_create(&thread, NULL, unfreeze_player_routine, args) == -1) {
+        perror("pthread_create");
+        logs(L_INFO, "pthread_create failed %s", strerror(errno));
+    }
 }
 
 /**

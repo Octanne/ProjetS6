@@ -988,78 +988,81 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	Level *lvl = liste_get(&sharedMemory->levels, player->level-1);
 	short newX = player->obj->x;
 	short newY = player->obj->y;
-	
-	// Function to handle the player possible movement	
-	switch (input) {
-		case KEY_UP:
-			newY--;
-			player_action(player, lvl, newX, newY, sharedMemory);
-			break;
-		case KEY_DOWN:
-			newY++;
-			player_action(player, lvl, newX, newY, sharedMemory);
-			break;
-		case KEY_LEFT:
-			newX--;
-			player->obj->player.orientation = LEFT_ORIENTATION;
-			player_action(player, lvl, newX, newY, sharedMemory);
-			break;
-		case KEY_RIGHT:
-			newX++;
-			player->obj->player.orientation = RIGHT_ORIENTATION;
-			player_action(player, lvl, newX, newY, sharedMemory);
-			break;
-		case KEY_SPACE:
-			// On vérifie si le joueur a des bombes
-			if (player->nbBombs > 0) {
-				// On décrémente le nombre de bombes du joueur
-				player->nbBombs--;
-				// On créée la bombe
-				Objet *bombe = creerBombeExplosif(player->obj->x+1, player->obj->y);
-				// On ajoute la bombe au niveau
-				levelAjouterObjet(lvl, bombe);
-				// On démarre le threads de la bombe
-				launch_bomb_routine(sharedMemory, bombe, lvl);
-				privateMessage(args, sharedMemory, "Bombe posée !", YELLOW_COLOR, 1);
-			} else {
-				privateMessage(args, sharedMemory, "Vous n'avez plus de bombes !", RED_COLOR, 1);
-			}
-			break;
-		case KEY_VALIDATE: 
-			// On récupère la liste des objets dans la hitbox du joueur
-			Liste objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
-			
-			// On parcourt la liste
-			EltListe *elt = objCollide.tete;
-			while (elt != NULL) {
-				Objet *obj = (Objet*)elt->elmt;
-				// Si l'objet est une porte
-				if (obj->type == DOOR_ID) {
-					// On récupère la doorLink
-					DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
-					// Si joueur à la door 1
-					if (doorLink.door1.door == obj) {
-						// On déplace le joueur à la door 2
-						changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
-							doorLink.door2.door->x, doorLink.door2.door->y);
-					} else {
-						// On déplace le joueur à la door 1
-						changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
-							doorLink.door1.door->x, doorLink.door1.door->y);
-					}
-					break;
-				}
 
-				// On passe à l'élément suivant
-				elt = elt->suivant;
-			}
-			break;
-		default:
-			// SEND la touche au client
-			char message[255];
-			sprintf(message, "Touche '%d' non prise en compte", input);
-			privateMessage(args, sharedMemory, message, RED_COLOR, 1);
-			break;
+	if (player->isFreeze == false) {
+		
+		// Function to handle the player possible movement	
+		switch (input) {
+			case KEY_UP:
+				newY--;
+				player_action(player, lvl, newX, newY, sharedMemory);
+				break;
+			case KEY_DOWN:
+				newY++;
+				player_action(player, lvl, newX, newY, sharedMemory);
+				break;
+			case KEY_LEFT:
+				newX--;
+				player->obj->player.orientation = LEFT_ORIENTATION;
+				player_action(player, lvl, newX, newY, sharedMemory);
+				break;
+			case KEY_RIGHT:
+				newX++;
+				player->obj->player.orientation = RIGHT_ORIENTATION;
+				player_action(player, lvl, newX, newY, sharedMemory);
+				break;
+			case KEY_SPACE:
+				// On vérifie si le joueur a des bombes
+				if (player->nbBombs > 0) {
+					// On décrémente le nombre de bombes du joueur
+					player->nbBombs--;
+					// On créée la bombe
+					Objet *bombe = creerBombeExplosif(player->obj->x+1, player->obj->y);
+					// On ajoute la bombe au niveau
+					levelAjouterObjet(lvl, bombe);
+					// On démarre le threads de la bombe
+					launch_bomb_routine(sharedMemory, bombe, lvl);
+					privateMessage(args->threadId, sharedMemory, "Bombe posée !", YELLOW_COLOR, 1);
+				} else {
+					privateMessage(args->threadId, sharedMemory, "Vous n'avez plus de bombes !", RED_COLOR, 1);
+				}
+				break;
+			case KEY_VALIDATE: 
+				// On récupère la liste des objets dans la hitbox du joueur
+				Liste objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
+				
+				// On parcourt la liste
+				EltListe *elt = objCollide.tete;
+				while (elt != NULL) {
+					Objet *obj = (Objet*)elt->elmt;
+					// Si l'objet est une porte
+					if (obj->type == DOOR_ID) {
+						// On récupère la doorLink
+						DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
+						// Si joueur à la door 1
+						if (doorLink.door1.door == obj) {
+							// On déplace le joueur à la door 2
+							changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
+								doorLink.door2.door->x, doorLink.door2.door->y);
+						} else {
+							// On déplace le joueur à la door 1
+							changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
+								doorLink.door1.door->x, doorLink.door1.door->y);
+						}
+						break;
+					}
+
+					// On passe à l'élément suivant
+					elt = elt->suivant;
+				}
+				break;
+			default:
+				// SEND la touche au client
+				char message[255];
+				sprintf(message, "Touche '%d' non prise en compte", input);
+				privateMessage(args->threadId, sharedMemory, message, RED_COLOR, 1);
+				break;
+		}
 	}
 
 	// Signal condition variable
@@ -1093,13 +1096,13 @@ void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int col
 /**
  * @brief Envoie un message à un client de la partie
  * 
- * @param args 
+ * @param threadId 
  * @param sharedMemory 
  * @param message 
  * @param color 
  * @param line 
  */
-void privateMessage(threadTCPArgs *args, threadsSharedMemory *sharedMemory, char* message , int color, int line) {
+void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* message , int color, int line) {
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, message);
@@ -1107,7 +1110,7 @@ void privateMessage(threadTCPArgs *args, threadsSharedMemory *sharedMemory, char
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response
-	if (write(sharedMemory->thread_sockets[args->threadId], &response, sizeof(NetMessage)) == -1) {
+	if (write(sharedMemory->thread_sockets[threadId], &response, sizeof(NetMessage)) == -1) {
 		logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
 		exit(EXIT_FAILURE);
 	}

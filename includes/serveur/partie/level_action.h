@@ -12,6 +12,7 @@ DoorLink* create_doorlink(Liste *doors);
 
 void changePlayerOfLevel(threadsSharedMemory *sharedMemory, Player *player, Level *oldLevel, Level *newLevel, short x, short y);
 void launch_bomb_routine(threadsSharedMemory *sharedMemory, Objet *obj, Level *lvl);
+void launch_unfreeze_player_routine(threadsSharedMemory *sharedMemory, Player *player, int threadId);
 
 #endif // __PLAYER8MOVEMENT__
 
