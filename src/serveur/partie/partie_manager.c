@@ -976,10 +976,12 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			break;
 		case KEY_LEFT:
 			newX--;
+			player->obj->player.orientation = LEFT_ORIENTATION;
 			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
 		case KEY_RIGHT:
 			newX++;
+			player->obj->player.orientation = RIGHT_ORIENTATION;
 			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
 		case KEY_SPACE:

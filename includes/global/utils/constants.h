@@ -92,7 +92,7 @@
 #define MATRICE_LEVEL_Y 20
 #define MATRICE_LEVEL_SIZE 1200
 
-#define MAX_PLAYERS 4
+#define MAX_PLAYERS 8
 
 #define MAX_DOORS_NUMBER 99
 
