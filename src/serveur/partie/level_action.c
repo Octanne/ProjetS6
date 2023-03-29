@@ -52,6 +52,54 @@ void launch_respawn_routine(threadsSharedMemory *sharedMemory, Objet *obj) {
 }
 
 /**
+ * @brief Routine pour le threads de bombe.
+ * 
+ * @param arg Tableau avec une sharedMemory et un Objet
+ * @return void* Non utilisé
+ */
+void *bomb_routine(void *arg) {
+    // Recuperer les arguments
+    void **args = (void**)arg;
+    threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
+    Objet *obj = (Objet*)args[1];
+    Level *lvl = (Level*)args[2];
+    // Wait 5 seconds
+    sleep(5);
+    // Lock the mutex
+    pthread_mutex_lock(&sharedMemory->mutex);
+    
+    // TODO faire l'explosion de la bombe
+
+    // Supprimer la bombe
+    levelSupprimerObjet(lvl, obj);
+
+    // Signal condition variable
+    pthread_cond_broadcast(&sharedMemory->update_cond);
+    pthread_mutex_unlock(&sharedMemory->mutex);
+    // Free the arguments
+    free(args);
+    return NULL;
+}
+
+/**
+ * @brief Fonction qui lance un thread pour une bombe
+ * 
+ * @param sharedMemory 
+ * @param obj 
+ */
+void launch_bomb_routine(threadsSharedMemory *sharedMemory, Objet *obj, Level *lvl) {
+    // Create the thread
+    pthread_t thread;
+    // Create the arguments
+    void **args = malloc(3 * sizeof(void*));
+    args[0] = sharedMemory;
+    args[1] = obj;
+    args[2] = lvl;
+    // Create the thread
+    pthread_create(&thread, NULL, bomb_routine, args);
+}
+
+/**
  * @brief Méthode qui verifie les différents mouvement du joueurs et action possible ou non.
  * 
  * @param player Le joueur qui bouge

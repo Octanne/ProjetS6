@@ -64,6 +64,11 @@ typedef struct {
 } DoorLink;
 
 typedef struct {
+	Level *level;
+	Objet *mob;
+} MobThreadsArgs;
+
+typedef struct {
 	pthread_mutex_t mutex;				// Pthread mutex		Used to lock the shared memory
 	pthread_t *threads;					// List of threads
 	int *thread_states;					// Thread states (disconnected, connected, etc.)
@@ -76,6 +81,7 @@ typedef struct {
 	Player *players;					// Store players to send efficiently to clients
 	Liste levels;						// Store levels in a list
 	DoorLink *doors;					// Store doors in a list
+	Liste mobsThreadsArgs;				// Store mobs in a list
 } threadsSharedMemory;
 
 typedef struct {

@@ -18,6 +18,7 @@ typedef struct {} Robot_obj;
 typedef struct {} Probe_obj;
 typedef struct {} Heart_obj;
 typedef struct {} Bomb_obj;
+typedef struct {} BombExplode_obj;
 typedef struct {
     int8_t color;
     int8_t orientation;
@@ -40,6 +41,7 @@ typedef struct {
         Probe_obj probe;
         Robot_obj robot;
         Player_obj player;
+        BombExplode_obj bombExplode;
     };
 
     short x;
@@ -70,6 +72,7 @@ Objet* creerKey(short x, short y, int8_t numkey);
 Objet* creerGate(short x, short y, int8_t numgate);
 Objet* creerDoor(short x, short y, int8_t numdoor);
 Objet* creerPlayer(short x, short y);
+Objet* creerBombeExplosif(short x, short y);
 
 void objet_free(Objet* objet);
 ObjetSize objet_getSize(Objet* objet);

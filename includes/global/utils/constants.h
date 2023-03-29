@@ -63,6 +63,7 @@
 #define HEART_ID 11
 #define BOMB_ID 12
 #define PLAYER_ID 13
+#define BOMB_EXPLOSIVE_ID 14
 
 #define TOTAL_TOOLS 12
 #define RIGHT_ORIENTATION 1
@@ -82,6 +83,7 @@
 #define TYPE_LEVEL 7
 #define TYPE_DOORLINK 8
 #define TYPE_DOOR 9
+#define TYPE_MOBTHREAD_ARGS 10
 
 // #####################
 // #       Level       #

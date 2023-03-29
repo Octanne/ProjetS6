@@ -40,6 +40,7 @@ Objet* creerStart(short x, short y) { return initObjet(x, y, START_ID); }
 Objet* creerLadder(short x, short y) { return initObjet(x, y, LADDER_ID); }
 Objet* creerProbe(short x, short y) { return initObjet(x, y, PROBE_ID); }
 Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
+Objet* creerBombeExplosif(short x, short y) { return initObjet(x, y, BOMB_EXPLOSIVE_ID); }
 
 Objet* creerTrap(short x, short y) {
     Objet *objet = initObjet(x, y, TRAP_ID);
@@ -98,6 +99,7 @@ ObjetSize objet_getSize(Objet* objet) {
         case HEART_ID:
         case BOMB_ID:
         case TRAP_ID:
+        case BOMB_EXPLOSIVE_ID:
         case GATE_ID:
             size.xSize = 1;
             size.ySize = 1;

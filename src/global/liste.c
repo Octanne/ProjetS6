@@ -93,6 +93,30 @@ void liste_add_queue(Liste* liste, void* elmt, char type) {
 	liste->queue = eltListe;
 }
 
+void free_pointer(void* elmt, char type) {
+	switch(type) {
+		case TYPE_NET_MESSAGE:
+		case TYPE_PARTIE_INFO:
+		case TYPE_MAP_INFO:
+		case TYPE_SOCKADDR_IN:
+		case TYPE_PID:
+		case TYPE_LEVEL:
+		case TYPE_DOORLINK:
+		case TYPE_DOOR:
+			free(elmt);
+			break;
+		case TYPE_OBJET:
+			objet_free(elmt);
+			break;
+		case TYPE_PLAYER:
+			player_free(elmt);
+			break;
+		default: // TODO
+			logs(L_INFO, "liste_free | ERROR type inconnu");
+			break;
+	}
+}
+
 /**
  * @brief Remove a pointer from the list.
  * 
@@ -118,27 +142,7 @@ void liste_remove(Liste* liste, void* elmt, int freeElmt) {
 			
 			// Free the pointer if needed.
 			if (freeElmt) {
-				switch(eltListe->type) {
-					case TYPE_OBJET:
-						objet_free(eltListe->elmt);
-						break;
-					case TYPE_PLAYER:
-						player_free(eltListe->elmt);
-						break;
-					case TYPE_NET_MESSAGE:
-					case TYPE_PARTIE_INFO:
-					case TYPE_MAP_INFO:
-					case TYPE_SOCKADDR_IN:
-					case TYPE_PID:
-					case TYPE_LEVEL:
-					case TYPE_DOORLINK:
-					case TYPE_DOOR:
-						free(eltListe->elmt);
-						break;
-					default: // TODO
-						logs(L_INFO, "liste_free | ERROR type inconnu");
-						break;
-				}
+				free_pointer(eltListe->elmt, eltListe->type);
 			}
 			
 			// Free the element and update the list size.
@@ -166,27 +170,7 @@ void liste_free(Liste* liste, int freeElmt) {
 	// Free the pointers and the elements. If freeElmt is false, only the elements are freed.
 	if (freeElmt) {
 		while (eltListe != NULL) {
-			switch(eltListe->type) {
-				case TYPE_OBJET:
-					objet_free(eltListe->elmt);
-					break;
-				case TYPE_PLAYER:
-					player_free(eltListe->elmt);
-					break;
-				case TYPE_NET_MESSAGE:
-				case TYPE_PARTIE_INFO:
-				case TYPE_MAP_INFO:
-				case TYPE_SOCKADDR_IN:
-				case TYPE_PID:
-				case TYPE_LEVEL:
-				case TYPE_DOORLINK:
-				case TYPE_DOOR:
-					free(eltListe->elmt);
-					break;
-				default: // TODO
-					logs(L_INFO, "liste_free | ERROR type inconnu");
-					break;
-			}
+			free_pointer(eltListe->elmt, eltListe->type);
 
 			EltListe* tmp = eltListe;
 			eltListe = eltListe->suivant;

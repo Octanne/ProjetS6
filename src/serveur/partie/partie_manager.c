@@ -573,6 +573,9 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Alocate temporary liste of doors
 	Liste doorListe = liste_create(true);
 
+	// Allocate liste of mobs threads arguments
+	th_shared_memory.mobsThreadsArgs = liste_create(true);
+
 	// Load all the levels in the server
 	th_shared_memory.levels = liste_create(true);
 	char lvlPath[260];
@@ -592,6 +595,28 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 			liste_add(&th_shared_memory.levels, level, TYPE_LEVEL);
 			
 			// Lecture des objets du niveau
+			EltListe *elt = level->listeObjet.tete;
+			while (elt != NULL) {
+				Objet *o = elt->elmt;
+				// Add the door to the list of doors
+				if (o->type == DOOR_ID) {
+					// Ajout à la liste des portes
+					Door *door = malloc(sizeof(Door));
+					door->door = o;
+					door->level = level;
+					liste_add(&doorListe, door, TYPE_DOOR);
+				} else if (o->type == ROBOT_ID || o->type == PROBE_ID) {
+					// Add the mob to the list of mobs
+					MobThreadsArgs *args = malloc(sizeof(MobThreadsArgs));
+					args->mob = o;
+					args->level = level;
+					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
+				}
+
+				// Next element
+				elt = elt->suivant;
+			}
+
 			for (int j = 0; j < level->listeObjet.taille; j++) {
 				Objet *o = liste_get(&level->listeObjet, j);
 				// Add the door to the list of doors
@@ -611,6 +636,8 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Links the doors
 	th_shared_memory.doors = create_doorlink(&doorListe); // Dynamic array of DoorLink
 	liste_free(&doorListe, false);
+
+	// TODO : Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
 
 	// Search start block of the first level
 	short enterX = -1, enterY = -1;
@@ -747,6 +774,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	}
 
 	// Free the memory
+	liste_free(&th_shared_memory.mobsThreadsArgs, true);
 	liste_free(&th_shared_memory.levels, true);
 	free(th_shared_memory.threads);
 	free(th_args_list);
@@ -930,7 +958,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	// Lock the mutex
 	pthread_mutex_lock(&sharedMemory->mutex);
 
-	// TODO : Handle the input
+	// Handle the input
 	Player* player = &sharedMemory->players[args->threadId];
 	Level *lvl = liste_get(&sharedMemory->levels, player->level-1);
 	short newX = player->obj->x;
@@ -954,8 +982,21 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			newX++;
 			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
-		case KEY_SPACE: // TODO voir pour utiliser les bombes
-			privateMessage(args, sharedMemory, "Bombe non encore implémentée", WHITE_COLOR, 1);
+		case KEY_SPACE:
+			// On vérifie si le joueur a des bombes
+			if (player->nbBombs > 0) {
+				// On décrémente le nombre de bombes du joueur
+				player->nbBombs--;
+				// On créée la bombe
+				Objet *bombe = creerBombeExplosif(player->obj->x+1, player->obj->y);
+				// On ajoute la bombe au niveau
+				levelAjouterObjet(lvl, bombe);
+				// On démarre le threads de la bombe
+				launch_bomb_routine(sharedMemory, bombe, lvl);
+				privateMessage(args, sharedMemory, "Bombe posée !", YELLOW_COLOR, 1);
+			} else {
+				privateMessage(args, sharedMemory, "Vous n'avez plus de bombes !", RED_COLOR, 1);
+			}
 			break;
 		case KEY_VALIDATE: 
 			// On récupère la liste des objets dans la hitbox du joueur

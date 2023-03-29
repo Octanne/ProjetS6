@@ -104,7 +104,6 @@ SpriteData emptySprite() {
 void levelAjouterObjet(Level* level, Objet* objet) {
     liste_add(&level->listeObjet, objet, TYPE_OBJET);
     levelUpdateMatriceSprite(level);
-    // TODO update CollideMatrice
 }
 
 /**
@@ -116,7 +115,6 @@ void levelAjouterObjet(Level* level, Objet* objet) {
 void levelSupprimerObjet(Level* level, Objet* objet) {
     liste_remove(&level->listeObjet, objet, true);
     levelUpdateMatriceSprite(level);
-    // TODO update CollideMatrice
 }
 
 void levelChangeLevelObjet(Level* oldLevel, Level *newLevel, Objet* objet, short x, short y) {
@@ -126,7 +124,6 @@ void levelChangeLevelObjet(Level* oldLevel, Level *newLevel, Objet* objet, short
     objet->y = y;
     levelUpdateMatriceSprite(oldLevel);
     levelUpdateMatriceSprite(newLevel);
-    // TODO update CollideMatrice
 }
 
 /**
@@ -285,6 +282,10 @@ void levelUpdateMatriceSprite(Level* level) {
             case BOMB_ID :
                 sprite = 'o';
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, WHITE_COLOR);
+                break;
+            case BOMB_EXPLOSIVE_ID :
+                sprite = 'o';
+                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, RED_COLOR);
                 break;
             case GATE_ID :
                 color = WHITE_COLOR;

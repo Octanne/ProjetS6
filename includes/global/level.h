@@ -19,7 +19,6 @@ typedef struct {
 typedef struct {
     Liste listeObjet;
     SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
-    Objet* matriceCollide[MATRICE_LEVEL_SIZE];
     int levelNumber;
 } Level;
 
