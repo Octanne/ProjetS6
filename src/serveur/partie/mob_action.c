@@ -16,6 +16,7 @@ void* probe_routine(void * args) {
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)argsTable[0];
     MobThreadsArgs *argsMobs = (MobThreadsArgs*)argsTable[1];
     
+    
     // Lock the mutex
     pthread_mutex_lock(&sharedMemory->mutex);
 
@@ -24,11 +25,11 @@ void* probe_routine(void * args) {
     // Signal condition variable
     pthread_cond_broadcast(&sharedMemory->update_cond);
     pthread_mutex_unlock(&sharedMemory->mutex);
+    
+    
     // Free the arguments
     free(args);
-
     printf("Probe %d is dead\n", argsMobs->mob->id);
-
     return NULL;
 }
 
@@ -38,20 +39,20 @@ void* robot_routine(void* args) {
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)argsTable[0];
     MobThreadsArgs *argsMobs = (MobThreadsArgs*)argsTable[1];
 
+
     // Lock the mutex
     pthread_mutex_lock(&sharedMemory->mutex);
-
 
     // TODO: Implement robot_routine
 
     // Signal condition variable
     pthread_cond_broadcast(&sharedMemory->update_cond);
     pthread_mutex_unlock(&sharedMemory->mutex);
+    
+
     // Free the arguments
     free(args);
-
     printf("Robot %d is dead\n", argsMobs->mob->id);
-
     return NULL;
 }
 
@@ -60,20 +61,23 @@ void* piege_routine(void* args) {
     void **argsTable = (void**)args;
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)argsTable[0];
     Liste *piegeThreadsArgs = (Liste*)argsTable[1];
-
     // Make to avoid unused variable warning
     piegeThreadsArgs = piegeThreadsArgs;
+
+
+    // Lock the mutex
+    pthread_mutex_lock(&sharedMemory->mutex);
 
     // TODO: Implement piege_routine
 
     // Signal condition variable
     pthread_cond_broadcast(&sharedMemory->update_cond);
     pthread_mutex_unlock(&sharedMemory->mutex);
+    
+
     // Free the arguments
     free(args);
-
     printf("Piege routine is dead\n");
-
     return NULL;
 }
 
