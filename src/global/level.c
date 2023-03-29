@@ -247,6 +247,12 @@ void levelUpdateMatriceSprite(Level* level) {
         int color, colorB;
         short x, y;
 
+        // Si pas actif, on passe à l'objet suivant
+        if (!objet->isActive) {
+            elt = elt->suivant;
+            continue;
+        }
+
 		// Switch sur le type de l'objet
         switch (objet->type) {
             case BLOCK_ID :
@@ -258,8 +264,13 @@ void levelUpdateMatriceSprite(Level* level) {
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, RED_COLOR);
                 break;
             case TRAP_ID :
-                sprite = '#';
-                level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
+                if (objet->trap.piegeActif) {
+                    sprite = '#';
+                    level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
+                } else {
+                    sprite = ' ';
+                    level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
+                }
                 break;
             case BOMB_ID :
                 sprite = 'o';

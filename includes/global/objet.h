@@ -8,7 +8,7 @@
 // Type d'objet
 typedef struct {} Block_obj;
 typedef struct {} Ladder_obj;
-typedef struct {} Trap_obj;
+typedef struct { bool piegeActif; } Trap_obj;
 typedef struct { int8_t numkey; } Key_obj;
 typedef struct { int8_t numgate; } Gate_obj;
 typedef struct { int8_t numdoor; } Door_obj;

@@ -28,5 +28,6 @@ void liste_add_queue(Liste* liste, void* elmt, char type);
 
 void* liste_get(Liste* liste, int index);
 void* liste_pop(Liste* liste);
+bool liste_contains(Liste* liste, void* elmt);
 
 #endif

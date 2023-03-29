@@ -36,12 +36,18 @@ Objet* initObjet(short x, short y, int8_t type) {
 Objet* creerBlock(short x, short y) { return initObjet(x, y, BLOCK_ID); }
 Objet* creerVie(short x, short y) { return initObjet(x, y, HEART_ID); }
 Objet* creerBomb(short x, short y) { return initObjet(x, y, BOMB_ID); }
-Objet* creerTrap(short x, short y) { return initObjet(x, y, TRAP_ID); }
 Objet* creerExit(short x, short y) { return initObjet(x, y, EXIT_ID); }
 Objet* creerStart(short x, short y) { return initObjet(x, y, START_ID); }
 Objet* creerLadder(short x, short y) { return initObjet(x, y, LADDER_ID); }
 Objet* creerProbe(short x, short y) { return initObjet(x, y, PROBE_ID); }
 Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
+
+Objet* creerTrap(short x, short y) {
+    Objet *objet = initObjet(x, y, TRAP_ID);
+    objet->trap.piegeActif = false;
+
+    return objet;
+}
 
 Objet* creerGate(short x, short y, int8_t numgate) {
 	Objet *objet = initObjet(x, y, GATE_ID);
@@ -112,7 +118,7 @@ ObjetSize objet_getSize(Objet* objet) {
             break;
         case PLAYER_ID:
             size.xSize = 3;
-            size.ySize = 3;
+            size.ySize = 4;
             break;
         default:
             logs(L_INFO, "objet_getSize | ERROR unknown type");

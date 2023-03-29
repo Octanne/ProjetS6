@@ -146,8 +146,8 @@ void init_gui_process(GameInterface *gameI) {
 	while((ch = getch()) != KEY_QUIT_GAME && !gameI->stopKeyBoardHandler) {
 		control_handler_gui(gameI, ch);
 
-		// Wait for 0.1s and clear getch buffer
-		usleep(100000);
+		// Wait for 0.01s and clear getch buffer
+		usleep(10000);
 		flushinp();
 	}
 	logs(L_INFO, "Main | Control handler stopped!");

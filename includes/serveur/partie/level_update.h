@@ -10,6 +10,7 @@ typedef struct Position_s {
 } Position;
 
 int checkHitBox(Level* level, short x, short y, short xSize, short ySize);
+Liste objectInHitBox(Level* level, short x, short y, short xSize, short ySize);
 
 int supprimerObjet(Level* level, short x, short y);
 

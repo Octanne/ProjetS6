@@ -36,6 +36,20 @@ void liste_add(Liste* liste, void* elmt, char type) {
 	}
 }
 
+bool liste_contains(Liste* liste, void* elmt) {
+	EltListe* eltListe = liste->tete;
+	while (eltListe != NULL) {
+		// If the element is found, return true.
+		if (eltListe->elmt == elmt) {
+			return true;
+		}
+
+		// Go to the next element.
+		eltListe = eltListe->suivant;
+	}
+	return false;
+}
+
 void liste_add_tete(Liste* liste, void* elmt, char type) {
 	EltListe* eltListe = malloc(sizeof(EltListe));
 	if (eltListe == NULL) {
