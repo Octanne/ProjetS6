@@ -264,7 +264,7 @@ void levelUpdateMatriceSprite(Level* level) {
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, RED_COLOR);
                 break;
             case TRAP_ID :
-                if (objet->trap.piegeActif) {
+                if (objet->piegeActif) {
                     sprite = '#';
                     level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
                 } else {

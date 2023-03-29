@@ -34,8 +34,6 @@ Objet* initObjet(short x, short y, int8_t type) {
 }
 
 Objet* creerBlock(short x, short y) { return initObjet(x, y, BLOCK_ID); }
-Objet* creerVie(short x, short y) { return initObjet(x, y, HEART_ID); }
-Objet* creerBomb(short x, short y) { return initObjet(x, y, BOMB_ID); }
 Objet* creerExit(short x, short y) { return initObjet(x, y, EXIT_ID); }
 Objet* creerStart(short x, short y) { return initObjet(x, y, START_ID); }
 Objet* creerLadder(short x, short y) { return initObjet(x, y, LADDER_ID); }
@@ -44,8 +42,7 @@ Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
 
 Objet* creerTrap(short x, short y) {
     Objet *objet = initObjet(x, y, TRAP_ID);
-    objet->trap.piegeActif = true;
-
+    objet->piegeActif = true;
     return objet;
 }
 
@@ -71,6 +68,19 @@ Objet* creerPlayer(short x, short y) {
     Objet* objet = initObjet(x, y, PLAYER_ID);
     objet->player.orientation = RIGHT_ORIENTATION;
     objet->player.color = LBLUE_COLOR;
+    objet->nbSecBeforeRespawn = 0;
+    return objet;
+}
+
+Objet* creerVie(short x, short y) { 
+    Objet* objet =  initObjet(x, y, HEART_ID);
+    objet->nbSecBeforeRespawn = 0;
+    return objet;
+}
+
+Objet* creerBomb(short x, short y) { 
+    Objet* objet =  initObjet(x, y, BOMB_ID);
+    objet->nbSecBeforeRespawn = 0;
     return objet;
 }
 
