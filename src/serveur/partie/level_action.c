@@ -130,7 +130,8 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
         EltListe* elt = oldCollision.tete;
         while (elt != NULL) {
             Objet* obj = (Objet*)elt->elmt;
-            if (obj->type == LADDER_ID) {
+            // Check if the player is on a ladder perfectly centered
+            if (obj->type == LADDER_ID && obj->x == player->obj->x && obj->y == player->obj->y) {
                 hasLadder = true;
                 break;
             }
@@ -182,8 +183,10 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
                         break;
                 }
             } else if (obj->type == LADDER_ID) {
-                // Check if the player is on the top of the ladder
-                hasLadder = true;
+                // Check if the player is on the top of the ladder perfectly centered
+                if (obj->x == newX && obj->y == newY) {
+                    hasLadder = true;
+                }
             } else if (obj->type == KEY_ID) {
                 switch (obj->key.numkey) {
                     case 0:
