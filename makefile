@@ -3,7 +3,7 @@
 #
 
 EXEC = client editeur serveur
-OBJECTS = client/gui/client_gui.o client/gui/menu_gui.o client/gui/game_gui.o client/process/client_network.o client/process/gui_process.o editeur/editor_gui.o editeur/level_edit.o global/player.o global/utils/utils.o global/level.o global/liste.o global/system_save.o global/objet.o serveur/partie/level_update.o serveur/partie/partie_manager.o serveur/partie/level_action.o serveur/console_manager.o serveur/serveur_network.o
+OBJECTS = client/gui/client_gui.o client/gui/menu_gui.o client/gui/game_gui.o client/process/client_network.o client/process/gui_process.o editeur/editor_gui.o editeur/level_edit.o global/player.o global/utils/utils.o global/level.o global/liste.o global/system_save.o global/objet.o serveur/partie/level_update.o serveur/partie/partie_manager.o serveur/partie/level_action.o serveur/partie/mob_action.o serveur/console_manager.o serveur/serveur_network.o
 PROJECT_NAME = ProjetS6
 
 SRC_DIR = src
@@ -235,7 +235,8 @@ obj/serveur.o: src/serveur.c includes/serveur/serveur_network.h \
  includes/global/network/data_update.h includes/global/utils/constants.h \
  includes/global/player.h includes/global/objet.h includes/global/objet.h \
  includes/global/network/net_struct.h \
- includes/global/network/data_update.h includes/serveur/console_manager.h \
+ includes/global/network/data_update.h includes/global/level.h \
+ includes/global/liste.h includes/serveur/console_manager.h \
  includes/global/utils/utils.h
 obj/serveur/partie/level_update.o: src/serveur/partie/level_update.c \
  includes/serveur/partie/level_update.h includes/global/level.h \
@@ -246,11 +247,13 @@ obj/serveur/partie/partie_manager.o: src/serveur/partie/partie_manager.c \
  includes/global/network/data_update.h includes/global/utils/constants.h \
  includes/global/player.h includes/global/objet.h includes/global/objet.h \
  includes/global/network/net_struct.h \
- includes/global/network/data_update.h includes/global/utils/utils.h \
+ includes/global/network/data_update.h includes/global/level.h \
+ includes/global/liste.h includes/global/utils/utils.h \
  includes/global/system_save.h includes/global/level.h \
- includes/global/liste.h includes/serveur/partie/level_update.h \
- includes/global/level.h includes/serveur/partie/level_action.h \
- includes/serveur/partie/partie_manager.h
+ includes/serveur/partie/level_update.h \
+ includes/serveur/partie/level_action.h \
+ includes/serveur/partie/partie_manager.h \
+ includes/serveur/partie/mob_action.h
 obj/serveur/partie/level_action.o: src/serveur/partie/level_action.c \
  includes/serveur/partie/level_action.h includes/global/player.h \
  includes/global/objet.h includes/global/level.h includes/global/liste.h \
@@ -259,7 +262,15 @@ obj/serveur/partie/level_action.o: src/serveur/partie/level_action.c \
  includes/global/network/data_update.h includes/global/objet.h \
  includes/global/network/net_struct.h \
  includes/global/network/data_update.h \
- includes/serveur/partie/level_update.h
+ includes/serveur/partie/level_update.h includes/global/utils/utils.h
+obj/serveur/partie/mob_action.o: src/serveur/partie/mob_action.c \
+ includes/serveur/partie/mob_action.h \
+ includes/serveur/partie/partie_manager.h includes/global/liste.h \
+ includes/global/network/data_update.h includes/global/utils/constants.h \
+ includes/global/player.h includes/global/objet.h includes/global/objet.h \
+ includes/global/network/net_struct.h \
+ includes/global/network/data_update.h includes/global/level.h \
+ includes/global/liste.h
 obj/serveur/console_manager.o: src/serveur/console_manager.c \
  includes/serveur/console_manager.h includes/global/utils/utils.h \
  includes/global/utils/constants.h
@@ -269,7 +280,8 @@ obj/serveur/serveur_network.o: src/serveur/serveur_network.c \
  includes/global/network/data_update.h includes/global/utils/constants.h \
  includes/global/player.h includes/global/objet.h includes/global/objet.h \
  includes/global/network/net_struct.h \
- includes/global/network/data_update.h includes/global/utils/utils.h
+ includes/global/network/data_update.h includes/global/level.h \
+ includes/global/liste.h includes/global/utils/utils.h
 obj/client.o: src/client.c includes/global/utils/utils.h \
  includes/global/utils/constants.h \
  includes/client/process/client_network.h \

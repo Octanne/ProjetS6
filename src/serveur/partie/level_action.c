@@ -5,9 +5,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 #include "level_update.h"
 #include "level.h"
+
+#include "utils.h"
+#include "constants.h"
 
 /**
  * @brief Routine pour le threads de respawn d'un objet
@@ -48,7 +52,10 @@ void launch_respawn_routine(threadsSharedMemory *sharedMemory, Objet *obj) {
 	args[0] = sharedMemory;
 	args[1] = obj;
 	// Create the thread
-	pthread_create(&thread, NULL, respawn_routine, args);
+	if (pthread_create(&thread, NULL, respawn_routine, args) == -1) {
+        perror("pthread_create");
+        logs(L_INFO, "pthread_create failed %s", strerror(errno));
+    }
 }
 
 /**
@@ -96,7 +103,10 @@ void launch_bomb_routine(threadsSharedMemory *sharedMemory, Objet *obj, Level *l
     args[1] = obj;
     args[2] = lvl;
     // Create the thread
-    pthread_create(&thread, NULL, bomb_routine, args);
+    if (pthread_create(&thread, NULL, bomb_routine, args) != 0) {
+        perror("pthread_create");
+        logs(L_INFO, "pthread_create failed %s", strerror(errno));
+    }
 }
 
 /**

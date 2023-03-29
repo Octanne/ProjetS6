@@ -18,6 +18,7 @@
 #include "system_save.h"
 #include "level_update.h"
 #include "level_action.h"
+#include "mob_action.h"
 
 #define NUM_PARTIES_PAR_PAGE 4
 
@@ -615,10 +616,10 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
 				} else if (o->type == TRAP_ID) {
 					// Add the trap to the list of traps
-					MobThreadsArgs *args = malloc(sizeof(MobThreadsArgs));
-					args->mob = o;
+					PiegeThreadArgs *args = malloc(sizeof(MobThreadsArgs));
+					args->piege = o;
 					args->level = level;
-					liste_add(&th_shared_memory.piegeThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
+					liste_add(&th_shared_memory.piegeThreadsArgs, args, TYPE_PIEGETHREAD_ARGS);
 				}
 
 				// Next element
@@ -645,9 +646,20 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	th_shared_memory.doors = create_doorlink(&doorListe); // Dynamic array of DoorLink
 	liste_free(&doorListe, false);
 
-	// TODO : Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
+	// Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
+	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
+	while (elt != NULL) {
+		MobThreadsArgs *args = (MobThreadsArgs*)elt->elmt;
 
-	// TODO : Start the thread for the traps (one thread for all the traps) (see piegeThreadsArgs)
+		// Start the thread for the mob
+		launch_mob_routine(&th_shared_memory, args);
+		
+		// Next element
+		elt = elt->suivant;
+	}
+
+	// Start the thread for the traps (one thread for all the traps) (see piegeThreadsArgs)
+	th_shared_memory.piegeThread = launch_piege_routine(&th_shared_memory, &th_shared_memory.piegeThreadsArgs);
 
 	// Search start block of the first level
 	short enterX = -1, enterY = -1;
@@ -793,6 +805,8 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	free(th_shared_memory.players);
 	free(th_shared_memory.thread_sockets);
 	free(th_shared_memory.doors);
+
+	// TODO voir pour couper les threads des mobs et des pieges
 
 	// Exit the processus with success
 	logs(L_DEBUG, "PartieManager | partieProcessusManager | Processus %d ended", getpid());

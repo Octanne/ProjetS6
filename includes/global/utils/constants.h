@@ -84,6 +84,7 @@
 #define TYPE_DOORLINK 8
 #define TYPE_DOOR 9
 #define TYPE_MOBTHREAD_ARGS 10
+#define TYPE_PIEGETHREAD_ARGS 11
 
 // #####################
 // #       Level       #

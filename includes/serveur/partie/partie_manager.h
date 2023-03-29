@@ -66,7 +66,13 @@ typedef struct {
 typedef struct {
 	Level *level;
 	Objet *mob;
+	pthread_t thread;
 } MobThreadsArgs;
+
+typedef struct {
+	Level *level;
+	Objet *piege;
+} PiegeThreadArgs;
 
 typedef struct {
 	pthread_mutex_t mutex;				// Pthread mutex		Used to lock the shared memory
@@ -83,6 +89,7 @@ typedef struct {
 	DoorLink *doors;					// Store doors in a list
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
 	Liste piegeThreadsArgs;				// Store pieges in a list
+	pthread_t piegeThread; 		    // Store pieges thread
 } threadsSharedMemory;
 
 typedef struct {

@@ -102,6 +102,8 @@ void free_pointer(void* elmt, char type) {
 		case TYPE_PID:
 		case TYPE_LEVEL:
 		case TYPE_DOORLINK:
+		case TYPE_PIEGETHREAD_ARGS:
+		case TYPE_MOBTHREAD_ARGS:
 		case TYPE_DOOR:
 			free(elmt);
 			break;
