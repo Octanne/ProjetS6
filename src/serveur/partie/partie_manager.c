@@ -912,6 +912,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			Objet* obj = (Objet*)elt->elmt;
 			if (obj->type == LADDER_ID) {
 				canMoveY = true;
+				printf("In ladder\n");
 				break;
 			}
 			elt = elt->suivant;
@@ -929,8 +930,8 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			switch (input) {
 				case KEY_RIGHT: x++; player->obj->player.orientation = RIGHT_ORIENTATION; break;
 				case KEY_LEFT: x--; player->obj->player.orientation = LEFT_ORIENTATION; break;
-				case KEY_UP: if (canMoveY) y--; break;
-				case KEY_DOWN: if (canMoveY) y++; break;
+				case KEY_UP: y--; break;
+				case KEY_DOWN: y++; break;
 			}
 
 			// Check if there is a collision
@@ -938,7 +939,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			// printf type of collision
 			EltListe* elt = newCollision.tete;
 			if (elt == NULL) {
-				// Check si on est sur une echelle et qu'il t a donc un block sous nos nouveau coordonnées
+				// Check si il y a un block en dessous de la nouvelle position
 				Liste underPlr = objectInHitBox(lvl, x, y+1, 3, 4);
 				if (underPlr.tete != NULL) { // TODO Vérifier l'ensemble des objets pour trouver un block
 					canMoveX = true;
@@ -951,114 +952,105 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 
 			// Else, conditions on type
 			else {
-				Objet* obj = (Objet*)newCollision.tete->elmt;
-				switch (obj->type) {
-					case BLOCK_ID:
-						// Do nothing
-						printf("PartieManager | inputPartieTCP | Collision with block\n");
-						break;
+				printf("PartieManager | inputPartieTCP | Collision, %d items\n", newCollision.taille);
+				canMoveX = true;
+				while (elt != NULL) {
+					Objet* obj = (Objet*)elt->elmt;
+					printf("PartieManager | inputPartieTCP | Collision with %d at '%d %d'\n", obj->type, obj->x, obj->y);
+					switch (obj->type) {
+						case TRAP_ID: // TODO : See to Check if the player is on the trap not in it too
+						case BLOCK_ID:
+							// Do nothing
+							printf("PartieManager | inputPartieTCP | Collision with block\n");
+							canMoveX = false;
+							canMoveY = false;
+							break;
 
-					case TRAP_ID:
-						// Kill the player if trap is activated and player not invincible
-						if (obj->trap.piegeActif && !sharedMemory->players[args->threadId].isInvincible) {
-							sharedMemory->players[args->threadId].life--; // TODO : Check if life == 0
-						}
-						// TODO pas bon car faut detecter si au dessus et pas dedans
-						break;
+						case GATE_ID:
+							switch (obj->gate.numgate) {
+								case 0:
+									if (!player->key1) {
+										// Laisse le joueur passer
+										canMoveX = false;
+									}
+									break;
+								case 1:
+									if (player->key2) {
+										// Laisse le joueur passer
+										canMoveX = false;
+									}
+									break;
+								case 2:
+									if (player->key3) {
+										// Laisse le joueur passer
+										canMoveX = false;
+									}
+									break;
+								case 3:
+									if (player->key4) {
+										// Laisse le joueur passer
+										canMoveX = false;
+									}
+									break;
+							}
+							break;
 
-					case GATE_ID:
-						switch (obj->gate.numgate) {
-							case 0:
-								if (player->key1) {
-									// Laisse le joueur passer
-									canMoveX = true;
-								}
-								break;
-							case 1:
-								if (player->key2) {
-									// Laisse le joueur passer
-									canMoveX = true;
-								}
-								break;
-							case 2:
-								if (player->key3) {
-									// Laisse le joueur passer
-									canMoveX = true;
-								}
-								break;
-							case 3:
-								if (player->key4) {
-									// Laisse le joueur passer
-									canMoveX = true;
-								}
-								break;
-						}
-						break;
-
-					case HEART_ID:
-						// Give the heart to the player
-						player->life++;
-						if (player->life > 5)
-							player->life = 5;
-
-						// TODO : Remove the heart from the level and respawn after a while
-
-						// Move the player
-						canMoveX = true;
-						break;
-					
-					case BOMB_ID:
-						// Give the bomb to the player
-						player->nbBombs++;
-						if (player->nbBombs > 3)
-							player->nbBombs = 3;
-
-						// TODO : Remove the bomb from the level and respawn after a while
+						case HEART_ID:
+							// Give the heart to the player
+							player->life++;
+							if (player->life > 5)
+								player->life = 5;
+							// TODO : Remove the heart from the level and respawn after a while
+							break;
 						
-						// Move the player
-						canMoveX = true;
-						break;
+						case BOMB_ID:
+							// Give the bomb to the player
+							player->nbBombs++;
+							if (player->nbBombs > 3)
+								player->nbBombs = 3;
+							// TODO : Remove the bomb from the level and respawn after a while
+							break;
 
-					case LADDER_ID:
-						// Axe where the player can move
-						canMoveX = true;
-					case START_ID:
-					case PLAYER_ID:
-					case ROBOT_ID:	// ROBOT thread will attack the player
-					case PROBE_ID:	// PROBE thread will attack the player
-						// Move the player
-						canMoveX = true;
-						printf("PartieManager | inputPartieTCP | Collision with ladder, start, player, robot or probe\n");
-						break;
-					
-					case KEY_ID:
-						// Give the key to the player
-						switch (obj->key.numkey) {
-							case 0: player->key1 = true; break;
-							case 1: player->key2 = true; break;
-							case 2: player->key3 = true; break;
-							case 3: player->key4 = true; break;
-						}
+						case LADDER_ID:
+							// Axe where the player can move
+							canMoveY = true;
+							break;
+						case START_ID:
+						case PLAYER_ID:
+						case ROBOT_ID:	// ROBOT thread will attack the player
+						case PROBE_ID:	// PROBE thread will attack the player
+							break;
+						
+						case KEY_ID:
+							// Give the key to the player
+							switch (obj->key.numkey) {
+								case 0: player->key1 = true; break;
+								case 1: player->key2 = true; break;
+								case 2: player->key3 = true; break;
+								case 3: player->key4 = true; break;
+							}
+							break;
+						
+						case DOOR_ID:
+							// Teleport the player to the other door
+							// TODO Find the other door
+							break;
 
-						// Move the player
-						canMoveX = true;
-						break;
-					
-					case DOOR_ID:
-						// Teleport the player to the other door
-						// TODO Find the other door
-						break;
-
-					case EXIT_ID:
-						// Win the game
-						// TODO
-						break;
+						case EXIT_ID:
+							// Win the game
+							// TODO
+							break;
+					}
+					elt = elt->suivant;
 				}
 			}
+
 			liste_free(&newCollision, 0);
 
 			// Move the player
-			player->obj->y = y;
+			if (canMoveY) {
+				player->obj->y = y;
+			}
 			if (canMoveX) {
 				player->obj->x = x;
 			}

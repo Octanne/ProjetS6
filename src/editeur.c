@@ -100,7 +100,7 @@ void stop_game() {
 	logs(L_INFO, "Main | Stopping game...");
 
 	// Free the game interface
-    int actualLevel = gameInterface.toolsMenu.levelNumberSelected;
+    int actualLevel = gameInterface.toolsMenu.levelNumberSelected-1;
     stop_gui();
 
 	// Save level

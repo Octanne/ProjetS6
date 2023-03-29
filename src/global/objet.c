@@ -44,7 +44,7 @@ Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
 
 Objet* creerTrap(short x, short y) {
     Objet *objet = initObjet(x, y, TRAP_ID);
-    objet->trap.piegeActif = false;
+    objet->trap.piegeActif = true;
 
     return objet;
 }
