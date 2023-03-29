@@ -22,6 +22,7 @@
 
 #define KEY_QUIT_GAME 113
 #define KEY_VALIDATE 10
+#define KEY_SPACE 32
 
 // #####################
 // #      COLORS       #
@@ -79,6 +80,8 @@
 #define TYPE_SOCKADDR_IN 5
 #define TYPE_PID 6
 #define TYPE_LEVEL 7
+#define TYPE_DOORLINK 8
+#define TYPE_DOOR 9
 
 // #####################
 // #       Level       #
@@ -88,6 +91,8 @@
 #define MATRICE_LEVEL_SIZE 1200
 
 #define MAX_PLAYERS 4
+
+#define MAX_DOORS_NUMBER 99
 
 #endif
 

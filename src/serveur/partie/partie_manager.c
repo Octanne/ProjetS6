@@ -17,7 +17,7 @@
 #include "constants.h"
 #include "system_save.h"
 #include "level_update.h"
-#include "player_movement.h"
+#include "level_action.h"
 
 #define NUM_PARTIES_PAR_PAGE 4
 
@@ -570,6 +570,9 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	th_shared_memory.game_state = 0;
 	pthread_cond_init(&th_shared_memory.update_cond, NULL);
 
+	// Alocate temporary liste of doors
+	Liste doorListe = liste_create(true);
+
 	// Load all the levels in the server
 	th_shared_memory.levels = liste_create(true);
 	char lvlPath[260];
@@ -582,31 +585,59 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		// Try to load the level
 		Level *level = malloc(sizeof(Level));
 		loop = get_level(level_file, i++, level);
+		level->levelNumber = i - 1;
 
 		// Add the level to the list if it was loaded, else free the memory
-		if (loop == 0)
+		if (loop == 0) {
 			liste_add(&th_shared_memory.levels, level, TYPE_LEVEL);
+			
+			// Lecture des objets du niveau
+			for (int j = 0; j < level->listeObjet.taille; j++) {
+				Objet *o = liste_get(&level->listeObjet, j);
+				// Add the door to the list of doors
+				if (o != NULL && o->type == DOOR_ID) {
+					// Ajout à la liste des portes
+					Door *door = malloc(sizeof(Door));
+					door->door = o;
+					door->level = level;
+					liste_add(&doorListe, door, TYPE_DOOR);
+				}
+			}
+		}
 		else
 			free(level);
 	}
+	
+	// Links the doors
+	th_shared_memory.doors = create_doorlink(&doorListe); // Dynamic array of DoorLink
+	liste_free(&doorListe, false);
 
 	// Search start block of the first level
-	short enterX = 0, enterY = 0;
-	Level* level = liste_get(&th_shared_memory.levels, 0);
-	for (i = 0; i < level->listeObjet.taille; i++) {
+	short enterX = -1, enterY = -1;
+	EltListe *e = th_shared_memory.levels.tete;
+	Level* level = (Level*)e->elmt;
+	while (e != NULL && enterX == -1 && enterY == -1) {
+		level = (Level*)e->elmt;
 
-		// Get the object
-		Objet *o = liste_get(&level->listeObjet, i);
-		if (o != NULL && o->type == START_ID) {
-			
-			// Save the position of the start block
-			logs(L_DEBUG, "PartieManager | partieProcessusManager | Start block found at (%d, %d)", o->x, o->y);
-			printf("PartieManager | partieProcessusManager | Start block found at (%d, %d)\n", o->x, o->y);
-			enterX = o->x;
-			enterY = o->y;
-			i = level->listeObjet.taille;
-			break;
+		EltListe *eltO = level->listeObjet.tete;
+		while (eltO != NULL) {
+			// Get the object
+			Objet *o = (Objet*)eltO->elmt;
+			if (o->type == START_ID) {
+				// Save the position of the start block
+				logs(L_DEBUG, "PartieManager | partieProcessusManager | Start block found at (%d, %d)", o->x, o->y);
+				printf("PartieManager | partieProcessusManager | Start block found at (%d, %d)\n", o->x, o->y);
+				enterX = o->x;
+				enterY = o->y;
+				break;
+			}
+
+			// Next object
+			eltO = eltO->suivant;
 		}
+
+		// Next level
+		e = e->suivant;
 	}
 
 	// Place the players on the map
@@ -721,6 +752,8 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	free(th_args_list);
 	free(th_shared_memory.thread_states);
 	free(th_shared_memory.players);
+	free(th_shared_memory.thread_sockets);
+	free(th_shared_memory.doors);
 
 	// Exit the processus with success
 	logs(L_DEBUG, "PartieManager | partieProcessusManager | Processus %d ended", getpid());
@@ -907,35 +940,106 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	switch (input) {
 		case KEY_UP:
 			newY--;
-			player_movement(player, lvl, newX, newY);
+			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
 		case KEY_DOWN:
 			newY++;
-			player_movement(player, lvl, newX, newY);
+			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
 		case KEY_LEFT:
 			newX--;
-			player_movement(player, lvl, newX, newY);
+			player_action(player, lvl, newX, newY, sharedMemory);
 			break;
 		case KEY_RIGHT:
 			newX++;
-			player_movement(player, lvl, newX, newY);
+			player_action(player, lvl, newX, newY, sharedMemory);
+			break;
+		case KEY_SPACE: // TODO voir pour utiliser les bombes
+			privateMessage(args, sharedMemory, "Bombe non encore implémentée", WHITE_COLOR, 1);
+			break;
+		case KEY_VALIDATE: 
+			// On récupère la liste des objets dans la hitbox du joueur
+			Liste objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
+			
+			// On parcourt la liste
+			EltListe *elt = objCollide.tete;
+			while (elt != NULL) {
+				Objet *obj = (Objet*)elt->elmt;
+				// Si l'objet est une porte
+				if (obj->type == DOOR_ID) {
+					// On récupère la doorLink
+					DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
+					// Si joueur à la door 1
+					if (doorLink.door1.door == obj) {
+						// On déplace le joueur à la door 2
+						changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
+							doorLink.door2.door->x, doorLink.door2.door->y);
+					} else {
+						// On déplace le joueur à la door 1
+						changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
+							doorLink.door1.door->x, doorLink.door1.door->y);
+					}
+					break;
+				}
+
+				// On passe à l'élément suivant
+				elt = elt->suivant;
+			}
+			break;
+		default:
+			// SEND la touche au client
+			char message[255];
+			sprintf(message, "Touche '%d' non prise en compte", input);
+			privateMessage(args, sharedMemory, message, RED_COLOR, 1);
 			break;
 	}
 
 	// Signal condition variable
 	pthread_cond_broadcast(&sharedMemory->update_cond);
 	pthread_mutex_unlock(&sharedMemory->mutex);
+}
 
-	// Send text info to the client
+/**
+ * @brief Envoie un message à tous les clients de la partie
+ * 
+ * @param sharedMemory structure containing the shared memory
+ */
+void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line) {
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
-	sprintf(response.dataTextInfoGUI.text, "Input received %d !", input);
+	sprintf(response.dataTextInfoGUI.text, message);
 	response.dataTextInfoGUI.color = WHITE_COLOR;
-	response.dataTextInfoGUI.line = 1;
+	response.dataTextInfoGUI.line = line;
 
 	// Send the response
-	if (write(args->clientSocket, &response, sizeof(NetMessage)) == -1) {
+	for (int i = 0; i < sharedMemory->nbThreads; i++) {
+		if (sharedMemory->thread_states[i] != TH_STATE_DISCONNECTED) {
+			if (write(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage)) == -1) {
+				logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+}
+
+/**
+ * @brief Envoie un message à un client de la partie
+ * 
+ * @param args 
+ * @param sharedMemory 
+ * @param message 
+ * @param color 
+ * @param line 
+ */
+void privateMessage(threadTCPArgs *args, threadsSharedMemory *sharedMemory, char* message , int color, int line) {
+	NetMessage response;
+	response.type = TCP_REQ_TEXT_INFO_GUI;
+	sprintf(response.dataTextInfoGUI.text, message);
+	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.line = line;
+
+	// Send the response
+	if (write(sharedMemory->thread_sockets[args->threadId], &response, sizeof(NetMessage)) == -1) {
 		logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
 		exit(EXIT_FAILURE);
 	}

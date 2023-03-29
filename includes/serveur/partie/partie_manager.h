@@ -10,6 +10,7 @@
 #include "data_update.h"
 #include "net_struct.h"
 #include "player.h"
+#include "level.h"
 
 typedef struct {
 	char map[255];
@@ -52,17 +53,29 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 #define TH_STATE_DISCONNECTED -1
 
 typedef struct {
-	pthread_mutex_t mutex;	// Pthread mutex		Used to lock the shared memory
-	pthread_t *threads;		// List of threads
-	int *thread_states;		// Thread states (disconnected, connected, etc.)
-	int *thread_sockets;	// Thread sockets
-	int nbThreads;			// Number of threads
+    Level *level;
+    Objet *door;
+} Door;
+
+typedef struct {
+    Door door1;
+    Door door2;
+	bool isLinked;
+} DoorLink;
+
+typedef struct {
+	pthread_mutex_t mutex;				// Pthread mutex		Used to lock the shared memory
+	pthread_t *threads;					// List of threads
+	int *thread_states;					// Thread states (disconnected, connected, etc.)
+	int *thread_sockets;				// Thread sockets
+	int nbThreads;						// Number of threads
 
 	// Game data
-	int game_state;				// Game state (0 = waiting, 1 = playing, 2 = end)
-	pthread_cond_t update_cond;	// Pthread condition	Used to wait for an update
-	Player *players;			// Store players to send efficiently to clients
-	Liste levels;				// Store levels in a list
+	int game_state;						// Game state (0 = waiting, 1 = playing, 2 = end)
+	pthread_cond_t update_cond;			// Pthread condition	Used to wait for an update
+	Player *players;					// Store players to send efficiently to clients
+	Liste levels;						// Store levels in a list
+	DoorLink *doors;					// Store doors in a list
 } threadsSharedMemory;
 
 typedef struct {
@@ -77,6 +90,9 @@ void* partieThreadTCP(void *thread_args);
 void updatePartieTCP(threadsSharedMemory *sharedMemory);
 void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input);
+
+void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line);
+void privateMessage(threadTCPArgs *args, threadsSharedMemory *sharedMemory, char* message , int color, int line);
 
 #endif
 

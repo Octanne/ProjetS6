@@ -4,6 +4,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include <string.h>
 
 #include "utils.h"
 #include "constants.h"
@@ -33,7 +34,6 @@ void load_level(GameInterface *gameI, Level newLevel) {
 
     // Logs and refresh level
     logs(L_INFO, "Main | Level %d : %d items loaded", gameI->gameInfo.player.level, gameI->gameInfo.level->listeObjet.taille);
-    set_text_info_gui(gameI, "Level loaded", 1, GREEN_COLOR);
 
     refresh_level(gameI);
 }
@@ -77,56 +77,62 @@ void refresh_player_menu(GameInterface *gameI) {
     // Clear window
     werase(gameI->gui.winTOOLS);
 	// Draw player infos
+    
+    // Draw Player name
+    wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
+    char name[500];
+    center_string(gameI->gameInfo.player.name, 11, name);
+    mvwprintw(gameI->gui.winTOOLS, 1, 1, name);
     // Draw Keys
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameI->gui.winTOOLS, 2, 2, "Keys");
+    mvwprintw(gameI->gui.winTOOLS, 3, 2, "Keys");
     if (gameI->gameInfo.player.key1 == 1) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(PURPLE_BLOCK));
-        mvwaddch(gameI->gui.winTOOLS, 4, 2, ' ');
+        mvwaddch(gameI->gui.winTOOLS, 5, 2, ' ');
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(PURPLE_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 5, 2, ACS_LLCORNER);
+        mvwaddch(gameI->gui.winTOOLS, 6, 2, ACS_LLCORNER);
     }
     if (gameI->gameInfo.player.key2 == 1) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_BLOCK));
-        mvwaddch(gameI->gui.winTOOLS, 4, 4, ' ');
+        mvwaddch(gameI->gui.winTOOLS, 5, 4, ' ');
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(GREEN_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 5, 4, ACS_LLCORNER);
+        mvwaddch(gameI->gui.winTOOLS, 6, 4, ACS_LLCORNER);
     }
     if (gameI->gameInfo.player.key3 == 1) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-        mvwaddch(gameI->gui.winTOOLS, 4, 6, ' ');
+        mvwaddch(gameI->gui.winTOOLS, 5, 6, ' ');
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 5, 6, ACS_LLCORNER);
+        mvwaddch(gameI->gui.winTOOLS, 6, 6, ACS_LLCORNER);
     }
     if (gameI->gameInfo.player.key4 == 1) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
-        mvwaddch(gameI->gui.winTOOLS, 4, 8, ' ');
+        mvwaddch(gameI->gui.winTOOLS, 5, 8, ' ');
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 5, 8, ACS_LLCORNER);
+        mvwaddch(gameI->gui.winTOOLS, 6, 8, ACS_LLCORNER);
     }
 
     // Draw Lives
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameI->gui.winTOOLS, 7, 2, "Lives");
+    mvwprintw(gameI->gui.winTOOLS, 8, 2, "Lives");
     int i;
     for (i = 0; i < gameI->gameInfo.player.life; i++) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 9, 2 + 2*i, 'V');
+        mvwaddch(gameI->gui.winTOOLS, 10, 2 + 2*i, 'V');
     }
 
     // Draw Bombs
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameI->gui.winTOOLS, 11, 2, "Bombs");
+    mvwprintw(gameI->gui.winTOOLS, 12, 2, "Bombs");
     for (i = 0; i < gameI->gameInfo.player.nbBombs; i++) {
         wattron(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
-        mvwaddch(gameI->gui.winTOOLS, 13, 2 + 2*i, 'O');
+        mvwaddch(gameI->gui.winTOOLS, 14, 2 + 2*i, 'O');
     }
 
     // Draw Level
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
-    mvwprintw(gameI->gui.winTOOLS, 15, 2, "Level");
+    mvwprintw(gameI->gui.winTOOLS, 16, 2, "Level");
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(YELLOW_BLOCK));
-    mvwprintw(gameI->gui.winTOOLS, 17, 2, " %03i ", gameI->gameInfo.player.level);
+    mvwprintw(gameI->gui.winTOOLS, 18, 2, " %03i ", gameI->gameInfo.player.level);
 
 	// Refresh window
     wattroff(gameI->gui.winTOOLS, COLOR_PAIR(RED_COLOR));
@@ -152,12 +158,14 @@ void gen_game_window(GameInterface *gameI) {
  */
 void gen_player_menu(GameInterface *gameI) {
     gameI->gameInfo.player.life = 5;
-    gameI->gameInfo.player.nbBombs = 5;
+    gameI->gameInfo.player.nbBombs = 3;
 
     gameI->gameInfo.player.key1 = 1;
     gameI->gameInfo.player.key2 = 1;
     gameI->gameInfo.player.key3 = 1;
     gameI->gameInfo.player.key4 = 1;
+
+    strcpy(gameI->gameInfo.player.name, "Player");
 
     gameI->gameInfo.player.level = 1;
 
@@ -201,36 +209,6 @@ void send_input_to_server(GameInterface *gameI, int key) {
 }
 
 void game_keyboard_handler(GameInterface *gameI, int key) {
-    switch (key) {
-        case KEY_UP:
-            set_text_info_gui(gameI, "Action: UP", 1, GREEN_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-        
-        case KEY_DOWN:
-            set_text_info_gui(gameI, "Action: DOWN", 1, GREEN_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-
-        case KEY_LEFT:
-            set_text_info_gui(gameI, "Action: LEFT", 1, GREEN_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-
-        case KEY_RIGHT:
-            set_text_info_gui(gameI, "Action: RIGHT", 1, GREEN_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-
-        case KEY_VALIDATE:
-            set_text_info_gui(gameI, "Action: VALIDATE", 1, GREEN_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-
-        default:
-            set_text_info_gui(gameI, "Action: UNKNOWN", 1, RED_COLOR);
-            send_input_to_server(gameI, key);
-        break;
-    }
+    send_input_to_server(gameI, key);
 }
 

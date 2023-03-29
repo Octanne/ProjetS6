@@ -20,6 +20,7 @@ typedef struct {
     Liste listeObjet;
     SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
     Objet* matriceCollide[MATRICE_LEVEL_SIZE];
+    int levelNumber;
 } Level;
 
 SpriteData creerSpriteData(char sprite, int color);
@@ -31,6 +32,7 @@ Level levelCreer();
 void level_free(Level* level);
 void levelAjouterObjet(Level* level, Objet* objet);
 void levelSupprimerObjet(Level* level, Objet* objet);
+void levelChangeLevelObjet(Level* oldLevel, Level *newLevel, Objet* objet, short x, short y);
 void levelUpdateMatriceSprite(Level* level);
 Liste rechercherObjet(Level* level, short x, short y);
 Level convert_bytes_to_level(char* bytes, size_t size);

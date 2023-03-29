@@ -29,6 +29,7 @@ Objet* initObjet(short x, short y, int8_t type) {
 
     objet->x = x;
     objet->y = y;
+    objet->id = -1;
 
     return objet;
 }
@@ -42,7 +43,7 @@ Objet* creerRobot(short x, short y) { return initObjet(x, y, ROBOT_ID); }
 
 Objet* creerTrap(short x, short y) {
     Objet *objet = initObjet(x, y, TRAP_ID);
-    objet->piegeActif = true;
+    objet->trap.piegeActif = true;
     return objet;
 }
 
@@ -68,19 +69,16 @@ Objet* creerPlayer(short x, short y) {
     Objet* objet = initObjet(x, y, PLAYER_ID);
     objet->player.orientation = RIGHT_ORIENTATION;
     objet->player.color = LBLUE_COLOR;
-    objet->nbSecBeforeRespawn = 0;
     return objet;
 }
 
 Objet* creerVie(short x, short y) { 
     Objet* objet =  initObjet(x, y, HEART_ID);
-    objet->nbSecBeforeRespawn = 0;
     return objet;
 }
 
 Objet* creerBomb(short x, short y) { 
     Objet* objet =  initObjet(x, y, BOMB_ID);
-    objet->nbSecBeforeRespawn = 0;
     return objet;
 }
 

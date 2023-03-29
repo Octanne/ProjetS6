@@ -119,6 +119,16 @@ void levelSupprimerObjet(Level* level, Objet* objet) {
     // TODO update CollideMatrice
 }
 
+void levelChangeLevelObjet(Level* oldLevel, Level *newLevel, Objet* objet, short x, short y) {
+    liste_remove(&oldLevel->listeObjet, objet, false);
+    liste_add(&newLevel->listeObjet, objet, TYPE_OBJET);
+    objet->x = x;
+    objet->y = y;
+    levelUpdateMatriceSprite(oldLevel);
+    levelUpdateMatriceSprite(newLevel);
+    // TODO update CollideMatrice
+}
+
 /**
  * @brief Search an objet in the level.
  * 
@@ -264,7 +274,7 @@ void levelUpdateMatriceSprite(Level* level) {
                 level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, RED_COLOR);
                 break;
             case TRAP_ID :
-                if (objet->piegeActif) {
+                if (objet->trap.piegeActif) {
                     sprite = '#';
                     level->matriceSprite[objet->y + objet->x*MATRICE_LEVEL_Y] = creerSpriteData(sprite, LBLUE_BLOCK);
                 } else {
