@@ -50,6 +50,93 @@ Liste objectInHitBox(Level* level, short x, short y, short xSize, short ySize) {
 }
 
 /**
+ * @brief Get a list of all the mobs and players in a hitbox.
+ * 
+ * @param level The level.
+ * @param x the x position.
+ * @param y the y position.
+ * @param xSize The x size of the hitbox. 
+ * @param ySize The y size of the hitbox.
+ * @return Liste mobs and players in the hitbox.
+ */
+Liste mobsAndPlayersInHitBox(Level* level, short x, short y, short xSize, short ySize) {
+	Liste returnObjs = liste_create(false);
+
+	// Check Object collisions by checking all positions of the hitbox
+	short i, j;
+	for (j = y; j > y-ySize; j--) {
+		for (i = x; i < x+xSize; i++) {
+			// Create a list of objects at the position of the hitbox
+			Liste objs = rechercherObjet(level, i, j);
+			
+			EltListe *elmt = objs.tete;
+			// Iterate over the list and add the objects to the return list
+			while (elmt != NULL) {
+				// Get the object
+				Objet* obj = (Objet*)elmt->elmt;
+				// Check if the object is not already in the list
+				if (!liste_contains(&returnObjs, elmt->elmt) && (obj->type == PLAYER_ID || 
+							obj->type == PROBE_ID || obj->type == ROBOT_ID)) {
+					// Add the object to the list
+					liste_add(&returnObjs, elmt->elmt, TYPE_OBJET);
+				}
+
+				// Next element
+				elmt = elmt->suivant;
+			}
+			
+			// Free the list
+			liste_free(&objs, 0);
+		}
+	}
+
+	return returnObjs;
+}
+
+/**
+ * @brief Get a list of all the players in a hitbox.
+ * 
+ * @param level The level.
+ * @param x the x position.
+ * @param y the y position.
+ * @param xSize The x size of the hitbox. 
+ * @param ySize The y size of the hitbox.
+ * @return Liste players in the hitbox.
+ */
+Liste playersInHitBox(Level* level, short x, short y, short xSize, short ySize) {
+	Liste returnObjs = liste_create(false);
+
+	// Check Object collisions by checking all positions of the hitbox
+	short i, j;
+	for (j = y; j > y-ySize; j--) {
+		for (i = x; i < x+xSize; i++) {
+			// Create a list of objects at the position of the hitbox
+			Liste objs = rechercherObjet(level, i, j);
+			
+			EltListe *elmt = objs.tete;
+			// Iterate over the list and add the objects to the return list
+			while (elmt != NULL) {
+				// Get the object
+				Objet* obj = (Objet*)elmt->elmt;
+				// Check if the object is not already in the list
+				if (!liste_contains(&returnObjs, elmt->elmt) && obj->type == PLAYER_ID) {
+					// Add the object to the list
+					liste_add(&returnObjs, elmt->elmt, TYPE_OBJET);
+				}
+
+				// Next element
+				elmt = elmt->suivant;
+			}
+			
+			// Free the list
+			liste_free(&objs, 0);
+		}
+	}
+
+	return returnObjs;
+}
+
+/**
  * @brief Check if a position is free.
  * 
  * @param level : The level.

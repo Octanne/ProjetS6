@@ -75,7 +75,33 @@ void *bomb_routine(void *arg) {
     // Lock the mutex
     pthread_mutex_lock(&sharedMemory->mutex);
     
-    // TODO faire l'explosion de la bombe
+    // Prendre les joueurs et mobs dans la zone d'explosion (5blocks)
+    Liste players = mobsAndPlayersInHitBox(lvl, obj->x-2, obj->y+2, 5, 5);
+    // Pour chaque joueur et mob dans la zone d'explosion
+    EltListe *e = players.tete;
+    while (e != NULL) {
+        // Recuperer l'objet
+        Objet *objTarget = (Objet*)e->elmt;
+
+        // Check la distance
+        int distance = abs(obj->x - objTarget->x) + abs(obj->y - objTarget->y);
+        // Si la distance est plus grande que 5, on ne fait rien
+        if (distance > 5) {
+            e = e->suivant;
+            continue;
+        }
+
+        // Si c'est un joueur
+        // TODO faire -1 vie au joueur et paralyser le joueur pendant 5 secondes (pensé a le tuer si il n'a plus de vie)
+        // Problème : Il faut trouver comment récuperer le joueur depuis sont obj
+        // Solution : Faire un parcourt des joueurs dans la sharedMemory et comparer l'objet du joueur avec l'objet du joueur dans la liste
+
+        // Si c'est un mob
+        // TODO paralisé le mob pendant 5 secondes (ajouté une valeur dans la structure ThreadMob pour le paralyser)
+
+        // Next element
+        e = e->suivant;
+    }
 
     // Supprimer la bombe
     levelSupprimerObjet(lvl, obj);
