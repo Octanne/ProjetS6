@@ -81,7 +81,8 @@ typedef struct {
 	Player *players;					// Store players to send efficiently to clients
 	Liste levels;						// Store levels in a list
 	DoorLink *doors;					// Store doors in a list
-	Liste mobsThreadsArgs;				// Store mobs in a list
+	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
+	Liste piegeThreadsArgs;				// Store pieges in a list
 } threadsSharedMemory;
 
 typedef struct {

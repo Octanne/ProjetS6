@@ -575,6 +575,8 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 	// Allocate liste of mobs threads arguments
 	th_shared_memory.mobsThreadsArgs = liste_create(true);
+	// Allocate liste of piege threads arguments
+	th_shared_memory.piegeThreadsArgs = liste_create(true);
 
 	// Load all the levels in the server
 	th_shared_memory.levels = liste_create(true);
@@ -611,6 +613,12 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 					args->mob = o;
 					args->level = level;
 					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
+				} else if (o->type == TRAP_ID) {
+					// Add the trap to the list of traps
+					MobThreadsArgs *args = malloc(sizeof(MobThreadsArgs));
+					args->mob = o;
+					args->level = level;
+					liste_add(&th_shared_memory.piegeThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
 				}
 
 				// Next element
@@ -638,6 +646,8 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	liste_free(&doorListe, false);
 
 	// TODO : Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
+
+	// TODO : Start the thread for the traps (one thread for all the traps) (see piegeThreadsArgs)
 
 	// Search start block of the first level
 	short enterX = -1, enterY = -1;
@@ -775,6 +785,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 	// Free the memory
 	liste_free(&th_shared_memory.mobsThreadsArgs, true);
+	liste_free(&th_shared_memory.piegeThreadsArgs, true);
 	liste_free(&th_shared_memory.levels, true);
 	free(th_shared_memory.threads);
 	free(th_args_list);
