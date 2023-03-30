@@ -1078,7 +1078,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line) {
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
-	sprintf(response.dataTextInfoGUI.text, message);
+	sprintf(response.dataTextInfoGUI.text, "%s", message);
 	response.dataTextInfoGUI.color = WHITE_COLOR;
 	response.dataTextInfoGUI.line = line;
 
@@ -1105,7 +1105,7 @@ void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int col
 void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* message , int color, int line) {
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
-	sprintf(response.dataTextInfoGUI.text, message);
+	sprintf(response.dataTextInfoGUI.text, "%s", message);
 	response.dataTextInfoGUI.color = WHITE_COLOR;
 	response.dataTextInfoGUI.line = line;
 

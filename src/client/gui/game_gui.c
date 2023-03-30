@@ -80,9 +80,9 @@ void refresh_player_menu(GameInterface *gameI) {
     
     // Draw Player name
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(LBLUE_BLOCK));
-    char name[500];
-    center_string(gameI->gameInfo.player.name, 11, name);
-    mvwprintw(gameI->gui.winTOOLS, 1, 1, name);
+    char centered_name[11];
+    center_string(gameI->gameInfo.player.name, 11, centered_name);
+    mvwprintw(gameI->gui.winTOOLS, 1, 1, "%11s", centered_name);
     // Draw Keys
     wattron(gameI->gui.winTOOLS, COLOR_PAIR(WHITE_COLOR));
     mvwprintw(gameI->gui.winTOOLS, 3, 2, "Keys");
