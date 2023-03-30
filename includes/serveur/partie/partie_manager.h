@@ -35,6 +35,7 @@ PartieManager partieManager_create(UDPSocketData udpSocket);
 void initTCPServersPIDList();
 void killTCPServersPID();
 
+void updatePartieListe(PartieManager *partieManager);
 
 // ### UDP ###
 PartieListeMessage listPartie(PartieManager *partieManager, int numPage);

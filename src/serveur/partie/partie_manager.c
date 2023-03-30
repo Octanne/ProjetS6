@@ -124,7 +124,34 @@ void killTCPServersPID() {
 	liste_free(&tcpServersPID, true);
 }
 
+void updatePartieListe(PartieManager *partieManager) {
+	// On parcour la liste des parties du manager
+	Liste *partieInfoListe = &partieManager->partieInfoListe;
+	EltListe *elt = partieInfoListe->tete;
+	while (elt != NULL) {
+		PartieStatutInfo *partieInfo = (PartieStatutInfo*)elt->elmt;
 
+		// On regarde si le pid est définit
+		if (partieInfo->pid_partie_process != -1) {
+			// On verifie si le processus est toujours actif
+			int status;
+			int pid = waitpid(partieInfo->pid_partie_process, &status, WNOHANG);
+			if (pid == -1) {
+				perror("PartieManager | Update Partie Liste | Waitpid");
+			} else if (pid == 0) {
+				// Le processus est toujours actif
+				partieInfo->isStart = true;
+			} else {
+				// Le processus est mort
+				// Suppression de la partie
+				liste_remove(partieInfoListe, elt->elmt, true);
+			}
+		}
+
+		// On passe à la partie suivante
+		elt = elt->suivant;
+	}
+}
 
 // ### UDP ###
 /**
@@ -137,6 +164,9 @@ void killTCPServersPID() {
  * @return PartieListeMessage
 */
 PartieListeMessage listPartie(PartieManager *partieManager, int numPage) {
+
+	// Update the list of games
+	updatePartieListe(partieManager);
 
 	// Initialisation
 	PartieListeMessage partieListeMessage;
@@ -543,6 +573,7 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
 	// Register the processus in the tcpServersPID list
 	pid_t *pidCopy = malloc(sizeof(pid_t));
 	*pidCopy = pid;
+	partieInfo->pid_partie_process = pid;
 	liste_add(&tcpServersPID, pidCopy, TYPE_PID);
 
 	return 0;
