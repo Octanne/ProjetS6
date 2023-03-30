@@ -46,12 +46,7 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 #define TH_STATE_DISCONNECTED -1
 
 typedef struct {
-	Level *level;
-	pthread_mutex_t mutex;
-} LoadedLevel;
-
-typedef struct {
-    LoadedLevel *loadLevel;
+    Level *level;
     Objet *door;
 } Door;
 
@@ -62,17 +57,15 @@ typedef struct {
 } DoorLink;
 
 typedef struct {
-	LoadedLevel *loadLevel;
+	Level *level;
 	Objet *mob;
-	pthread_t thread;
 	bool isFreeze;
 
-	pthread_mutex_t mutex;
-	pthread_cond_t update_cond;
+	pthread_t thread;
 } MobThreadsArgs;
 
 typedef struct {
-	LoadedLevel *loadLevel;
+	Level *level;
 	Objet *piege;
 } PiegeLoaded;
 
@@ -88,7 +81,7 @@ typedef struct {
 	pthread_cond_t update_cond;			// Pthread condition	Used to wait for an update
 	Player *players;					// Store players to send efficiently to clients
 	Liste levels;						// Store levels in a list
-	DoorLink *doors;					// Store doors in a list
+	DoorLink *doors;					// Store doors in array
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
 	Liste piegesLoaded;					// Store pieges in a list
 	pthread_t piegeThread; 		    	// Store pieges thread

@@ -578,7 +578,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Allocate liste of mobs threads arguments
 	th_shared_memory.mobsThreadsArgs = liste_create(true);
 	// Allocate liste of piege threads arguments
-	th_shared_memory.piegeThreadsArgs = liste_create(true);
+	th_shared_memory.piegesLoaded = liste_create(true);
 
 	// Load all the levels in the server
 	th_shared_memory.levels = liste_create(true);
@@ -593,6 +593,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		Level *level = malloc(sizeof(Level));
 		loop = get_level(level_file, i++, level);
 		level->levelNumber = i - 1;
+		pthread_mutex_init(&level->mutex, NULL);
 
 		// Add the level to the list if it was loaded, else free the memory
 		if (loop == 0) {
@@ -616,31 +617,17 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 					o->id = mobNumber++;
 					args->level = level;
 					args->isFreeze = false;
-					pthread_cond_init(&args->update_cond, NULL);
-					pthread_mutex_init(&args->mutex, NULL);
 					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
 				} else if (o->type == TRAP_ID) {
 					// Add the trap to the list of traps
-					PiegeThreadArgs *args = malloc(sizeof(MobThreadsArgs));
+					PiegeLoaded *args = malloc(sizeof(MobThreadsArgs));
 					args->piege = o;
 					args->level = level;
-					liste_add(&th_shared_memory.piegeThreadsArgs, args, TYPE_PIEGETHREAD_ARGS);
+					liste_add(&th_shared_memory.piegesLoaded, args, TYPE_PIEGETHREAD_ARGS);
 				}
 
 				// Next element
 				elt = elt->suivant;
-			}
-
-			for (int j = 0; j < level->listeObjet.taille; j++) {
-				Objet *o = liste_get(&level->listeObjet, j);
-				// Add the door to the list of doors
-				if (o != NULL && o->type == DOOR_ID) {
-					// Ajout à la liste des portes
-					Door *door = malloc(sizeof(Door));
-					door->door = o;
-					door->level = level;
-					liste_add(&doorListe, door, TYPE_DOOR);
-				}
 			}
 		}
 		else
@@ -650,21 +637,6 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Links the doors
 	th_shared_memory.doors = create_doorlink(&doorListe); // Dynamic array of DoorLink
 	liste_free(&doorListe, false);
-
-	// Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
-	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
-	while (elt != NULL) {
-		MobThreadsArgs *args = (MobThreadsArgs*)elt->elmt;
-
-		// Start the thread for the mob
-		launch_mob_routine(&th_shared_memory, args);
-		
-		// Next element
-		elt = elt->suivant;
-	}
-
-	// Start the thread for the traps (one thread for all the traps) (see piegeThreadsArgs)
-	th_shared_memory.piegeThread = launch_piege_routine(&th_shared_memory, &th_shared_memory.piegeThreadsArgs);
 
 	// Search start block of the first level
 	short enterX = -1, enterY = -1;
@@ -710,8 +682,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		p.key2 = false;
 		p.key3 = false;
 		p.key4 = false;
-		p.posX = enterX;
-		p.posY = enterY;
+		p.numPlayer = i;
 		p.level = 1;
 		p.obj = poserPlayer(level, enterX, enterY);
 		if (p.obj == NULL) {
@@ -765,10 +736,24 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		printf("PartieManager | partieProcessusManager | Thread %d created\n", i);
 	}
 
-
 	// Lock mutex and set game_state to 1
 	pthread_mutex_lock(&th_shared_memory.mutex);
 	th_shared_memory.game_state = 1;
+
+	// Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
+	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
+	while (elt != NULL) {
+		MobThreadsArgs *args = (MobThreadsArgs*)elt->elmt;
+
+		// Start the thread for the mob
+		launch_mob_routine(&th_shared_memory, args);
+		
+		// Next element
+		elt = elt->suivant;
+	}
+
+	// Start the thread for the traps (one thread for all the traps) (see piegeThreadsArgs)
+	th_shared_memory.piegeThread = launch_piege_routine(&th_shared_memory, &th_shared_memory.piegesLoaded);
 
 	// While the game is not finished,
 	while (th_shared_memory.game_state == 1) {
@@ -823,7 +808,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 	// Free the memory
 	liste_free(&th_shared_memory.mobsThreadsArgs, true);
-	liste_free(&th_shared_memory.piegeThreadsArgs, true);
+	liste_free(&th_shared_memory.piegesLoaded, true);
 	liste_free(&th_shared_memory.levels, true);
 	free(th_shared_memory.threads);
 	free(th_args_list);
@@ -913,7 +898,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 	NetMessage response;
 	response.type = TCP_REQ_GAME_UPDATE;
 	logs(L_DEBUG, "PartieManager | updatePartieTCP | Preparing response");
-	printf("PartieManager | updatePartieTCP | Preparing response\n");
+	//printf("PartieManager | updatePartieTCP | Preparing response\n");
 	
 	// Send to all connected players the informations about the game
 	int i, j;
@@ -924,7 +909,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 			// Get head of the level list
 			elt = sharedMemory->levels.tete;
 			logs(L_DEBUG, "PartieManager | updatePartieTCP | Finding player's level");
-			printf("PartieManager | updatePartieTCP | Finding player's level\n");
+			//printf("PartieManager | updatePartieTCP | Finding player's level\n");
 			
 			// Depending on the room of the player, send the informations about the game
 			for (j = 1; j <= sharedMemory->levels.taille; j++) {
@@ -932,7 +917,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 				// If the player is in the room
 				if (sharedMemory->players[i].level == j) {
 					logs(L_DEBUG, "PartieManager | updatePartieTCP | Sending update to client %d", i);
-					printf("PartieManager | updatePartieTCP | Sending update to client %d\n", i);
+					//printf("PartieManager | updatePartieTCP | Sending update to client %d\n", i);
 
 					// Get the level
 					Level* lvl = (Level*)elt->elmt;
@@ -952,7 +937,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 
 					// Logs
 					logs(L_DEBUG, "PartieManager | updatePartieTCP | Sent update to client %d, size : %ld", i, response.dataUpdateGame.sizeLevel);
-					printf("PartieManager | updatePartieTCP | Sent update to client %d, size : %ld\n", i, response.dataUpdateGame.sizeLevel);
+					//printf("PartieManager | updatePartieTCP | Sent update to client %d, size : %ld\n", i, response.dataUpdateGame.sizeLevel);
 				}
 
 				// Go to the next room
@@ -1046,9 +1031,9 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 					levelAjouterObjet(lvl, bombe);
 					// On démarre le threads de la bombe
 					launch_bomb_routine(sharedMemory, bombe, lvl);
-					privateMessage(args->threadId, sharedMemory, "Bombe posée !", YELLOW_COLOR, 1);
+					privateMessage(sharedMemory, args->threadId, "Bombe posée !", YELLOW_COLOR, 1);
 				} else {
-					privateMessage(args->threadId, sharedMemory, "Vous n'avez plus de bombes !", RED_COLOR, 1);
+					privateMessage(sharedMemory, args->threadId, "Vous n'avez plus de bombes !", RED_COLOR, 1);
 				}
 				break;
 			case KEY_VALIDATE: 
@@ -1063,17 +1048,19 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 					if (obj->type == DOOR_ID) {
 						// On récupère la doorLink
 						DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
-						// Si joueur à la door 1
-						if (doorLink.door1.door == obj) {
-							// On déplace le joueur à la door 2
-							changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
-								doorLink.door2.door->x, doorLink.door2.door->y);
-						} else {
-							// On déplace le joueur à la door 1
-							changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
-								doorLink.door1.door->x, doorLink.door1.door->y);
+						if (doorLink.isLinked) {
+							// Si joueur à la door 1
+							if (doorLink.door1.door == obj) {
+								// On déplace le joueur à la door 2
+								changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
+									doorLink.door2.door->x, doorLink.door2.door->y);
+							} else {
+								// On déplace le joueur à la door 1
+								changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
+									doorLink.door1.door->x, doorLink.door1.door->y);
+							}
+							break;
 						}
-						break;
 					}
 
 					// On passe à l'élément suivant
@@ -1084,7 +1071,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 				// SEND la touche au client
 				char message[255];
 				sprintf(message, "Touche '%d' non prise en compte", input);
-				privateMessage(args->threadId, sharedMemory, message, RED_COLOR, 1);
+				privateMessage(sharedMemory, args->threadId, message, RED_COLOR, 1);
 				break;
 		}
 	}

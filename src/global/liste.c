@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "player.h"
 #include "objet.h"
+#include "level.h"
 
 #include <stdlib.h>
 #include <stdio.h>

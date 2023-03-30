@@ -3,6 +3,7 @@
 #define LEVEL_H
 
 #include <ncurses.h>
+#include <pthread.h>
 
 #include "liste.h"
 #include "objet.h"
@@ -19,7 +20,10 @@ typedef struct {
 typedef struct {
     Liste listeObjet;
     SpriteData matriceSprite[MATRICE_LEVEL_SIZE];
+
+    // Server purpose
     int levelNumber;
+    pthread_mutex_t mutex;
 } Level;
 
 SpriteData creerSpriteData(char sprite, int color);

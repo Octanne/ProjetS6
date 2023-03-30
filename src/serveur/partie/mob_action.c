@@ -11,6 +11,42 @@
 #include "utils.h"
 #include "constants.h"
 #include "level_update.h"
+#include "partie_manager.h"
+
+void *uninvincible_player_routine(void *arg) {
+    // Recuperer les arguments
+    void **args = (void**)arg;
+    threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
+    Player *player = (Player*)args[1];
+    // Free the arguments
+    free(args);
+    // Wait 3 seconds
+    sleep(3);
+    // Lock the mutex
+    pthread_mutex_lock(&sharedMemory->mutex);
+    // Uninvincible the player
+    player->isInvincible = false;
+    // Envoie message au client
+    privateMessage(sharedMemory, player->numPlayer, "Vous n'êtes plus invincible !", GREEN_COLOR, 1);
+    // Signal condition variable
+    pthread_cond_broadcast(&sharedMemory->update_cond);
+    pthread_mutex_unlock(&sharedMemory->mutex);
+    return NULL;
+}
+
+void launch_uninvincible_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
+    // Create the thread
+    pthread_t thread;
+    // Create the arguments
+    void **args = malloc(3 * sizeof(void*));
+    args[0] = sharedMemory;
+    args[1] = player;
+    // Create the thread
+    if (pthread_create(&thread, NULL, uninvincible_player_routine, args) == -1) {
+        perror("pthread_create");
+        logs(L_INFO, "pthread_create failed %s", strerror(errno));
+    }
+}
 
 void* probe_routine(void * args) {
     // Recuperer les arguments
@@ -26,16 +62,18 @@ void* probe_routine(void * args) {
     while (sharedMemory->game_state != 2) {
         // Lock the mutex
         pthread_mutex_lock(&sharedMemory->mutex);
-        //pthread_mutex_lock(&argsMob->mutex);
 
         // Mise en pause si freeze et reveil sur condition
         if (argsMob->isFreeze) {
             printf("Probe %d is freeze\n", argsMob->mob->id);
-            pthread_cond_wait(&argsMob->update_cond, &sharedMemory->mutex);
+            // On fait sleep le temps du freeze soit 5 secondes
+            pthread_mutex_unlock(&sharedMemory->mutex);
+            sleep(5);
+            pthread_mutex_lock(&sharedMemory->mutex);
+            argsMob->isFreeze = false;
             printf("Probe %d is unfreeze\n", argsMob->mob->id);
         }
 
-        // TODO : ajouter les mouvements du probe et l'attaque si sur un joueur
         // Choix d'un random entre 0 et 3
         int random = rand() % 4;
         int newX = argsMob->mob->x;
@@ -53,7 +91,8 @@ void* probe_routine(void * args) {
         }
 
         // Check hitbox
-        Liste liste = objectInHitBox(argsMob->level, newX, newY, 3, 2);
+        ObjetSize size = objet_getSize(argsMob->mob); // On augment la hitbox de 1 pour pouvoir voir les pièges aux pieds.
+        Liste liste = objectInHitBox(argsMob->level, newX, newY+1, size.xSize, size.ySize+1);
         // Si la liste est vide alors on peut bouger
         if (liste.tete != NULL) {
             bool canMove = true;
@@ -61,7 +100,8 @@ void* probe_routine(void * args) {
             EltListe *element = liste.tete;
             while (element != NULL) {
                 Objet *objet = (Objet*)element->elmt;
-                if (objet->type == BLOCK_ID || objet->type == GATE_ID ) {
+                if ((objet->y <= newY && (objet->type == BLOCK_ID || objet->type == GATE_ID)) 
+                    || (objet->type == TRAP_ID)) {
                     canMove = false;
                     break;
                 }
@@ -84,14 +124,49 @@ void* probe_routine(void * args) {
             argsMob->mob->y = newY;
         }
 
+        // On regarde si il y a un joueur dans la hitbox
+        size = objet_getSize(argsMob->mob);
+        Liste listePlayer = playersInHitBox(sharedMemory, argsMob->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
+        // Si la liste n'est pas vide alors on attaque
+        if (listePlayer.taille > 0) {
+            EltListe *element = listePlayer.tete;
+            while (element != NULL) {
+                Player *player = (Player*)element->elmt;
+
+                if (player->isInvincible) {
+                    // Next element
+                    element = element->suivant;
+                    continue;
+                }
+
+                if (player->life > 1) {
+                    player->life--;
+                    // Envoie d'un message au joueur
+                    privateMessage(sharedMemory, player->numPlayer, "Une probe vous a attaqué !", YELLOW_COLOR, 1);
+                    // Make invincible
+                    player->isInvincible = true;
+                    // On lance un thread pour le rendre non invincible
+                    launch_uninvincible_player_routine(sharedMemory, player);
+                } else {
+                    player->life--;
+                    player->isAlive = false;
+                    // TODO : Faire quelque chose quand le joueur est mort
+                }
+
+                // Next element
+                element = element->suivant;
+            }
+            
+        }
+        // On libere la liste
+        liste_free(&listePlayer, false);
+
         // Signal condition variable
         pthread_cond_broadcast(&sharedMemory->update_cond);
         pthread_mutex_unlock(&sharedMemory->mutex);
-        //pthread_mutex_unlock(&argsMob->mutex);
         
         // Latence comme pour le joueur de 0.5s
         usleep(500000);
-        printf("Routine probe !\n");
     }
     
     printf("Probe %d is dead\n", argsMob->mob->id);
@@ -105,32 +180,97 @@ void* robot_routine(void* args) {
     MobThreadsArgs *argsMob = (MobThreadsArgs*)argsTable[1];
     // Free the arguments
     free(args);
-
+    bool orientationLeft = true;
     printf("Debut routine robot\n");
 
     // Si jeux fini alors th_shared_memory.game_state = 2
     while (sharedMemory->game_state != 2) {
         // Lock the mutex
         pthread_mutex_lock(&sharedMemory->mutex);
-        //pthread_mutex_lock(&argsMob->mutex);
 
         // Mise en pause si freeze et reveil sur condition
         if (argsMob->isFreeze) {
+            pthread_mutex_unlock(&sharedMemory->mutex);
             printf("Robot %d is freeze\n", argsMob->mob->id);
-            pthread_cond_wait(&argsMob->update_cond, &sharedMemory->mutex);
+            // On fait dormir le temps du freeze soit 5s
+            sleep(5);
             printf("Robot %d is unfreeze\n", argsMob->mob->id);
+            pthread_mutex_lock(&sharedMemory->mutex);
+            argsMob->isFreeze = false;
         }
 
-        // TODO : ajouter les mouvements du robot et l'attaque si sur un joueur
+        // Mouvement du robot ajout de plus 1 pour la hitbox car on veut voir les pieges au sol
+        int value = orientationLeft ? -1 : 1;
+        Objet *objet = argsMob->mob;
+        ObjetSize size = objet_getSize(objet);
+        Liste block = objectInHitBox(argsMob->level, argsMob->mob->x+value, argsMob->mob->y+1, size.xSize, size.ySize+1);
+        EltListe *element = block.tete;
+        bool canMove = true;
+        while (element != NULL) {
+            Objet *objet = (Objet*)element->elmt;
+            if ((objet->y <= argsMob->mob->y && (objet->type == BLOCK_ID || objet->type == GATE_ID)) 
+                || (objet->type == TRAP_ID)) {
+                orientationLeft = !orientationLeft;
+                canMove = false;
+                break;
+            }
+
+            // Next element
+            element = element->suivant;
+        }
+        // On libere la liste
+        liste_free(&block, false);
+
+        // On change le x suivant l'orientation
+        if (orientationLeft && canMove) {
+            argsMob->mob->x--;
+        } else if (canMove) {
+            argsMob->mob->x++;
+        }
+
+        // On regarde si il y a un joueur dans la hitbox
+        size = objet_getSize(argsMob->mob);
+        Liste listePlayer = playersInHitBox(sharedMemory, argsMob->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
+        // Si la liste n'est pas vide alors on attaque
+        if (listePlayer.taille > 0) {
+            EltListe *element = listePlayer.tete;
+            while (element != NULL) {
+                Player *player = (Player*)element->elmt;
+
+                if (player->isInvincible) {
+                    // Next element
+                    element = element->suivant;
+                    continue;
+                }
+
+                if (player->life > 1) {
+                    player->life--;
+                    // Envoie d'un message au joueur
+                    privateMessage(sharedMemory, player->numPlayer, "Un robot vous a attaqué !", YELLOW_COLOR, 1);
+                    // Make invincible
+                    player->isInvincible = true;
+                    // On lance un thread pour le rendre non invincible
+                    launch_uninvincible_player_routine(sharedMemory, player);
+                } else {
+                    player->life--;
+                    player->isAlive = false;
+                    // TODO Faire quelque chose quand le joueur est mort
+                }
+
+                // Next element
+                element = element->suivant;
+            }
+            
+        }
+        // On libere la liste
+        liste_free(&listePlayer, false);
 
         // Signal condition variable
         pthread_cond_broadcast(&sharedMemory->update_cond);
         pthread_mutex_unlock(&sharedMemory->mutex);
-        //pthread_mutex_unlock(&argsMob->mutex);
         
         // Latence comme pour le joueur de 0.01s
-        sleep(1);
-        printf("Routine Robot\n");
+        usleep(400000);
     }
 
     printf("Robot %d is dead\n", argsMob->mob->id);
@@ -156,13 +296,48 @@ void* piege_routine(void* args) {
         // Activation des pièges 
         EltListe *elt = piegeThreadsArgs->tete;
         while (elt != NULL) {
-            PiegeThreadArgs *argsPiege = (PiegeThreadArgs*)elt->elmt;
+            PiegeLoaded *argsPiege = (PiegeLoaded*)elt->elmt;
             
             // Toggle du piege
             argsPiege->piege->trap.piegeActif = !argsPiege->piege->trap.piegeActif;
             
             if (argsPiege->piege->trap.piegeActif) {
-                // TODO : ajouter l'attaque si un joueur au dessus du piege
+                // On regarde si il y a un joueur dans la hitbox
+                ObjetSize size = objet_getSize(argsPiege->piege);
+                Liste listePlayer = playersInHitBox(sharedMemory, argsPiege->level, argsPiege->piege->x, argsPiege->piege->y-1, size.xSize, size.ySize);
+                // Si la liste n'est pas vide alors on attaque
+                if (listePlayer.taille > 0) {
+                    EltListe *element = listePlayer.tete;
+                    while (element != NULL) {
+                        Player *player = (Player*)element->elmt;
+
+                        if (player->isInvincible) {
+                            // Next element
+                            element = element->suivant;
+                            continue;
+                        }
+
+                        if (player->life > 1) {
+                            player->life--;
+                            // Envoie d'un message au joueur
+                            privateMessage(sharedMemory, player->numPlayer, "Vous venez de vous prendre un piège !", YELLOW_COLOR, 1);
+                            // Make invincible
+                            player->isInvincible = true;
+                            // On lance un thread pour le rendre non invincible
+                            launch_uninvincible_player_routine(sharedMemory, player);
+                        } else {
+                            player->life--;
+                            player->isAlive = false;
+                            // TODO Faire quelque chose quand le joueur est mort
+                        }
+
+                        // Next element
+                        element = element->suivant;
+                    }
+                    
+                }
+                // On libere la liste
+                liste_free(&listePlayer, false);
             }
             
             // Next element
@@ -181,7 +356,6 @@ void* piege_routine(void* args) {
     printf("Routine | Fin routine piège\n");
     return NULL;
 }
-
 
 void launch_mob_routine(threadsSharedMemory *sharedMemory, MobThreadsArgs *argsMobs) {
     if (argsMobs->mob->type == ROBOT_ID) {

@@ -3,6 +3,8 @@
 #define __PLAYER__
 
 #include <stdbool.h>
+#include <pthread.h>
+
 #include "objet.h"
 
 typedef struct {
@@ -19,11 +21,11 @@ typedef struct {
 	bool key3;
 	bool key4;
 
-	short posX;
-	short posY;
 	int level;
+	int numPlayer;
 
 	Objet *obj;
+	pthread_mutex_t mutex;
 } Player;
 
 void player_free(Player *player);
