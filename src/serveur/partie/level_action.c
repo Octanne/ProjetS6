@@ -24,6 +24,8 @@ void *respawn_routine(void *arg) {
 	void **args = (void**)arg;
 	threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
 	Objet *obj = (Objet*)args[1];
+    // Free the arguments
+	free(args);
 	// Wait 5 seconds
 	sleep(5);
 	// Lock the mutex
@@ -33,8 +35,6 @@ void *respawn_routine(void *arg) {
 	// Signal condition variable
 	pthread_cond_broadcast(&sharedMemory->update_cond);
 	pthread_mutex_unlock(&sharedMemory->mutex);
-	// Free the arguments
-	free(args);
 	return NULL;
 }
 
@@ -70,6 +70,8 @@ void *bomb_routine(void *arg) {
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
     Objet *obj = (Objet*)args[1];
     Level *lvl = (Level*)args[2];
+    // Free the arguments
+    free(args);
     // Wait 5 seconds
     sleep(5);
     // Lock the mutex
@@ -135,8 +137,6 @@ void *bomb_routine(void *arg) {
     // Signal condition variable
     pthread_cond_broadcast(&sharedMemory->update_cond);
     pthread_mutex_unlock(&sharedMemory->mutex);
-    // Free the arguments
-    free(args);
     return NULL;
 }
 
@@ -145,7 +145,11 @@ void *unfreeze_player_routine(void *arg) {
     void **args = (void**)arg;
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
     Player *player = (Player*)args[1];
-    int* threadId = (int*)args[2];
+    int *threadIdP = (int*)args[2];
+    int threadId = *threadIdP;
+    // Free the arguments
+    free(threadIdP);
+    free(args);
     // Wait 5 seconds
     sleep(5);
     // Lock the mutex
@@ -153,12 +157,10 @@ void *unfreeze_player_routine(void *arg) {
     // Unfreeze the player
     player->isFreeze = false;
     // Envoie message au client
-    privateMessage(*threadId, sharedMemory, "Vous n'êtes plus gelé !", YELLOW_COLOR, 1);
+    privateMessage(threadId, sharedMemory, "Vous n'êtes plus gelé !", GREEN_COLOR, 1);
     // Signal condition variable
     pthread_cond_broadcast(&sharedMemory->update_cond);
     pthread_mutex_unlock(&sharedMemory->mutex);
-    // Free the arguments
-    free(args);
     return NULL;
 }
 
@@ -169,7 +171,9 @@ void launch_unfreeze_player_routine(threadsSharedMemory *sharedMemory, Player *p
     void **args = malloc(3 * sizeof(void*));
     args[0] = sharedMemory;
     args[1] = player;
-    args[2] = (void*)&threadId;
+    int *id = malloc(sizeof(int));
+    *id = threadId;
+    args[2] = id;
     // Create the thread
     if (pthread_create(&thread, NULL, unfreeze_player_routine, args) == -1) {
         perror("pthread_create");

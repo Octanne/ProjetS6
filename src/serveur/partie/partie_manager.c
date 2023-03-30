@@ -557,7 +557,7 @@ int startPartieProcessus(PartieManager *partieManager, PartieStatutInfo *partieI
  * @param partieInfo	PartieStatutInfo containing informations about the game
 */
 void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
-	int i;
+	int i; int mobNumber = 0;
 
 	// Create threadsSharedMemory and create thread list depending on the number of players
 	memset(&th_shared_memory, 0, sizeof(threadsSharedMemory));
@@ -570,6 +570,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Define game part
 	th_shared_memory.game_state = 0;
 	pthread_cond_init(&th_shared_memory.update_cond, NULL);
+	pthread_mutex_init(&th_shared_memory.mutex, NULL);
 
 	// Alocate temporary liste of doors
 	Liste doorListe = liste_create(true);
@@ -612,7 +613,11 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 					// Add the mob to the list of mobs
 					MobThreadsArgs *args = malloc(sizeof(MobThreadsArgs));
 					args->mob = o;
+					o->id = mobNumber++;
 					args->level = level;
+					args->isFreeze = false;
+					pthread_cond_init(&args->update_cond, NULL);
+					pthread_mutex_init(&args->mutex, NULL);
 					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
 				} else if (o->type == TRAP_ID) {
 					// Add the trap to the list of traps
@@ -786,7 +791,28 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 	// Wait for all threads to finish
 	for (i = 0; i < partieInfo.nbPlayers; i++) {
-		pthread_join(th_shared_memory.threads[i], NULL);
+		if (pthread_join(th_shared_memory.threads[i], NULL) != 0) {
+			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
+			i, strerror(errno));
+		}
+	}
+
+	// Wait for all mobs threads to finish
+	EltListe *mobThreadE = th_shared_memory.mobsThreadsArgs.tete;
+	while (mobThreadE != NULL) {
+		if (pthread_join(((MobThreadsArgs*)mobThreadE->elmt)->thread, NULL) != 0) {
+			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
+			i, strerror(errno));
+		}
+		
+		// Next element
+		mobThreadE = mobThreadE->suivant;
+	}
+
+	// Wait for piege threads to finish
+	if (pthread_join(th_shared_memory.piegeThread, NULL) != 0) {
+		logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
+		i, strerror(errno));
 	}
 
 	// Close the socket
@@ -805,8 +831,6 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	free(th_shared_memory.players);
 	free(th_shared_memory.thread_sockets);
 	free(th_shared_memory.doors);
-
-	// TODO voir pour couper les threads des mobs et des pieges
 
 	// Exit the processus with success
 	logs(L_DEBUG, "PartieManager | partieProcessusManager | Processus %d ended", getpid());
@@ -1106,7 +1130,7 @@ void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* messa
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
-	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.color = color;
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response

@@ -26,13 +26,6 @@ typedef struct {
 	Liste playersInWait;
 } PartieStatutInfo;
 
-/**typedef struct {
-	Liste players;
-	Liste load_level;
-
-	PartieStatutInfo *infosStatus;
-} Partie;**/
-
 typedef struct {
 	Liste partieInfoListe;
 	UDPSocketData udpSocket;
@@ -67,6 +60,10 @@ typedef struct {
 	Level *level;
 	Objet *mob;
 	pthread_t thread;
+	bool isFreeze;
+
+	pthread_mutex_t mutex;
+	pthread_cond_t update_cond;
 } MobThreadsArgs;
 
 typedef struct {
@@ -89,7 +86,7 @@ typedef struct {
 	DoorLink *doors;					// Store doors in a list
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
 	Liste piegeThreadsArgs;				// Store pieges in a list
-	pthread_t piegeThread; 		    // Store pieges thread
+	pthread_t piegeThread; 		    	// Store pieges thread
 } threadsSharedMemory;
 
 typedef struct {
