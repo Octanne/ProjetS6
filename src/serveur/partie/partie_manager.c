@@ -1126,15 +1126,15 @@ void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int col
  * @param color 
  * @param line 
  */
-void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* message , int color, int line) {
+void privateMessage(threadsSharedMemory *sharedMemory, int clientThreadId, char* message , int color, int line) {
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
-	response.dataTextInfoGUI.color = color;
+	response.dataTextInfoGUI.color = WHITE_COLOR;
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response
-	if (write(sharedMemory->thread_sockets[threadId], &response, sizeof(NetMessage)) == -1) {
+	if (write(sharedMemory->thread_sockets[clientThreadId], &response, sizeof(NetMessage)) == -1) {
 		logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
 		exit(EXIT_FAILURE);
 	}

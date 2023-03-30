@@ -46,7 +46,12 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 #define TH_STATE_DISCONNECTED -1
 
 typedef struct {
-    Level *level;
+	Level *level;
+	pthread_mutex_t mutex;
+} LoadedLevel;
+
+typedef struct {
+    LoadedLevel *loadLevel;
     Objet *door;
 } Door;
 
@@ -57,7 +62,7 @@ typedef struct {
 } DoorLink;
 
 typedef struct {
-	Level *level;
+	LoadedLevel *loadLevel;
 	Objet *mob;
 	pthread_t thread;
 	bool isFreeze;
@@ -67,9 +72,9 @@ typedef struct {
 } MobThreadsArgs;
 
 typedef struct {
-	Level *level;
+	LoadedLevel *loadLevel;
 	Objet *piege;
-} PiegeThreadArgs;
+} PiegeLoaded;
 
 typedef struct {
 	pthread_mutex_t mutex;				// Pthread mutex		Used to lock the shared memory
@@ -85,7 +90,7 @@ typedef struct {
 	Liste levels;						// Store levels in a list
 	DoorLink *doors;					// Store doors in a list
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
-	Liste piegeThreadsArgs;				// Store pieges in a list
+	Liste piegesLoaded;					// Store pieges in a list
 	pthread_t piegeThread; 		    	// Store pieges thread
 } threadsSharedMemory;
 
@@ -103,7 +108,7 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory);
 void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int input);
 
 void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line);
-void privateMessage(int threadId, threadsSharedMemory *sharedMemory, char* message , int color, int line);
+void privateMessage(threadsSharedMemory *sharedMemory, int clientThreadId, char* message , int color, int line);
 
 #endif
 
