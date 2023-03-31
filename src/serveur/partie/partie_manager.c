@@ -1009,13 +1009,11 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 	// Remove the thread from the list
 	sharedMemory->thread_states[args->threadId] = TH_STATE_DISCONNECTED;
 
-	// Remove the player from the level
-	Objet* player = sharedMemory->players[args->threadId].obj;
-	Level* lvl = liste_get(&sharedMemory->levels, sharedMemory->players[args->threadId].level);
-	if (sharedMemory->players[args->threadId].isAlive) levelSupprimerObjet(lvl, player);
-
-	// Delete the client from the game
-	sharedMemory->players[args->threadId].isAlive = false;
+	// Delete the player from the game if he is alive
+	Player* player = &sharedMemory->players[args->threadId];
+	if (sharedMemory->players[args->threadId].isAlive) {
+		death_player_routine(sharedMemory, player);
+	}
 
 	// Signal condition variable & unlock mutex
 	pthread_cond_broadcast(&sharedMemory->update_cond);
@@ -1149,7 +1147,7 @@ void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int col
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
-	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.color = color;
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response to all connected clients
