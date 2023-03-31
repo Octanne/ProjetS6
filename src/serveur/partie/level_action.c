@@ -374,8 +374,8 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
         // On récupére tout les blocs sous les pieds du joueur
         Liste underPlr = objectInHitBox(level, newX, MATRICE_LEVEL_Y-1, 3, MATRICE_LEVEL_Y-player->obj->y+1);
         // Parcourir la liste
-        if (underPlr.tete != NULL) {
-            short highestY = 19;
+        if (underPlr.taille > 0) {
+            short highestY = 20;
             EltListe* elt = underPlr.tete;
             while (elt != NULL) {
                 Objet* obj = (Objet*)elt->elmt;
@@ -403,18 +403,23 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
                 pthread_mutex_lock(&sharedMemory->mutex);
             }
 
-            // On retire 1 de vie au joueur
-            if (player->life-1 > 0) {
-                player->life--;
-                // On envoie un message au client
-                privateMessage(sharedMemory, player->numPlayer, "Vous avez perdu une vie en tombant !", RED_COLOR, 1);
-            } else {
-                // On tu le joueur
-                player->life = 0;
+            // Si sort de la map on le tue
+            if (player->obj->y >= MATRICE_LEVEL_Y-1) {
                 death_player_routine(sharedMemory, player);
+            } else {
+                // On retire 1 de vie au joueur
+                if (player->life-1 > 0) {
+                    player->life--;
+                    // On envoie un message au client
+                    privateMessage(sharedMemory, player->numPlayer, "Vous avez perdu une vie en tombant !", RED_COLOR, 1);
+                } else {
+                    // On tue le joueur
+                    player->life = 0;
+                    death_player_routine(sharedMemory, player);
+                }
             }
         } else {
-            // Sort de la map donc mort
+            // Sort de la map donc mort mais pas normal
             death_player_routine(sharedMemory, player);
         }
         liste_free(&underPlr, false);
@@ -476,6 +481,7 @@ DoorLink* create_doorlink(Liste *doors) {
 void death_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
     // On met le joueur en mort
     player->isAlive = false;
+    player->life = 0;
     // On supprime le joueur de la map
     Level *level = liste_get(&sharedMemory->levels, player->level-1);
     levelSupprimerObjet(level, player->obj);
@@ -512,6 +518,7 @@ void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
 
     // On envoie un message au joueur
     privateMessage(sharedMemory, player->numPlayer, "Vous êtes de retour !", GREEN_COLOR, 1);
+    privateMessage(sharedMemory, player->numPlayer, "Press 'Q' to quit...", RED_COLOR, 1);
 
     // Logs
     logs(L_INFO, "PartieManager | partieProcessusManager | Le joueur %d est de retour !", player->numPlayer);
