@@ -341,10 +341,9 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
 			} else if (obj->type == DOOR_ID) {
 				DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
 				if (doorLink.isLinked) {
-					broadcastMessage(sharedMemory, "Appuyer sur 'Entrer' pour utiliser la porte !", YELLOW_COLOR, 1);
-
+					privateMessage(sharedMemory, player->numPlayer, "Appuyer sur 'Entrer' pour utiliser la porte !", YELLOW_COLOR, 1);
 				} else {
-					broadcastMessage(sharedMemory, "Cette porte ne semble pas fonctionner...", PURPLE_COLOR, 1);
+					privateMessage(sharedMemory, player->numPlayer, "Cette porte ne semble pas fonctionner...", PURPLE_COLOR, 1);
 				}
 			}
             elt = elt->suivant;
