@@ -671,10 +671,13 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 	// Search start block of the first level
 	short enterX = -1, enterY = -1;
+	int enterLevel = -1;
 	EltListe *e = th_shared_memory.levels.tete;
 	Level* level = (Level*)e->elmt;
 	while (e != NULL && enterX == -1 && enterY == -1) {
+		// Get the level
 		level = (Level*)e->elmt;
+		enterLevel++;
 
 		EltListe *eltO = level->listeObjet.tete;
 		while (eltO != NULL) {
@@ -696,6 +699,11 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		// Next level
 		e = e->suivant;
 	}
+
+	// Save enter level, x and y in shared memory
+	th_shared_memory.levelEnter = enterLevel;
+	th_shared_memory.enterX = enterX;
+	th_shared_memory.enterY = enterY;
 
 	// Place the players on the map
 	th_shared_memory.players = malloc(sizeof(Player) * partieInfo.nbPlayers);
@@ -992,13 +1000,13 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 	// Remove the thread from the list
 	sharedMemory->thread_states[args->threadId] = TH_STATE_DISCONNECTED;
 
-	// Delete the client from the game
-	sharedMemory->players[args->threadId].isAlive = false;
-
 	// Remove the player from the level
 	Objet* player = sharedMemory->players[args->threadId].obj;
 	Level* lvl = liste_get(&sharedMemory->levels, sharedMemory->players[args->threadId].level);
-	levelSupprimerObjet(lvl, player);
+	if (sharedMemory->players[args->threadId].isAlive) levelSupprimerObjet(lvl, player);
+
+	// Delete the client from the game
+	sharedMemory->players[args->threadId].isAlive = false;
 
 	// Signal condition variable
 	pthread_cond_broadcast(&sharedMemory->update_cond);
@@ -1026,10 +1034,25 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	// Handle the input
 	Player* player = &sharedMemory->players[args->threadId];
 	Level *lvl = liste_get(&sharedMemory->levels, player->level-1);
-	short newX = player->obj->x;
-	short newY = player->obj->y;
 
-	if (player->isFreeze == false) {
+	// If the player is dead
+	if (!player->isAlive) {
+		switch(input) {
+			case KEY_VALIDATE:
+				// Repsawn the player
+				respawn_player_routine(sharedMemory, player);
+				break;
+		}
+
+		// Update condition variable
+		pthread_cond_broadcast(&sharedMemory->update_cond);
+	}
+
+	// If the player is not frozen
+	if (!player->isFreeze && player->isAlive) {
+		short newX = player->obj->x;
+		short newY = player->obj->y;
+
 		// Liste pour portails
 		Liste objCollide; EltListe *elt;
 		// Message pour le client
@@ -1108,10 +1131,12 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 				privateMessage(sharedMemory, args->threadId, message, RED_COLOR, 1);
 				break;
 		}
+
+		// Signal condition variable
+		pthread_cond_broadcast(&sharedMemory->update_cond);
 	}
 
-	// Signal condition variable
-	pthread_cond_broadcast(&sharedMemory->update_cond);
+	// Unlock the mutex
 	pthread_mutex_unlock(&sharedMemory->mutex);
 }
 
@@ -1151,7 +1176,7 @@ void privateMessage(threadsSharedMemory *sharedMemory, int clientThreadId, char*
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
-	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.color = color;
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response

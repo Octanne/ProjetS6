@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "level_update.h"
 #include "partie_manager.h"
+#include "level_action.h"
 
 void *uninvincible_player_routine(void *arg) {
     // Recuperer les arguments
@@ -133,7 +134,7 @@ void* probe_routine(void * args) {
             while (element != NULL) {
                 Player *player = (Player*)element->elmt;
 
-                if (player->isInvincible) {
+                if (player->isInvincible || !player->isAlive) {
                     // Next element
                     element = element->suivant;
                     continue;
@@ -149,8 +150,7 @@ void* probe_routine(void * args) {
                     launch_uninvincible_player_routine(sharedMemory, player);
                 } else {
                     player->life--;
-                    player->isAlive = false;
-                    // TODO : Faire quelque chose quand le joueur est mort
+                    death_player_routine(sharedMemory, player);
                 }
 
                 // Next element
@@ -237,7 +237,7 @@ void* robot_routine(void* args) {
             while (element != NULL) {
                 Player *player = (Player*)element->elmt;
 
-                if (player->isInvincible) {
+                if (player->isInvincible || !player->isAlive) {
                     // Next element
                     element = element->suivant;
                     continue;
@@ -253,8 +253,7 @@ void* robot_routine(void* args) {
                     launch_uninvincible_player_routine(sharedMemory, player);
                 } else {
                     player->life--;
-                    player->isAlive = false;
-                    // TODO Faire quelque chose quand le joueur est mort
+                    death_player_routine(sharedMemory, player);
                 }
 
                 // Next element
@@ -311,7 +310,7 @@ void* piege_routine(void* args) {
                     while (element != NULL) {
                         Player *player = (Player*)element->elmt;
 
-                        if (player->isInvincible) {
+                        if (player->isInvincible || !player->isAlive) {
                             // Next element
                             element = element->suivant;
                             continue;
@@ -327,8 +326,7 @@ void* piege_routine(void* args) {
                             launch_uninvincible_player_routine(sharedMemory, player);
                         } else {
                             player->life--;
-                            player->isAlive = false;
-                            // TODO Faire quelque chose quand le joueur est mort
+                            death_player_routine(sharedMemory, player);
                         }
 
                         // Next element

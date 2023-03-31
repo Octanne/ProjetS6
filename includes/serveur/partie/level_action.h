@@ -14,5 +14,8 @@ void changePlayerOfLevel(threadsSharedMemory *sharedMemory, Player *player, Leve
 void launch_bomb_routine(threadsSharedMemory *sharedMemory, Objet *obj, Level *lvl);
 void launch_unfreeze_player_routine(threadsSharedMemory *sharedMemory, Player *player);
 
+void death_player_routine(threadsSharedMemory *sharedMemory, Player *player);
+void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player);
+
 #endif // __PLAYER8MOVEMENT__
 
