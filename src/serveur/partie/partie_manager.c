@@ -800,7 +800,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	th_shared_memory.game_state = 1;
 
 	// Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
-	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
+	elt = th_shared_memory.mobsThreadsArgs.tete;
 	while (elt != NULL) {
 
 		// Start the thread for the mob
