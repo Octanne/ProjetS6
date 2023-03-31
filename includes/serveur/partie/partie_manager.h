@@ -45,6 +45,7 @@ PartieJoinLeaveWaitMessage waitListePartie(PartieManager *partieManager, int num
 
 // ### TCP ###
 #define TH_STATE_DISCONNECTED -1
+#define TH_STATE_CONNECTED 1
 
 typedef struct {
     Level *level;
@@ -82,6 +83,7 @@ typedef struct {
 	pthread_cond_t update_cond;			// Pthread condition	Used to wait for an update
 	Player *players;					// Store players to send efficiently to clients
 	Liste levels;						// Store levels in a list
+	Liste level_mutexes;				// Store level mutexes in a list
 	DoorLink *doors;					// Store doors in array
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
 	Liste piegesLoaded;					// Store pieges in a list

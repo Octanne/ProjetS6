@@ -25,7 +25,11 @@
 threadsSharedMemory th_shared_memory;
 
 /**
- * @brief Function handling the SIGINT signal for TCP servers
+ * @brief Function handling the SIGINT signal for TCP servers:
+ * - Send a leave message to all the players
+ * - Close the socket
+ * - Set the thread state to disconnected
+ * - Exit the process
 */
 void sigintHandler(int sig_num) {
 	// Logs and print
@@ -40,7 +44,7 @@ void sigintHandler(int sig_num) {
 	message.type = TCP_REQ_PARTIE_LEAVE;
 	int i;
 	for (i = 0; i < th_shared_memory.nbThreads; i++) {
-		if (th_shared_memory.thread_states[i] != TH_STATE_DISCONNECTED) {
+		if (th_shared_memory.thread_states[i] == TH_STATE_CONNECTED) {
 
 			// Send the leave message
 			if (write(th_shared_memory.thread_sockets[i], &message, sizeof(NetMessage)) == -1) {
@@ -756,6 +760,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		printf("PartieManager | partieProcessusManager | Thread %d linked to clientSocket %d\n", i, clientSocket);
 
 		// Create the thread
+		th_shared_memory.thread_states[i] = TH_STATE_CONNECTED;
 		int status = pthread_create(&th_shared_memory.threads[i], NULL, partieThreadTCP, &th_args_list[i]);
 		if (status != 0) {
 			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_create != 0");
@@ -774,9 +779,9 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	// Start threads for mobs (PROBE AND ROBOT) (one thread per mob) (see mobsThreadsArgs)
 	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
 	while (elt != NULL) {
-		MobThreadsArgs *args = (MobThreadsArgs*)elt->elmt;
 
 		// Start the thread for the mob
+		MobThreadsArgs *args = (MobThreadsArgs*)elt->elmt;
 		launch_mob_routine(&th_shared_memory, args);
 		
 		// Next element
@@ -796,7 +801,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		// Check if there is remaining players
 		int remainingPlayers = 0;
 		for (i = 0; i < partieInfo.nbPlayers; i++)
-			if (th_shared_memory.thread_states[i] != TH_STATE_DISCONNECTED)
+			if (th_shared_memory.thread_states[i] == TH_STATE_CONNECTED)
 				remainingPlayers++;
 		if (remainingPlayers == 0)
 			th_shared_memory.game_state = 2;
@@ -806,30 +811,26 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	pthread_mutex_unlock(&th_shared_memory.mutex);
 
 	// Wait for all threads to finish
-	for (i = 0; i < partieInfo.nbPlayers; i++) {
-		if (pthread_join(th_shared_memory.threads[i], NULL) != 0) {
-			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
-			i, strerror(errno));
-		}
-	}
+	for (i = 0; i < partieInfo.nbPlayers; i++)
+		if (pthread_join(th_shared_memory.threads[i], NULL) != 0)
+			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", i, strerror(errno));
 
 	// Wait for all mobs threads to finish
 	EltListe *mobThreadE = th_shared_memory.mobsThreadsArgs.tete;
 	while (mobThreadE != NULL) {
-		if (pthread_join(((MobThreadsArgs*)mobThreadE->elmt)->thread, NULL) != 0) {
-			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
-			i, strerror(errno));
-		}
+
+		// Join the thread
+		MobThreadsArgs *args = (MobThreadsArgs*)mobThreadE->elmt;
+		if (pthread_join(args->thread, NULL) != 0)
+			logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", i, strerror(errno));
 		
 		// Next element
 		mobThreadE = mobThreadE->suivant;
 	}
 
 	// Wait for piege threads to finish
-	if (pthread_join(th_shared_memory.piegeThread, NULL) != 0) {
-		logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", 
-		i, strerror(errno));
-	}
+	if (pthread_join(th_shared_memory.piegeThread, NULL) != 0)
+		logs(L_DEBUG, "PartieManager | partieProcessusManager | pthread_join %d, erreur : %s", i, strerror(errno));
 
 	// Close the socket
 	if (close(sockedTCP) == -1) {
@@ -842,11 +843,11 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	liste_free(&th_shared_memory.piegesLoaded, true);
 	liste_free(&th_shared_memory.levels, true);
 	free(th_shared_memory.threads);
-	free(th_args_list);
 	free(th_shared_memory.thread_states);
-	free(th_shared_memory.players);
 	free(th_shared_memory.thread_sockets);
+	free(th_shared_memory.players);
 	free(th_shared_memory.doors);
+	free(th_args_list);
 
 	// Exit the processus with success
 	logs(L_DEBUG, "PartieManager | partieProcessusManager | Processus %d ended", getpid());
@@ -935,7 +936,7 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
 	int i, j;
 	EltListe* elt = NULL;
 	for (i = 0; i < sharedMemory->nbThreads; i++) {
-		if (sharedMemory->thread_states[i] != TH_STATE_DISCONNECTED) {
+		if (sharedMemory->thread_states[i] == TH_STATE_CONNECTED) {
 
 			// Get head of the level list
 			elt = sharedMemory->levels.tete;
@@ -985,9 +986,17 @@ void updatePartieTCP(threadsSharedMemory *sharedMemory) {
  * @param sharedMemory	threadsSharedMemory structure containing the shared memory
 */
 void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
+	// Print messages that the client is leaving
+	logs(L_DEBUG, "PartieManager | leavePartieTCP | Client %d is leaving", args->threadId);
+	printf("PartieManager | leavePartieTCP | Client %d is leaving\n", args->threadId);
 
 	// Lock the mutex
 	pthread_mutex_lock(&sharedMemory->mutex);
+
+	// Broadcast to all clients that the client is leaving
+	char message[64];
+	sprintf(message, "Client %d is leaving", args->threadId);
+	broadcastMessage(sharedMemory, message, RED_COLOR, 1);
 
 	// Remove the thread from the list
 	sharedMemory->thread_states[args->threadId] = TH_STATE_DISCONNECTED;
@@ -1000,10 +1009,8 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 	Level* lvl = liste_get(&sharedMemory->levels, sharedMemory->players[args->threadId].level);
 	levelSupprimerObjet(lvl, player);
 
-	// Signal condition variable
+	// Signal condition variable & unlock mutex
 	pthread_cond_broadcast(&sharedMemory->update_cond);
-
-	// Unlock the mutex
 	pthread_mutex_unlock(&sharedMemory->mutex);
 }
 
@@ -1030,8 +1037,11 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	short newY = player->obj->y;
 
 	if (player->isFreeze == false) {
+
 		// Liste pour portails
-		Liste objCollide; EltListe *elt;
+		Liste objCollide;
+		EltListe *elt;
+
 		// Message pour le client
 		char message[255];
 
@@ -1121,21 +1131,26 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
  * @param sharedMemory structure containing the shared memory
  */
 void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int color, int line) {
+
+	// Create the response
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
 	response.dataTextInfoGUI.color = WHITE_COLOR;
 	response.dataTextInfoGUI.line = line;
 
-	// Send the response
-	for (int i = 0; i < sharedMemory->nbThreads; i++) {
-		if (sharedMemory->thread_states[i] != TH_STATE_DISCONNECTED) {
-			if (write(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage)) == -1) {
+	// Send the response to all connected clients
+	for (int i = 0; i < sharedMemory->nbThreads; i++)
+		if (sharedMemory->thread_states[i] == TH_STATE_CONNECTED) {
+
+			// Logs
+			logs(L_DEBUG, "PartieManager | inputPartieTCP | Envoi d'un message broadcast au client %d", i);
+			fprintf(stderr, "PartieManager | inputPartieTCP | Envoi d'un message broadcast au client %d\n", i);
+
+			// Send the response
+			if (write(sharedMemory->thread_sockets[i], &response, sizeof(NetMessage)) == -1)
 				logs(L_DEBUG, "PartieManager | inputPartieTCP | sendto == -1");
-				exit(EXIT_FAILURE);
-			}
 		}
-	}
 }
 
 /**
@@ -1148,10 +1163,20 @@ void broadcastMessage(threadsSharedMemory *sharedMemory, char* message , int col
  * @param line 
  */
 void privateMessage(threadsSharedMemory *sharedMemory, int clientThreadId, char* message , int color, int line) {
+
+	// Check if the client is still connected
+	if (sharedMemory->thread_states[clientThreadId] == TH_STATE_DISCONNECTED)
+		return;
+
+	// Logs
+	logs(L_DEBUG, "PartieManager | inputPartieTCP | Envoi d'un message privé au client %d", clientThreadId);
+	fprintf(stderr, "PartieManager | inputPartieTCP | Envoi d'un message privé au client %d\n", clientThreadId);
+
+	// Create the response
 	NetMessage response;
 	response.type = TCP_REQ_TEXT_INFO_GUI;
 	sprintf(response.dataTextInfoGUI.text, "%s", message);
-	response.dataTextInfoGUI.color = WHITE_COLOR;
+	response.dataTextInfoGUI.color = color;
 	response.dataTextInfoGUI.line = line;
 
 	// Send the response
