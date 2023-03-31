@@ -518,7 +518,7 @@ void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
 
     // On envoie un message au joueur
     privateMessage(sharedMemory, player->numPlayer, "Vous êtes de retour !", GREEN_COLOR, 1);
-    privateMessage(sharedMemory, player->numPlayer, "Press 'Q' to quit...", RED_COLOR, 1);
+    privateMessage(sharedMemory, player->numPlayer, "Press 'Q' to quit...", RED_COLOR, 0);
 
     // Logs
     logs(L_INFO, "PartieManager | partieProcessusManager | Le joueur %d est de retour !", player->numPlayer);
