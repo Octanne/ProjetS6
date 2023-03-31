@@ -25,8 +25,8 @@ Liste rechercherMobsInListe(Liste listeMobs, Level *level, short x, short y) {
 		MobThreadsArgs *mob = (MobThreadsArgs*)elt->elmt;
         Objet* objet = mob->mob;
         ObjetSize size = objet_getSize(objet);
-        if (mob->level == level && (x >= objet->x && x < objet->x + size.xSize) && 
-             (y <= objet->y && y > objet->y - size.ySize)) {
+        if (mob->levelMutex->level.levelNumber == level->levelNumber && (x >= objet->x && x < objet->x + size.xSize) && 
+            	(y <= objet->y && y > objet->y - size.ySize)) {
             liste_add(&liste, mob, TYPE_MOBTHREAD_ARGS);
         }
         elt = elt->suivant;

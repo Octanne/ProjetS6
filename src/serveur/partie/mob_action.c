@@ -15,33 +15,42 @@
 #include "level_action.h"
 
 void *uninvincible_player_routine(void *arg) {
+
     // Recuperer les arguments
     void **args = (void**)arg;
     threadsSharedMemory *sharedMemory = (threadsSharedMemory*)args[0];
     Player *player = (Player*)args[1];
+
     // Free the arguments
     free(args);
+
     // Wait 3 seconds
     sleep(3);
+
     // Lock the mutex
     pthread_mutex_lock(&sharedMemory->mutex);
+
     // Uninvincible the player
     player->isInvincible = false;
+
     // Envoie message au client
     privateMessage(sharedMemory, player->numPlayer, "Vous n'êtes plus invincible !", GREEN_COLOR, 1);
-    // Signal condition variable
-    pthread_cond_broadcast(&sharedMemory->update_cond);
+
+    // Unlock the mutex
     pthread_mutex_unlock(&sharedMemory->mutex);
     return NULL;
 }
 
 void launch_uninvincible_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
+
     // Create the thread
     pthread_t thread;
+
     // Create the arguments
     void **args = malloc(3 * sizeof(void*));
     args[0] = sharedMemory;
     args[1] = player;
+
     // Create the thread
     if (pthread_create(&thread, NULL, uninvincible_player_routine, args) == -1) {
         perror("pthread_create");
@@ -93,7 +102,7 @@ void* probe_routine(void * args) {
 
         // Check hitbox
         ObjetSize size = objet_getSize(argsMob->mob); // On augment la hitbox de 1 pour pouvoir voir les pièges aux pieds.
-        Liste liste = objectInHitBox(argsMob->level, newX, newY+1, size.xSize, size.ySize+1);
+        Liste liste = objectInHitBox(&argsMob->levelMutex->level, newX, newY+1, size.xSize, size.ySize+1);
         // Si la liste est vide alors on peut bouger
         if (liste.tete != NULL) {
             bool canMove = true;
@@ -127,7 +136,7 @@ void* probe_routine(void * args) {
 
         // On regarde si il y a un joueur dans la hitbox
         size = objet_getSize(argsMob->mob);
-        Liste listePlayer = playersInHitBox(sharedMemory, argsMob->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
+        Liste listePlayer = playersInHitBox(sharedMemory, &argsMob->levelMutex->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
         // Si la liste n'est pas vide alors on attaque
         if (listePlayer.taille > 0) {
             EltListe *element = listePlayer.tete;
@@ -203,7 +212,7 @@ void* robot_routine(void* args) {
         int value = orientationLeft ? -1 : 1;
         Objet *objet = argsMob->mob;
         ObjetSize size = objet_getSize(objet);
-        Liste block = objectInHitBox(argsMob->level, argsMob->mob->x+value, argsMob->mob->y+1, size.xSize, size.ySize+1);
+        Liste block = objectInHitBox(&argsMob->levelMutex->level, argsMob->mob->x+value, argsMob->mob->y+1, size.xSize, size.ySize+1);
         EltListe *element = block.tete;
         bool canMove = true;
         while (element != NULL) {
@@ -223,7 +232,7 @@ void* robot_routine(void* args) {
         if (canMove) {
             // Ajustment pour orientation droite car on veut pas un pied dans le vide et l'autre sur le block
             int orienAdd = orientationLeft ? 0 : +2;
-            Liste vide = objectInHitBox(argsMob->level, argsMob->mob->x+value+orienAdd, argsMob->mob->y+1, 1, 1);
+            Liste vide = objectInHitBox(&argsMob->levelMutex->level, argsMob->mob->x+value+orienAdd, argsMob->mob->y+1, 1, 1);
             if (vide.tete == NULL) {
                 orientationLeft = !orientationLeft;
                 canMove = false;
@@ -244,7 +253,7 @@ void* robot_routine(void* args) {
 
         // On regarde si il y a un joueur dans la hitbox
         size = objet_getSize(argsMob->mob);
-        Liste listePlayer = playersInHitBox(sharedMemory, argsMob->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
+        Liste listePlayer = playersInHitBox(sharedMemory, &argsMob->levelMutex->level, argsMob->mob->x, argsMob->mob->y, size.xSize, size.ySize);
         // Si la liste n'est pas vide alors on attaque
         if (listePlayer.taille > 0) {
             EltListe *element = listePlayer.tete;
@@ -317,7 +326,7 @@ void* piege_routine(void* args) {
             if (argsPiege->piege->trap.piegeActif) {
                 // On regarde si il y a un joueur dans la hitbox
                 ObjetSize size = objet_getSize(argsPiege->piege);
-                Liste listePlayer = playersInHitBox(sharedMemory, argsPiege->level, argsPiege->piege->x, argsPiege->piege->y-1, size.xSize, size.ySize);
+                Liste listePlayer = playersInHitBox(sharedMemory, &argsPiege->levelMutex->level, argsPiege->piege->x, argsPiege->piege->y-1, size.xSize, size.ySize);
                 // Si la liste n'est pas vide alors on attaque
                 if (listePlayer.taille > 0) {
                     EltListe *element = listePlayer.tete;
