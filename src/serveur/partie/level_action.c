@@ -112,6 +112,14 @@ void *bomb_routine(void *arg) {
     while (e != NULL) {
         // Recuperer le joueur
         Player *player = (Player*)e->elmt;
+
+        // Verifier si en vie
+        if (!player->isAlive) {
+            // Next element
+            e = e->suivant;
+            continue;
+        }
+
         // Vérifier la distance
         int distance = abs(obj->x - player->obj->x) + abs(obj->y - player->obj->y);
         if (distance > 5) {
@@ -131,8 +139,7 @@ void *bomb_routine(void *arg) {
             } else {
                 // On tue le joueur
                 player->life--;
-                player->isAlive = false;
-                // TODO Faire quelque quand le joueur est mort
+                death_player_routine(sharedMemory, player);
             }
         } else {
             // On freeze le joueur
@@ -147,8 +154,7 @@ void *bomb_routine(void *arg) {
             } else {
                 // On tue le joueur
                 player->life--;
-                player->isAlive = false;
-                // TODO Faire quelque quand le joueur est mort
+                death_player_routine(sharedMemory, player);
             }
         }
 
@@ -335,10 +341,9 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
 			} else if (obj->type == DOOR_ID) {
 				DoorLink doorLink = sharedMemory->doors[obj->door.numdoor];
 				if (doorLink.isLinked) {
-					broadcastMessage(sharedMemory, "Appuyer sur 'Entrer' pour utiliser la porte !", YELLOW_COLOR, 1);
-
+					privateMessage(sharedMemory, player->numPlayer, "Appuyer sur 'Entrer' pour utiliser la porte !", YELLOW_COLOR, 1);
 				} else {
-					broadcastMessage(sharedMemory, "Cette porte ne semble pas fonctionner...", PURPLE_COLOR, 1);
+					privateMessage(sharedMemory, player->numPlayer, "Cette porte ne semble pas fonctionner...", PURPLE_COLOR, 1);
 				}
 			}
             elt = elt->suivant;
@@ -413,5 +418,50 @@ DoorLink* create_doorlink(Liste *doors) {
 	}
 
 	return linkDoor;
+}
+
+void death_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
+    // On met le joueur en mort
+    player->isAlive = false;
+    // On supprime le joueur de la map
+    Level *level = liste_get(&sharedMemory->levels, player->level-1);
+    levelSupprimerObjet(level, player->obj);
+    // Set to NULL to avoid double free
+    player->obj = NULL;
+    // Envoie d'un message au joueur
+    privateMessage(sharedMemory, player->numPlayer, "Vous êtes mort, 'ENTRER' pour recommencer, 'Q' pour quitter.", RED_COLOR, 0);
+
+    // Logs
+    logs(L_INFO, "PartieManager | partieProcessusManager | Le joueur %d est mort", player->numPlayer);
+    printf("PartieManager | partieProcessusManager | Le joueur %d est mort \n", player->numPlayer);
+}
+
+void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
+    player->life = 5;
+    player->nbBombs = 0;
+    player->isAlive = true;
+    player->isFreeze = false;
+    player->isInvincible = false;
+    player->key1 = false;
+    player->key2 = false;
+    player->key3 = false;
+    player->key4 = false;
+    player->level = sharedMemory->levelEnter+1;
+    Level *level = liste_get(&sharedMemory->levels, sharedMemory->levelEnter);
+    player->obj = poserPlayer(level, sharedMemory->enterX, sharedMemory->enterY);
+    if (player->obj == NULL) {
+        logs(L_DEBUG, "PartieManager | partieProcessusManager | poserPlayer == NULL");
+        printf("PartieManager | partieProcessusManager | Error while placing the player on the map\n");
+        exit(EXIT_FAILURE);
+    }
+    player->obj->player.color = 1 + player->numPlayer % 7;
+    player->obj->player.orientation = RIGHT_ORIENTATION;
+
+    // On envoie un message au joueur
+    privateMessage(sharedMemory, player->numPlayer, "Vous êtes de retour !", GREEN_COLOR, 1);
+
+    // Logs
+    logs(L_INFO, "PartieManager | partieProcessusManager | Le joueur %d est de retour !", player->numPlayer);
+    printf("PartieManager | partieProcessusManager | Le joueur %d est de retour ! \n", player->numPlayer);
 }
 

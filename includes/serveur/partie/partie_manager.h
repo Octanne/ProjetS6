@@ -88,6 +88,9 @@ typedef struct {
 	Liste mobsThreadsArgs;				// Store mobs in a list (probe and robot)
 	Liste piegesLoaded;					// Store pieges in a list
 	pthread_t piegeThread; 		    	// Store pieges thread
+	short enterX;						// Enter X
+	short enterY;						// Enter Y
+	short levelEnter;					// Enter level
 } threadsSharedMemory;
 
 typedef struct {
