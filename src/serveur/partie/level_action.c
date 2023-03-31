@@ -352,27 +352,80 @@ void player_action(Player *player, Level *level, short newX, short newY, threads
 	liste_free(&newCollision, false);
 
     // Check if there is a block under the new position
-    Liste underPlr = objectInHitBox(level, newX, newY+1, 3, 1);
-    // Parcourir la liste
-    if (underPlr.tete != NULL) {
-        EltListe* elt = underPlr.tete;
-        while (elt != NULL) {
-            Objet* obj = (Objet*)elt->elmt;
-            if (obj->type == BLOCK_ID || obj->type == TRAP_ID || obj->type == LADDER_ID) {
-                hasBlockUnderFeet = true;
-                break;
+    if (player->obj->y == newY) {
+        Liste underPlr = objectInHitBox(level, newX, newY+1, 3, 1);
+        // Parcourir la liste
+        if (underPlr.tete != NULL) {
+            EltListe* elt = underPlr.tete;
+            while (elt != NULL) {
+                Objet* obj = (Objet*)elt->elmt;
+                if (obj->type == BLOCK_ID || obj->type == TRAP_ID || obj->type == LADDER_ID) {
+                    hasBlockUnderFeet = true;
+                    break;
+                }
+                elt = elt->suivant;
             }
-            elt = elt->suivant;
         }
+        liste_free(&underPlr, false);
     }
-    liste_free(&underPlr, false);
 
-    // Check if the player can move
-    if (canMoveX && hasBlockUnderFeet) {
-        player->obj->x = newX;
-    }
-    if (canMoveY && hasLadder) {
-        player->obj->y = newY;
+    // Si pas de bloc sous les pieds on fait tomber le joueur
+    if (!hasBlockUnderFeet && !hasLadder && player->obj->y == newY) {
+        // On récupére tout les blocs sous les pieds du joueur
+        Liste underPlr = objectInHitBox(level, newX, MATRICE_LEVEL_Y-1, 3, MATRICE_LEVEL_Y-player->obj->y+1);
+        // Parcourir la liste
+        if (underPlr.tete != NULL) {
+            short highestY = 19;
+            EltListe* elt = underPlr.tete;
+            while (elt != NULL) {
+                Objet* obj = (Objet*)elt->elmt;
+                if (obj->type == BLOCK_ID || obj->type == TRAP_ID || obj->type == LADDER_ID || obj->type == GATE_ID) {
+                    if (obj->y < highestY) {
+                        highestY = obj->y;
+                    }
+                }
+                elt = elt->suivant;
+            }
+
+            printf("Le joueur %s tombe de %d en %d !\r ", player->name, player->obj->y, highestY);
+            fflush(stdout);
+
+            // On met à jour la position du joueur
+            player->obj->x = newX;
+
+            // On fait tomber le joueur de 1 en 1 jusqu'à la hauteur du bloc le plus haut
+            while (player->obj->y < highestY-1) {
+                player->obj->y++;
+                // On envoie la mise à jour au client
+                pthread_cond_broadcast(&sharedMemory->update_cond);
+                pthread_mutex_unlock(&sharedMemory->mutex);
+                usleep(100000);
+                pthread_mutex_lock(&sharedMemory->mutex);
+            }
+
+            // On retire 1 de vie au joueur
+            if (player->life-1 > 0) {
+                player->life--;
+                // On envoie un message au client
+                privateMessage(sharedMemory, player->numPlayer, "Vous avez perdu une vie en tombant !", RED_COLOR, 1);
+            } else {
+                // On tu le joueur
+                player->life = 0;
+                death_player_routine(sharedMemory, player);
+            }
+        } else {
+            // Sort de la map donc mort
+            death_player_routine(sharedMemory, player);
+        }
+        liste_free(&underPlr, false);
+    } else {
+        // Check if the player can move
+        if (canMoveX) {
+            player->obj->x = newX;
+        }
+        if (canMoveY && hasLadder) {
+            player->obj->y = newY;
+        }
     }
 }
 

@@ -218,6 +218,20 @@ void* robot_routine(void* args) {
             // Next element
             element = element->suivant;
         }
+
+        // On verifie si il y a du vide sous les pieds
+        if (canMove) {
+            // Ajustment pour orientation droite car on veut pas un pied dans le vide et l'autre sur le block
+            int orienAdd = orientationLeft ? 0 : +2;
+            Liste vide = objectInHitBox(argsMob->level, argsMob->mob->x+value+orienAdd, argsMob->mob->y+1, 1, 1);
+            if (vide.tete == NULL) {
+                orientationLeft = !orientationLeft;
+                canMove = false;
+            }
+            // On libere la liste
+            liste_free(&vide, false);
+        }
+
         // On libere la liste
         liste_free(&block, false);
 
