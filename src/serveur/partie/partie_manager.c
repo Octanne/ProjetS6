@@ -1030,7 +1030,11 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	short newY = player->obj->y;
 
 	if (player->isFreeze == false) {
-		
+		// Liste pour portails
+		Liste objCollide; EltListe *elt;
+		// Message pour le client
+		char message[255];
+
 		// Function to handle the player possible movement	
 		switch (input) {
 			case KEY_UP:
@@ -1069,10 +1073,10 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 				break;
 			case KEY_VALIDATE: 
 				// On récupère la liste des objets dans la hitbox du joueur
-				Liste objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
+				objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
 				
 				// On parcourt la liste
-				EltListe *elt = objCollide.tete;
+				elt = objCollide.tete;
 				while (elt != NULL) {
 					Objet *obj = (Objet*)elt->elmt;
 					// Si l'objet est une porte
@@ -1100,7 +1104,6 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 				break;
 			default:
 				// SEND la touche au client
-				char message[255];
 				sprintf(message, "Touche '%d' non prise en compte", input);
 				privateMessage(sharedMemory, args->threadId, message, RED_COLOR, 1);
 				break;
