@@ -123,8 +123,8 @@ ObjetSize objet_getSize(Objet* objet) {
             size.ySize = 2;
             break;
         case ROBOT_ID:
-            size.xSize = 4;
-            size.ySize = 3;
+            size.xSize = 3;
+            size.ySize = 4;
             break;
         case PLAYER_ID:
             size.xSize = 3;
