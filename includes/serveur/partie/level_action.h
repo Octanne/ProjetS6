@@ -16,6 +16,7 @@ void launch_unfreeze_player_routine(threadsSharedMemory *sharedMemory, Player *p
 
 void death_player_routine(threadsSharedMemory *sharedMemory, Player *player);
 void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player);
+void launch_fall_player_routine(threadsSharedMemory *sharedMemory, Player *player, short highestY);
 
 #endif // __PLAYER8MOVEMENT__
 

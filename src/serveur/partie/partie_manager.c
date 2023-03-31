@@ -678,9 +678,9 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		Objet *o = args->mob;
 
 		// Remove the mob from the level
-		liste_remove(&args->level->listeObjet, o, false);
+		liste_remove(&args->levelMutex->level.listeObjet, o, false);
 		// Add the mob to the end of the list
-		liste_add(&args->level->listeObjet, o, TYPE_OBJET);
+		liste_add(&args->levelMutex->level.listeObjet, o, TYPE_OBJET);
 
 		// Next element
 		elt = elt->suivant;
@@ -738,6 +738,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		p.isAlive = true;
 		p.isFreeze = false;
 		p.isInvincible = false;
+		p.isFalling = false;
 		p.key1 = false;
 		p.key2 = false;
 		p.key3 = false;
@@ -1061,7 +1062,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 			respawn_player_routine(sharedMemory, player);
 
 	// If the player is not frozen
-	if (!player->isFreeze && player->isAlive) {
+	if (!player->isFreeze && player->isAlive && !player->isFalling) {
 		short newX = player->obj->x;
 		short newY = player->obj->y;
 

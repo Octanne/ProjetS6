@@ -389,32 +389,10 @@ void player_action(Player *player, LevelMutex *levelMutex, short newX, short new
 
 			// On met à jour la position du joueur
 			player->obj->x = newX;
+			player->isFalling = true;
 
-			// On fait tomber le joueur de 1 en 1 jusqu'à la hauteur du bloc le plus haut
-			while (player->obj->y < highestY-1) {
-				player->obj->y++;
-				// On envoie la mise à jour au client
-				pthread_cond_broadcast(&sharedMemory->update_cond);
-				pthread_mutex_unlock(&sharedMemory->mutex);
-				usleep(100000);
-				pthread_mutex_lock(&sharedMemory->mutex);
-			}
-
-			// Si sort de la map on le tue
-			if (player->obj->y >= MATRICE_LEVEL_Y-1) {
-				death_player_routine(sharedMemory, player);
-			} else {
-				// On retire 1 de vie au joueur
-				if (player->life-1 > 0) {
-					player->life--;
-					// On envoie un message au client
-					privateMessage(sharedMemory, player->numPlayer, "Vous avez perdu une vie en tombant !", RED_COLOR, 1);
-				} else {
-					// On tue le joueur
-					player->life = 0;
-					death_player_routine(sharedMemory, player);
-				}
-			}
+			// Call fall routine
+			launch_fall_player_routine(sharedMemory, player, highestY);
 		} else {
 			// Sort de la map donc mort mais pas normal
 			death_player_routine(sharedMemory, player);
@@ -428,6 +406,70 @@ void player_action(Player *player, LevelMutex *levelMutex, short newX, short new
 		if (canMoveY && hasLadder) {
 			player->obj->y = newY;
 		}
+	}
+}
+
+void *fall_player_routine(void *arg) {
+	threadsSharedMemory *sharedMemory = ((void**)arg)[0];
+	Player *player = ((void**)arg)[1];
+	short *highestYD = ((void**)arg)[2];
+	short highestY = *highestYD;
+	free(arg);
+	free(highestYD);
+	pthread_mutex_lock(&sharedMemory->mutex);
+
+	short nbBlock = 0;
+
+	// On fait tomber le joueur de 1 en 1 jusqu'à la hauteur du bloc le plus haut
+	while (player->obj->y < highestY-1) {
+		player->obj->y++;
+		nbBlock++;
+		// On envoie la mise à jour au client
+		pthread_cond_broadcast(&sharedMemory->update_cond);
+		pthread_mutex_unlock(&sharedMemory->mutex);
+		usleep(100000);
+		pthread_mutex_lock(&sharedMemory->mutex);
+	}
+
+	// Si sort de la map on le tue
+	if (player->obj->y >= MATRICE_LEVEL_Y-1) {
+		death_player_routine(sharedMemory, player);
+	} else if (nbBlock > 2) { // Si on tombe de plus de 2 blocs on perd une vie
+		// On retire 1 de vie au joueur
+		if (player->life-1 > 0) {
+			player->life--;
+			// On envoie un message au client
+			privateMessage(sharedMemory, player->numPlayer, "Vous avez perdu une vie en tombant !", RED_COLOR, 1);
+		} else {
+			// On tue le joueur
+			player->life = 0;
+			death_player_routine(sharedMemory, player);
+		}
+	}
+
+	// Desactive falling
+	player->isFalling = false;
+
+	// Unlock mutex && cond
+	pthread_mutex_unlock(&sharedMemory->mutex);
+	pthread_cond_broadcast(&sharedMemory->update_cond);
+
+	return NULL;
+}
+
+void launch_fall_player_routine(threadsSharedMemory *sharedMemory, Player *player, short highestY) {
+	// On crée un thread pour faire tomber le joueur
+	void* args = malloc(sizeof(void*)*3);
+	((void**)args)[0] = sharedMemory;
+	((void**)args)[1] = player;
+	short *highestYA = malloc(sizeof(short));
+	*highestYA = highestY;
+	((void**)args)[2] = highestYA;
+	pthread_t thread;
+	if (pthread_create(&thread, NULL, fall_player_routine, (void*)args)) {
+		perror("pthread_create");
+		logs(L_INFO, "Erreur lors de la création du thread fall_player_routine");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -523,6 +565,7 @@ void respawn_player_routine(threadsSharedMemory *sharedMemory, Player *player) {
 	player->isAlive = true;
 	player->isFreeze = false;
 	player->isInvincible = false;
+	player->isFalling = false;
 	player->key1 = false;
 	player->key2 = false;
 	player->key3 = false;

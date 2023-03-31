@@ -15,6 +15,7 @@ typedef struct {
 	bool isAlive;
 	bool isFreeze;
 	bool isInvincible;
+	bool isFalling;
 
 	bool key1;
 	bool key2;
