@@ -668,6 +668,21 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 		else
 			free(level);
 	}
+
+	// Déplacement des mobs de la liste du niveau vers la fin de la liste
+	EltListe *elt = th_shared_memory.mobsThreadsArgs.tete;
+	while (elt != NULL) {
+		MobThreadsArgs *args = elt->elmt;
+		Objet *o = args->mob;
+
+		// Remove the mob from the level
+		liste_remove(&args->level->listeObjet, o, false);
+		// Add the mob to the end of the list
+		liste_add(&args->level->listeObjet, o, TYPE_OBJET);
+
+		// Next element
+		elt = elt->suivant;
+	}
 	
 	// Links the doors
 	th_shared_memory.doors = create_doorlink(&doorListe); // Dynamic array of DoorLink
