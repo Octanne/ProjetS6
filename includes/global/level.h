@@ -23,8 +23,13 @@ typedef struct {
 
     // Server purpose
     int levelNumber;
-    pthread_mutex_t mutex;
 } Level;
+
+typedef struct {
+	Level level;
+	pthread_mutex_t mutex;
+} LevelMutex;
+
 
 SpriteData creerSpriteData(char sprite, int color);
 SpriteData emptySprite();

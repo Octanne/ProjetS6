@@ -114,6 +114,13 @@ void free_pointer(void* elmt, char type) {
 		case TYPE_PLAYER:
 			player_free(elmt);
 			break;
+		case TYPE_MUTEX_LEVEL:
+			{
+				LevelMutex* levelMutex = (LevelMutex*)elmt;
+				level_free(&levelMutex->level);
+				free(levelMutex);
+			}
+			break;
 		default: // TODO
 			logs(L_INFO, "liste_free | ERROR type inconnu");
 			break;

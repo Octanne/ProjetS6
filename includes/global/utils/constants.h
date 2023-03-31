@@ -85,6 +85,7 @@
 #define TYPE_DOOR 9
 #define TYPE_MOBTHREAD_ARGS 10
 #define TYPE_PIEGETHREAD_ARGS 11
+#define TYPE_MUTEX_LEVEL 12
 
 // #####################
 // #       Level       #

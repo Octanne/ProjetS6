@@ -252,3 +252,43 @@ void center_string(const char* str, const int dest_len, char* dest) {
     sprintf(dest, "%*s%s%*s", left_spaces, " ", str, right_spaces, " ");
 }
 
+/**
+ * @brief Lock both mutexes to avoid deadlocks by:
+ * - Locking the first one
+ * - Trying to lock the second one
+ * - If the second one is already locked, unlock the first one and try again until the second one is unlocked
+*/
+void lockMutexAvoidDeadLock(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2) {
+
+	int lock_state = 1;
+	while (lock_state > 0) {
+
+		// First state : lock the first mutex and try to lock the second one
+		if (lock_state == 1) {
+			pthread_mutex_lock(mutex1);
+
+			// If locked, exit the loop
+			if (pthread_mutex_trylock(mutex2) == 0)
+				lock_state = 0;
+			// Else, unlock the first mutex and try again in the second state
+			else {
+				lock_state = 2;
+				pthread_mutex_unlock(mutex1);
+			}
+		}
+
+		// Second state : lock the second mutex and try to lock the first one
+		if (lock_state == 2) {
+			pthread_mutex_lock(mutex2);
+
+			// If locked, exit the loop
+			if (pthread_mutex_trylock(mutex1) == 0)
+				lock_state = 0;
+			// Else, unlock the second mutex and try again in the first state
+			else {
+				lock_state = 1;
+				pthread_mutex_unlock(mutex2);
+			}
+		}
+	}
+}

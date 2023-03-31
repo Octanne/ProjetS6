@@ -625,39 +625,41 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 	while (loop == 0) {
 
 		// Try to load the level
-		Level *level = malloc(sizeof(Level));
-		loop = get_level(level_file, i++, level);
-		level->levelNumber = i - 1;
-		pthread_mutex_init(&level->mutex, NULL);
+		LevelMutex *levelMutex = malloc(sizeof(LevelMutex));
+		loop = get_level(level_file, i++, &levelMutex->level);
+		levelMutex->level.levelNumber = i - 1;
 
 		// Add the level to the list if it was loaded, else free the memory
 		if (loop == 0) {
-			liste_add(&th_shared_memory.levels, level, TYPE_LEVEL);
+			liste_add(&th_shared_memory.levels, levelMutex, TYPE_LEVEL);
 			
 			// Lecture des objets du niveau
-			EltListe *elt = level->listeObjet.tete;
+			EltListe *elt = levelMutex->level.listeObjet.tete;
 			while (elt != NULL) {
 				Objet *o = elt->elmt;
+
 				// Add the door to the list of doors
 				if (o->type == DOOR_ID) {
 					// Ajout à la liste des portes
 					Door *door = malloc(sizeof(Door));
 					door->door = o;
-					door->level = level;
+					door->levelMutex = levelMutex;
 					liste_add(&doorListe, door, TYPE_DOOR);
-				} else if (o->type == ROBOT_ID || o->type == PROBE_ID) {
-					// Add the mob to the list of mobs
+				}
+				// Add the mob to the list of mobs
+				else if (o->type == ROBOT_ID || o->type == PROBE_ID) {
 					MobThreadsArgs *args = malloc(sizeof(MobThreadsArgs));
 					args->mob = o;
 					o->id = mobNumber++;
-					args->level = level;
+					args->levelMutex = levelMutex;
 					args->isFreeze = false;
 					liste_add(&th_shared_memory.mobsThreadsArgs, args, TYPE_MOBTHREAD_ARGS);
-				} else if (o->type == TRAP_ID) {
-					// Add the trap to the list of traps
+				}
+				// Add the trap to the list of traps
+				else if (o->type == TRAP_ID) {
 					PiegeLoaded *args = malloc(sizeof(MobThreadsArgs));
 					args->piege = o;
-					args->level = level;
+					args->levelMutex = levelMutex;
 					liste_add(&th_shared_memory.piegesLoaded, args, TYPE_PIEGETHREAD_ARGS);
 				}
 
@@ -666,7 +668,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 			}
 		}
 		else
-			free(level);
+			free(levelMutex);
 	}
 	
 	// Links the doors
@@ -1011,9 +1013,8 @@ void leavePartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory) {
 
 	// Delete the player from the game if he is alive
 	Player* player = &sharedMemory->players[args->threadId];
-	if (sharedMemory->players[args->threadId].isAlive) {
+	if (sharedMemory->players[args->threadId].isAlive)
 		death_player_routine(sharedMemory, player);
-	}
 
 	// Signal condition variable & unlock mutex
 	pthread_cond_broadcast(&sharedMemory->update_cond);
@@ -1038,7 +1039,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 
 	// Handle the input
 	Player* player = &sharedMemory->players[args->threadId];
-	Level *lvl = liste_get(&sharedMemory->levels, player->level-1);
+	LevelMutex *levelMutex = liste_get(&sharedMemory->levels, player->level-1);
 
 	// If the player is dead and press ENTER, respawn
 	if (!player->isAlive && input == KEY_VALIDATE)
@@ -1060,21 +1061,21 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 		switch (input) {
 			case KEY_UP:
 				newY--;
-				player_action(player, lvl, newX, newY, sharedMemory);
+				player_action(player, levelMutex, newX, newY, sharedMemory);
 				break;
 			case KEY_DOWN:
 				newY++;
-				player_action(player, lvl, newX, newY, sharedMemory);
+				player_action(player, levelMutex, newX, newY, sharedMemory);
 				break;
 			case KEY_LEFT:
 				newX--;
 				player->obj->player.orientation = LEFT_ORIENTATION;
-				player_action(player, lvl, newX, newY, sharedMemory);
+				player_action(player, levelMutex, newX, newY, sharedMemory);
 				break;
 			case KEY_RIGHT:
 				newX++;
 				player->obj->player.orientation = RIGHT_ORIENTATION;
-				player_action(player, lvl, newX, newY, sharedMemory);
+				player_action(player, levelMutex, newX, newY, sharedMemory);
 				break;
 			case KEY_SPACE:
 				// On vérifie si le joueur a des bombes
@@ -1084,9 +1085,9 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 					// On créée la bombe
 					Objet *bombe = creerBombeExplosif(player->obj->x+1, player->obj->y);
 					// On ajoute la bombe au niveau
-					levelAjouterObjet(lvl, bombe);
+					levelAjouterObjet(&levelMutex->level, bombe);
 					// On démarre le threads de la bombe
-					launch_bomb_routine(sharedMemory, bombe, lvl);
+					launch_bomb_routine(sharedMemory, bombe, levelMutex);
 					privateMessage(sharedMemory, args->threadId, "Bombe posée !", YELLOW_COLOR, 1);
 				} else {
 					privateMessage(sharedMemory, args->threadId, "Vous n'avez plus de bombes !", RED_COLOR, 1);
@@ -1094,7 +1095,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 				break;
 			case KEY_VALIDATE: 
 				// On récupère la liste des objets dans la hitbox du joueur
-				objCollide = objectInHitBox(lvl, player->obj->x, player->obj->y, 3, 4);
+				objCollide = objectInHitBox(&levelMutex->level, player->obj->x, player->obj->y, 3, 4);
 				
 				// On parcourt la liste
 				elt = objCollide.tete;
@@ -1108,11 +1109,11 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 							// Si joueur à la door 1
 							if (doorLink.door1.door == obj) {
 								// On déplace le joueur à la door 2
-								changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door2.level, 
+								changePlayerOfLevel(sharedMemory, player, levelMutex, doorLink.door2.levelMutex, 
 									doorLink.door2.door->x, doorLink.door2.door->y);
 							} else {
 								// On déplace le joueur à la door 1
-								changePlayerOfLevel(sharedMemory, player, lvl, doorLink.door1.level, 
+								changePlayerOfLevel(sharedMemory, player, levelMutex, doorLink.door1.levelMutex, 
 									doorLink.door1.door->x, doorLink.door1.door->y);
 							}
 							break;
