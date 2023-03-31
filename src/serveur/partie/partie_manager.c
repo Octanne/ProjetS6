@@ -1147,7 +1147,7 @@ void inputPartieTCP(threadTCPArgs *args, threadsSharedMemory *sharedMemory, int 
 	}
 
 	// Signal condition variable & Unlock the mutex
-  pthread_cond_broadcast(&sharedMemory->update_cond);
+  	pthread_cond_broadcast(&sharedMemory->update_cond);
 	pthread_mutex_unlock(&sharedMemory->mutex);
 }
 
