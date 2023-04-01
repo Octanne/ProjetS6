@@ -251,6 +251,7 @@ int write_data(int fd, char* data, size_t size, char data_type) {
     // Get the table at the address found
     off_t table[TAILLE_TABLE];
     if (get_table(fd, tableEntry.addr_table, table) == -1) {
+		logs(L_DEBUG, "add_data | ERROR get_table");
         return -1;
     }
 
@@ -302,12 +303,13 @@ int write_data(int fd, char* data, size_t size, char data_type) {
 
     // Update table with the address of the data
     if (write_table(fd, tableEntry.addr_table, table) == -1) {
+		logs(L_DEBUG, "add_data | Error while writing table");
         return -1;
     }
 
 	// Logs and return
     logs(L_DEBUG, "add_data | Data added at addr = %ld, idx = %d, tableAddr = %ld", 
-    table[tableEntry.idx_table], tableEntry.idx_table, tableEntry.addr_table);
+    	table[tableEntry.idx_table], tableEntry.idx_table, tableEntry.addr_table);
     return 1;
 }
 
@@ -510,6 +512,7 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
 		return -1;
 	}
 
+
 	// No empty space found => addresse utilisé = fin du fichier
 	if (emptyData.index == -1) {
 		table[TAILLE_TABLE - 1] = lseek(fd, 0, SEEK_END);
@@ -517,9 +520,16 @@ int find_av_tableEntry(int fd, off_t addrTable, table_entry_t* result) {
 	
 	// Else (empty space found) => update the empty space
 	else { 
+
 		// Espace vide trouvé mise à jour de celui-ci.
 		if (update_empty(fd, &emptyData, SIZE_TABLE) == -1) {
 			logs(L_DEBUG, "find_av_tableEntry | Impossible to update the empty space found");
+			return -1;
+		}
+
+		// Get the last version of the table: table
+		if (get_table(fd, addrTable, table) == -1) {
+			logs(L_DEBUG, "find_av_tableEntry | Error while getting table at addr = %ld", addrTable);
 			return -1;
 		}
 
@@ -760,6 +770,9 @@ int update_empty(int fd, empty_data_t* emptyData, size_t sizeNeeded) {
     // If size not fully used : update the empty space
     long sizeLeft = emptyData->size - sizeNeeded - SIZE_DATA_INFO; // Comme peut être négatif, on utilise long
     if (sizeLeft > 0) {
+
+		// Logs
+		logs(L_DEBUG, "update_empty | sizeLeft = %ld (> 0)", sizeLeft);
 
 		// Update data_info
         data_info_t dataInfo;
@@ -1087,6 +1100,11 @@ int remove_level(file_t file, int numLevel) {
 		return -1;
     }
 
+	// show table
+	char* str = show_table(file);
+	logs(L_DEBUG, "Remove_level | Table : %s", str);
+	free(str);
+
 	// Remove the level
     int res = transform_to_empty(fd, numLevel, ADDR_FIRST_TABLE, 0);
     if (res == -2)
@@ -1103,6 +1121,11 @@ int remove_level(file_t file, int numLevel) {
 
 	// Logs
     logs(L_DEBUG, "Remove_level | level : %d, success : %d", numLevel, res);
+
+	// show table
+	str = show_table(file);
+	logs(L_DEBUG, "Remove_level | Table : %s", str);
+	free(str);
 
     return res;
 }
