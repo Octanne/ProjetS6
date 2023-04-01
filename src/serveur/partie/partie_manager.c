@@ -631,6 +631,7 @@ void partieProcessusManager(int sockedTCP, PartieStatutInfo partieInfo) {
 
 		// Add the level to the list if it was loaded, else free the memory
 		if (loop == 0) {
+			pthread_mutex_init(&levelMutex->mutex, NULL);
 			liste_add(&th_shared_memory.levels, levelMutex, TYPE_LEVEL);
 			
 			// Lecture des objets du niveau

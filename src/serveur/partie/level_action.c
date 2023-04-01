@@ -409,6 +409,11 @@ void player_action(Player *player, LevelMutex *levelMutex, short newX, short new
 	}
 }
 
+/**
+ * Routine de chute du joueur
+ * 
+ * @param arg : void** contenant les arguments
+*/
 void *fall_player_routine(void *arg) {
 	threadsSharedMemory *sharedMemory = ((void**)arg)[0];
 	Player *player = ((void**)arg)[1];
@@ -457,6 +462,13 @@ void *fall_player_routine(void *arg) {
 	return NULL;
 }
 
+/**
+ * @brief Lance le thread fall_player_routine.
+ * 
+ * @param sharedMemory La mémoire partagée.
+ * @param player Le joueur.
+ * @param highestY La hauteur du bloc le plus haut sous les pieds du joueur.
+ */
 void launch_fall_player_routine(threadsSharedMemory *sharedMemory, Player *player, short highestY) {
 	// On crée un thread pour faire tomber le joueur
 	void* args = malloc(sizeof(void*)*3);
