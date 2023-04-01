@@ -1,5 +1,0 @@
-obj/*.o
-obj/**/*.o
-bin/
-run/
-.vscode/
